@@ -1,0 +1,497 @@
+<title>Canvas Pouch Workshop</title>
+<script>document.documentElement.setAttribute("data-direction", "bold");</script>
+<!--SITE_CSS-->
+<style>
+/* ---- page-level: only what the marketing site has no vocabulary for ----
+   Most people open this on a phone at the sewing table, so the base rules are
+   the phone layout and wider screens are the override. */
+body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--body); color: var(--color--text); background: var(--color--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+/* The artifact host stamps data-theme on <html>; the site themes by class. The
+   script bridges the two — this block only covers the moment before it runs. */
+html[data-theme="dark"]:not(.theme-light) {
+  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: #1f1f23;
+  --color--surface-inverse: #1f1f23; --color--border: #3b3b42; --color--accent-deep: #e9560c;
+  --color--success: #5fd08a; --color--warning: #f0b544; --color--danger: #f28b82;
+}
+section[id], .steps_item[id] { scroll-margin-top: 4.25rem; }
+.heading-2xl, .heading-xl, .steps_title, .faq_question { text-wrap: balance; }
+.main-nav_link:focus-visible, .step-bar:focus-visible { outline: 2px solid var(--color--primary); outline-offset: 3px; border-radius: 2px; }
+.kit_item .checkbox, .step-done .checkbox { width: 1.35rem; height: 1.35rem; }
+h2[tabindex="-1"]:focus, h3[tabindex="-1"]:focus { outline: none; }
+
+/* nav: one row on a phone — links scroll sideways instead of wrapping */
+.nav-links { display: flex; gap: var(--space--lg); }
+.main-nav_link { font-size: var(--type--small); }
+#theme-toggle { flex: none; }
+
+/* hero */
+.hero_facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space--md) var(--space--lg); margin: var(--space--xs) 0 0; padding-top: var(--space--md); border-top: 1px solid var(--color--on-inverse-faint); }
+.hero_fact { display: grid; gap: 0.1rem; }
+.hero_fact-label { font-family: var(--type--family-mono); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color--on-inverse-mu); }
+.hero_fact-value { margin: 0; font-weight: 600; color: var(--color--on-inverse-strong); font-variant-numeric: tabular-nums; }
+.hero_cta { justify-self: start; margin-top: var(--space--xs); }
+.pouch-art { display: block; width: 100%; max-width: 320px; height: auto; margin: auto; }
+.pouch-art .body { fill: var(--color--on-inverse-wash); stroke: var(--color--on-inverse-strong); stroke-width: 2; }
+.pouch-art .teeth { fill: none; stroke: var(--color--primary); stroke-width: 5; stroke-dasharray: 2 2.5; }
+.pouch-art .part { fill: var(--color--on-inverse-faint); stroke: var(--color--on-inverse-strong); stroke-width: 1.5; }
+.pouch-art .stitch { fill: none; stroke: var(--color--on-inverse-mu); stroke-width: 1; stroke-dasharray: 4 3; }
+.pouch-art .dim { fill: none; stroke: var(--color--on-inverse-mu); stroke-width: 1; }
+.pouch-art text { fill: var(--color--on-inverse-body); font-family: var(--type--family-mono); font-size: 11px; }
+
+/* what to bring */
+.kit { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: var(--space--xs); }
+.kit_item { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space--md); align-items: start; padding: 0.8rem 0; border-top: 1px solid var(--color--border); cursor: pointer; }
+.kit li:first-child .kit_item { border-top: none; }
+.kit_item .checkbox { margin-top: 0.1rem; }
+.kit_name { display: block; color: var(--color--text); font-weight: 500; }
+.kit_note { display: block; font-size: var(--type--small); color: var(--color--text-mu); }
+.kit_qty { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); white-space: nowrap; font-variant-numeric: tabular-nums; padding-top: 0.1rem; }
+.kit_item input:checked ~ .kit_body .kit_name { color: var(--color--text-mu); text-decoration: line-through; text-decoration-color: var(--color--primary); }
+.card_head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space--md); }
+.card_count { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); }
+
+/* cutting */
+.cut { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space--lg); align-items: start; }
+.cut_main { display: grid; gap: var(--space--md); }
+.table_wrap { overflow-x: auto; border: 1px solid var(--color--border); border-radius: var(--radius--md); background: var(--color--surface); }
+.table { width: 100%; border-collapse: collapse; font-size: var(--type--small); }
+.table th, .table td { padding: 0.7rem 0.75rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color--border); }
+.table thead th { font-family: var(--type--family-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color--text-mu); background: var(--color--surface-alt); white-space: nowrap; }
+.table tbody tr:last-child td { border-bottom: none; }
+.table td { color: var(--color--text-mu); }
+.table td strong { display: block; color: var(--color--text); font-weight: 600; }
+.table .is-num { font-family: var(--type--family-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--color--text); }
+.table .is-sub { display: block; font-family: var(--type--family-mono); color: var(--color--text-mu); }
+.table .is-qty { text-align: right; }
+.cut_figure { margin: 0; display: grid; gap: var(--space--sm); max-width: 440px; }
+.cut-art { display: block; width: 100%; height: auto; }
+.cut-art .panel { fill: var(--color--surface); stroke: var(--color--text); stroke-width: 1.5; }
+.cut-art .zip-edge { fill: none; stroke: var(--color--primary); stroke-width: 4; }
+.cut-art .seam { fill: none; stroke: var(--color--primary); stroke-width: 1.5; stroke-dasharray: 7 5; }
+.cut-art .dim { fill: none; stroke: var(--color--text-mu); stroke-width: 1; }
+.cut-art text { fill: var(--color--text-mu); font-family: var(--type--family-mono); font-size: 13px; }
+.cut-art .strong { fill: var(--color--text); }
+.cut_caption { font-size: var(--type--small); color: var(--color--text-mu); max-width: 46ch; }
+
+/* steps */
+.steps-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: var(--space--md); margin-bottom: var(--space--md); }
+.steps-head .title-set { margin-bottom: 0; }
+.step-tally { display: flex; align-items: center; gap: var(--space--md); }
+.step-progress { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.step-progress strong { color: var(--color--text); }
+.steps_item.is-timeline { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space--sm); }
+.steps_text { max-width: 62ch; }
+.step-specs { display: flex; flex-wrap: wrap; gap: var(--space--xs); }
+.step-specs .pill { font-family: var(--type--family-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+.steps_item .message { max-width: 62ch; font-size: var(--type--small); }
+.step-photo { display: grid; place-items: center; aspect-ratio: 16 / 9; max-width: 360px; padding: var(--space--md); border: 1.5px dashed var(--color--border); border-radius: var(--radius--md); background: var(--color--surface-alt); color: var(--color--text-mu); font-family: var(--type--family-mono); font-size: var(--type--small); text-align: center; }
+.step-done { display: inline-flex; align-items: center; gap: var(--space--sm); justify-self: start; min-height: 44px; margin-top: var(--space--xs); padding: 0.5rem 1.1rem 0.5rem 0.8rem; border: var(--border--control-width) solid var(--color--border); border-radius: var(--radius--control); background: var(--color--surface); font-size: var(--type--small); font-weight: 600; color: var(--color--text); cursor: pointer; }
+.steps_item.is-done { border-left-color: var(--color--primary); }
+.steps_item.is-done::before { color: var(--color--success); }
+.steps_item.is-done .steps_title { color: var(--color--text-mu); text-decoration: line-through; text-decoration-color: var(--color--primary); }
+.steps_item.is-done .step-done { border-color: var(--color--primary); }
+
+/* floating "next step" bar — phones only, only while the steps are on screen */
+.step-bar { display: none; }
+.step-bar_count { flex: none; font-family: var(--type--family-mono); font-weight: 700; color: var(--color--accent-on-inverse); font-variant-numeric: tabular-nums; }
+.step-bar_next { display: grid; flex: 1; min-width: 0; line-height: 1.3; }
+.step-bar_label { font-family: var(--type--family-mono); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color--on-inverse-mu); }
+.step-bar_title { font-weight: 600; color: var(--color--text-inverse); }
+.step-bar_go { flex: none; font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 700; color: var(--color--accent-on-inverse); }
+
+.faq { margin-top: 0; }
+
+@media (max-width: 767px) {
+  html[data-direction] { --space--section: 3.5rem; }
+  .title-set { margin-bottom: var(--space--lg); }
+  .heading-xl { font-size: 1.625rem; }
+  .steps_title, .faq_question { font-size: 1.1875rem; }
+  .container.is-nav { flex-wrap: nowrap; gap: var(--space--md); }
+  .main-nav_menu { flex-wrap: nowrap; min-width: 0; gap: var(--space--sm); }
+  .nav-links { gap: 0.9rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .main-nav_link { padding: 0.6rem 0; white-space: nowrap; }
+  .hero_cta { justify-self: stretch; }
+  .card.is-flush { padding: var(--space--md) var(--space--md) var(--space--xs); }
+  .steps_item.is-timeline { padding-left: 1.6rem; padding-bottom: var(--space--lg); }
+  #steps { padding-bottom: calc(var(--space--section) + 4.5rem); }
+  .step-bar {
+    position: fixed; z-index: 20;
+    left: var(--space--sm); right: var(--space--sm); bottom: calc(var(--space--sm) + env(safe-area-inset-bottom, 0px));
+    display: flex; align-items: center; gap: var(--space--md);
+    padding: 0.7rem var(--space--md);
+    background: var(--color--surface-inverse); color: var(--color--text-inverse);
+    border: 1px solid var(--color--on-inverse-line); border-radius: var(--radius--lg);
+    box-shadow: var(--effect--shadow-2);
+    transform: translateY(calc(100% + 2rem)); visibility: hidden;
+    transition: transform var(--effect--transition-base), visibility 0s linear 0.2s;
+  }
+  .step-bar.is-shown { transform: none; visibility: visible; transition: transform var(--effect--transition-base); }
+}
+@media (min-width: 768px) {
+  .hero_facts { grid-template-columns: repeat(4, auto); justify-content: start; column-gap: var(--space--xl); }
+}
+@media (min-width: 901px) {
+  .cut { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--space--xl); }
+  .table th, .table td { padding: 0.75rem var(--space--md); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .button, .step-bar, .step-bar.is-shown { transition: none; }
+}
+</style>
+
+<header class="main-nav">
+  <div class="container is-nav">
+    <a class="main-nav_logo" href="#top">Casabe</a>
+    <nav class="main-nav_menu" aria-label="Sections">
+      <div class="nav-links">
+        <a class="main-nav_link" href="#bring">Bring</a>
+        <a class="main-nav_link" href="#cut">Cutting</a>
+        <a class="main-nav_link" href="#steps">Steps</a>
+        <a class="main-nav_link" href="#fixes">Fixes</a>
+      </div>
+      <button id="theme-toggle" class="button is-outline-sm" type="button" aria-label="Switch color theme">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="container is-hero-split">
+    <div class="hero_content">
+      <span class="eyebrow is-on-inverse-tight">Workshop handout &middot; Draft</span>
+      <h1 class="heading-2xl is-on-inverse">Sew a lined canvas zip pouch</h1>
+      <p class="text-lg is-on-inverse">What to bring, how to cut, and every step in order. Tick steps off as you sew&thinsp;&mdash;&thinsp;your checkmarks stay on this device.</p>
+      <dl class="hero_facts">
+        <div class="hero_fact"><dt class="hero_fact-label">Level</dt><dd class="hero_fact-value">Beginner</dd></div>
+        <div class="hero_fact"><dt class="hero_fact-label">Time</dt><dd class="hero_fact-value">About 2 hrs</dd></div>
+        <div class="hero_fact"><dt class="hero_fact-label">Finished</dt><dd class="hero_fact-value">8 &times; 5 in</dd></div>
+        <div class="hero_fact"><dt class="hero_fact-label">Seam allowance</dt><dd class="hero_fact-value">&frac12; in</dd></div>
+      </dl>
+      <a class="button is-primary hero_cta" href="#steps">Go to the steps</a>
+    </div>
+    <div class="hero_plate" role="img" aria-label="Line drawing of the finished pouch: 8 inches wide by 5 inches tall, zipper along the top edge.">
+      <svg class="pouch-art" viewBox="0 0 312 214" aria-hidden="true">
+        <rect class="body" x="40" y="46" width="220" height="130" rx="10"></rect>
+        <line class="teeth" x1="58" y1="62" x2="242" y2="62"></line>
+        <rect class="part" x="42" y="55" width="16" height="14" rx="2"></rect>
+        <rect class="part" x="242" y="55" width="16" height="14" rx="2"></rect>
+        <rect class="part" x="164" y="55" width="16" height="14" rx="3"></rect>
+        <rect class="part" x="167" y="71" width="10" height="22" rx="5"></rect>
+        <line class="stitch" x1="50" y1="74" x2="160" y2="74"></line>
+        <line class="stitch" x1="184" y1="74" x2="250" y2="74"></line>
+        <path class="dim" d="M40 188 V198 M260 188 V198 M40 193 H260"></path>
+        <text x="150" y="211" text-anchor="middle">8 in &middot; 20 cm</text>
+        <path class="dim" d="M272 46 H282 M272 176 H282 M277 46 V176"></path>
+        <text transform="translate(296 111) rotate(90)" text-anchor="middle">5 in &middot; 13 cm</text>
+      </svg>
+      <span class="hero_plate-label">Finished pouch</span>
+      <span class="hero_plate-rule"></span>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="bring">
+  <div class="container">
+    <div class="title-set">
+      <span class="eyebrow">Before the workshop</span>
+      <h2 class="heading-xl">What to bring</h2>
+      <p class="text-base">Tick things off as you pack. Canvas is thick, so a denim needle and clips matter more than they would for cotton.</p>
+    </div>
+    <div class="grid-cols is-2col is-1col-sm">
+      <div class="card is-flush">
+        <div class="card_head"><h3 class="card_title">Materials</h3><span class="card_count">6 items</span></div>
+        <ul class="kit">
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="kit-canvas"><span class="kit_body"><span class="kit_name">Cotton canvas, 10&nbsp;oz</span><span class="kit_note">Outer. Duck or bull denim both work.</span></span><span class="kit_qty">fat quarter</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="kit-lining"><span class="kit_body"><span class="kit_name">Quilting cotton</span><span class="kit_note">Lining. A print hides chalk marks.</span></span><span class="kit_qty">10 &times; 14 in</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="kit-zipper"><span class="kit_body"><span class="kit_name">Nylon coil zipper, #5</span><span class="kit_note">Longer is fine&thinsp;&mdash;&thinsp;you trim it in step 2.</span></span><span class="kit_qty">9 in +</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="kit-tabs"><span class="kit_body"><span class="kit_name">Canvas scraps for zipper tabs</span></span><span class="kit_qty">2 &times; 3 in</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="kit-thread"><span class="kit_body"><span class="kit_name">All-purpose polyester thread</span><span class="kit_note">Match the canvas; it shows on the topstitching.</span></span><span class="kit_qty">1 spool</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="kit-interfacing"><span class="kit_body"><span class="kit_name">Woven fusible interfacing</span><span class="kit_note">Optional. Makes a stiffer pouch.</span></span><span class="kit_qty">10 &times; 14 in</span></label></li>
+        </ul>
+      </div>
+      <div class="card is-flush">
+        <div class="card_head"><h3 class="card_title">Tools</h3><span class="card_count">7 items</span></div>
+        <ul class="kit">
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-machine"><span class="kit_body"><span class="kit_name">Sewing machine with a zipper foot</span></span><span class="kit_qty"></span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-needle"><span class="kit_body"><span class="kit_name">Denim needle</span><span class="kit_note">Bring a spare. Canvas bends thin needles.</span></span><span class="kit_qty">100/16</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-cutter"><span class="kit_body"><span class="kit_name">Rotary cutter and mat, or fabric shears</span></span><span class="kit_qty"></span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-ruler"><span class="kit_body"><span class="kit_name">Clear quilting ruler</span></span><span class="kit_qty">6 &times; 12 in</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-clips"><span class="kit_body"><span class="kit_name">Sewing clips</span><span class="kit_note">Pins won&rsquo;t go through four layers of canvas cleanly.</span></span><span class="kit_qty">10+</span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-iron"><span class="kit_body"><span class="kit_name">Iron and pressing cloth</span></span><span class="kit_qty"></span></label></li>
+          <li><label class="kit_item"><input class="checkbox" type="checkbox" data-track="tool-marker"><span class="kit_body"><span class="kit_name">Chalk or a heat-erasable marker</span></span><span class="kit_qty"></span></label></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section is-alt" id="cut">
+  <div class="container">
+    <div class="title-set">
+      <span class="eyebrow">At the table</span>
+      <h2 class="heading-xl">Cut your pieces</h2>
+      <p class="text-base">Square up your fabric first, then cut everything before you sit down at a machine.</p>
+    </div>
+    <div class="cut">
+      <div class="cut_main">
+        <div class="table_wrap">
+          <table class="table">
+            <thead><tr><th>Piece</th><th>Cut size</th><th class="is-qty">Qty</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Outer panel</strong>Canvas</td><td class="is-num">9 &times; 6 in<span class="is-sub">22.9 &times; 15.2 cm</span></td><td class="is-num is-qty">2</td></tr>
+              <tr><td><strong>Lining panel</strong>Quilting cotton</td><td class="is-num">9 &times; 6 in<span class="is-sub">22.9 &times; 15.2 cm</span></td><td class="is-num is-qty">2</td></tr>
+              <tr><td><strong>Zipper tab</strong>Canvas</td><td class="is-num">2 &times; 3 in<span class="is-sub">5.1 &times; 7.6 cm</span></td><td class="is-num is-qty">2</td></tr>
+              <tr><td><strong>Interfacing</strong>Woven fusible, optional</td><td class="is-num">8&frac12; &times; 5&frac12; in<span class="is-sub">21.6 &times; 14 cm</span></td><td class="is-num is-qty">2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="message is-callout">
+          <p class="message_title">Every seam is &frac12;&nbsp;in (1.3&nbsp;cm)</p>
+          <p class="message_text">Unless a step says otherwise. Line the cut edge up with the &frac12; mark on your machine&rsquo;s throat plate.</p>
+        </div>
+      </div>
+      <figure class="cut_figure">
+        <svg class="cut-art" viewBox="0 0 400 280" role="img" aria-label="Diagram of one 9 by 6 inch panel with the stitching line drawn half an inch inside the cut edge.">
+          <path class="dim" d="M70 24 V40 M340 24 V40 M70 32 H340"></path>
+          <text x="205" y="18" text-anchor="middle">9 in &middot; 22.9 cm</text>
+          <path class="dim" d="M32 50 H48 M32 230 H48 M40 50 V230"></path>
+          <text transform="translate(24 140) rotate(-90)" text-anchor="middle">6 in &middot; 15.2 cm</text>
+          <rect class="panel" x="70" y="50" width="270" height="180"></rect>
+          <line class="zip-edge" x1="70" y1="50" x2="340" y2="50"></line>
+          <rect class="seam" x="85" y="65" width="240" height="150"></rect>
+          <text class="strong" x="205" y="136" text-anchor="middle">Outer or lining</text>
+          <text x="205" y="155" text-anchor="middle">cut 2 of each</text>
+          <path class="dim" d="M325 215 H372 M340 230 H372 M364 215 V230"></path>
+          <text x="364" y="254" text-anchor="middle">&frac12; in</text>
+        </svg>
+        <figcaption class="cut_caption">The orange edge joins the zipper. The dashed line is where you sew, &frac12;&nbsp;in in from the cut edge.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="steps">
+  <div class="container is-8c">
+    <div class="steps-head">
+      <div class="title-set">
+        <span class="eyebrow">At the machine</span>
+        <h2 class="heading-xl">Step by step</h2>
+      </div>
+      <div class="step-tally">
+        <p class="step-progress" id="step-progress" role="status" aria-live="polite"><strong>0</strong> of 9 steps done</p>
+        <button id="step-reset" class="button is-outline-sm" type="button">Clear checkmarks</button>
+      </div>
+    </div>
+    <div class="message is-warning">
+      <p class="message_title">Draft steps</p>
+      <p class="message_text">These are placeholders while the instructions are being written. Measurements and order may change before the workshop.</p>
+    </div>
+    <ol class="steps is-timeline">
+      <li class="steps_item is-timeline" id="step-1">
+        <h3 class="steps_title">Press and fuse</h3>
+        <p class="steps_text">Press the canvas and lining flat. If you&rsquo;re using interfacing, center it on the wrong side of each outer panel and fuse it with a pressing cloth.</p>
+        <div class="step-specs"><span class="pill is-outline">Iron: cotton, steam</span></div>
+        <div class="step-photo">Photo to come: interfacing centered on the outer panel</div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-1">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-2">
+        <h3 class="steps_title">Cover the zipper ends</h3>
+        <p class="steps_text">Fold each tab in half and press, then fold the raw edges in to the crease. Slip one over each end of the zipper and stitch across close to the fold. Trim the zipper so the tabbed length is 9&nbsp;in.</p>
+        <div class="step-specs"><span class="pill is-outline">Stitch 3.0 mm</span><span class="pill is-outline">&#8539; in from fold</span></div>
+        <div class="message is-callout"><p class="message_text">Slide the pull to the middle before you trim, or it can run off the cut end.</p></div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-2">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-3">
+        <h3 class="steps_title">Sew the first side of the zipper</h3>
+        <p class="steps_text">Stack from the bottom: outer panel right side up, zipper face down along the top edge, lining right side down. Clip the three layers together and sew along the zipper tape.</p>
+        <div class="step-specs"><span class="pill is-outline">Zipper foot</span><span class="pill is-outline">Stitch 2.5 mm</span><span class="pill is-outline">&frac14; in from edge</span></div>
+        <div class="step-photo">Photo to come: the three-layer stack, clipped</div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-3">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-4">
+        <h3 class="steps_title">Sew the second side</h3>
+        <p class="steps_text">Repeat with the other outer and lining panel on the free zipper tape. Line the panels up with the first pair so the sides match.</p>
+        <div class="step-specs"><span class="pill is-outline">Zipper foot</span><span class="pill is-outline">Stitch 2.5 mm</span></div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-4">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-5">
+        <h3 class="steps_title">Topstitch along the zipper</h3>
+        <p class="steps_text">Press the fabric away from the teeth on both sides. Topstitch through the outer and lining together, close to the fold, so the lining can&rsquo;t catch in the zipper.</p>
+        <div class="step-specs"><span class="pill is-outline">Stitch 3.0 mm</span><span class="pill is-outline">&#8539; in from fold</span></div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-5">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-6">
+        <h3 class="steps_title">Open the zipper halfway</h3>
+        <p class="steps_text">Do this before you sew around the edges.</p>
+        <div class="message is-warning"><p class="message_text">If the zipper is closed when you sew the perimeter, there&rsquo;s no way to turn the pouch right side out.</p></div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-6">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-7">
+        <h3 class="steps_title">Sew around the edges</h3>
+        <p class="steps_text">Open the pieces out so the two outers face each other and the two linings face each other, with the zipper teeth pointing toward the lining. Clip all around and sew, leaving a gap in the bottom of the lining.</p>
+        <div class="step-specs"><span class="pill is-outline">&frac12; in seam</span><span class="pill is-outline">Leave a 3 in gap</span></div>
+        <div class="step-photo">Photo to come: outers and linings clipped, gap marked</div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-7">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-8">
+        <h3 class="steps_title">Box the corners (optional)</h3>
+        <p class="steps_text">For a pouch that stands up, pinch each bottom corner flat so the side seam sits on the bottom seam. Mark a line 1&nbsp;in from the point, sew across it, and trim.</p>
+        <div class="step-specs"><span class="pill is-outline">1 in across</span><span class="pill is-outline">Trim to &frac14; in</span></div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-8">Done</label>
+      </li>
+      <li class="steps_item is-timeline" id="step-9">
+        <h3 class="steps_title">Turn, close and press</h3>
+        <p class="steps_text">Turn the pouch through the gap and push the corners out. Sew the gap closed close to the edge, tuck the lining inside, and press.</p>
+        <div class="step-specs"><span class="pill is-outline">Edgestitch the gap</span></div>
+        <div class="step-photo">Photo to come: the finished pouch</div>
+        <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-9">Done</label>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<a class="step-bar" id="step-bar" href="#step-1">
+  <span class="step-bar_count" id="step-bar-count">0/9</span>
+  <span class="step-bar_next"><span class="step-bar_label" id="step-bar-label">Next step</span><span class="step-bar_title" id="step-bar-title">Press and fuse</span></span>
+  <span class="step-bar_go">Go</span>
+</a>
+
+<section class="section is-alt" id="fixes">
+  <div class="container is-8c">
+    <div class="title-set">
+      <span class="eyebrow">If something goes wrong</span>
+      <h2 class="heading-xl">Common fixes</h2>
+    </div>
+    <div class="faq">
+      <div class="faq_item">
+        <h3 class="faq_question">My needle keeps breaking</h3>
+        <p class="faq_answer">Switch to a 100/16 denim needle and slow right down near the zipper tabs. Never sew over the metal zipper stops.</p>
+      </div>
+      <div class="faq_item">
+        <h3 class="faq_question">The machine skips stitches at thick corners</h3>
+        <p class="faq_answer">Fold a scrap of canvas to the same height and put it behind the presser foot so the foot stays level as it climbs the seam.</p>
+      </div>
+      <div class="faq_item">
+        <h3 class="faq_question">The lining bunches up by the zipper</h3>
+        <p class="faq_answer">Press both sides away from the teeth before topstitching, and check the lining is lying flat underneath before each side.</p>
+      </div>
+      <div class="faq_item">
+        <h3 class="faq_question">The corners look rounded after turning</h3>
+        <p class="faq_answer">Clip the seam allowance at each corner before turning, then push the corners out with a point turner or a chopstick.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer_layout">
+      <div>
+        <p class="footer_heading">Casabe</p>
+        <p class="footer_copyright">Canvas pouch workshop handout &middot; draft, September 2026</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Theme: the site themes by .theme-dark/.theme-light on <html>; the artifact
+   host signals its choice with data-theme. Host choice, then OS preference;
+   the in-page toggle overrides both until the host changes again. */
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  var chosen = null;
+  function host() { var t = root.getAttribute("data-theme"); return t === "dark" || t === "light" ? t : null; }
+  function apply(mode) {
+    var dark = mode === "dark";
+    root.classList.toggle("theme-dark", dark);
+    root.classList.toggle("theme-light", !dark);
+    if (toggle) toggle.textContent = dark ? "Light" : "Dark";
+  }
+  function sync() { apply(chosen || host() || (mq && mq.matches ? "dark" : "light")); }
+  sync();
+  if (mq && mq.addEventListener) mq.addEventListener("change", function () { if (!chosen && !host()) sync(); });
+  if (window.MutationObserver) new MutationObserver(function () { chosen = null; sync(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  if (toggle) toggle.addEventListener("click", function () { chosen = root.classList.contains("theme-dark") ? "light" : "dark"; apply(chosen); });
+})();
+
+/* Checkmarks for the packing list and steps, remembered on this device only,
+   plus the phone's floating "next step" bar. */
+(function () {
+  var KEY = "casabe-canvas-pouch-v1";
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage blocked: checkmarks last for this visit */ } }
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("input[data-track]"));
+  var steps = boxes.filter(function (b) { return b.getAttribute("data-track").indexOf("step-") === 0; });
+  var progress = document.getElementById("step-progress");
+  var bar = document.getElementById("step-bar");
+  var barCount = document.getElementById("step-bar-count");
+  var barLabel = document.getElementById("step-bar-label");
+  var barTitle = document.getElementById("step-bar-title");
+
+  function paint() {
+    var done = 0, next = null;
+    steps.forEach(function (b) {
+      var item = b.closest(".steps_item");
+      if (item) item.classList.toggle("is-done", b.checked);
+      if (b.checked) done++;
+      else if (!next) next = item;
+    });
+    if (progress) progress.innerHTML = "<strong>" + done + "</strong> of " + steps.length + " steps done";
+    if (bar) {
+      barCount.textContent = done + "/" + steps.length;
+      if (next) {
+        barLabel.textContent = done ? "Next step" : "First step";
+        barTitle.textContent = next.querySelector(".steps_title").textContent;
+        bar.setAttribute("href", "#" + next.id);
+      } else {
+        barLabel.textContent = "All steps done";
+        barTitle.textContent = "Something off? See common fixes";
+        bar.setAttribute("href", "#fixes");
+      }
+    }
+  }
+
+  /* Ticking a step done moves on to the next step that isn't done yet; after
+     the last one, on to the common fixes. The pause lets the tick land first. */
+  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function advance(box) {
+    var target = null;
+    for (var j = steps.indexOf(box) + 1; j < steps.length; j++) {
+      if (!steps[j].checked) { target = steps[j].closest(".steps_item"); break; }
+    }
+    if (!target) target = document.getElementById("fixes");
+    setTimeout(function () {
+      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      var heading = target.querySelector("h2, h3");
+      if (heading) { heading.setAttribute("tabindex", "-1"); heading.focus({ preventScroll: true }); }
+    }, 350);
+  }
+
+  boxes.forEach(function (b) {
+    b.checked = !!state[b.getAttribute("data-track")];
+    b.addEventListener("change", function () {
+      state[b.getAttribute("data-track")] = b.checked; save(); paint();
+      if (b.checked && steps.indexOf(b) !== -1) advance(b);
+    });
+  });
+  var reset = document.getElementById("step-reset");
+  if (reset) reset.addEventListener("click", function () {
+    boxes.forEach(function (b) { b.checked = false; });
+    state = {}; save(); paint();
+  });
+  paint();
+
+  /* Show the bar while the steps are on screen but their own counter isn't. */
+  if (bar && window.IntersectionObserver) {
+    var inSteps = false, headVisible = true;
+    var update = function () { bar.classList.toggle("is-shown", inSteps && !headVisible); };
+    new IntersectionObserver(function (e) { inSteps = e[0].isIntersecting; update(); }).observe(document.querySelector(".steps"));
+    new IntersectionObserver(function (e) { headVisible = e[0].isIntersecting; update(); }).observe(document.querySelector(".steps-head"));
+  }
+})();
+</script>
