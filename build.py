@@ -5,8 +5,9 @@
 Inlines the Casabe marketing-site stylesheet and the two brand fonts into
 src/body.html, so the page fetches nothing, and writes:
 
-  index.html     the public page (GitHub Pages serves this)
-  artifact.html  the same page without <head>, for the claude.ai artifact copy
+  canvas-pouch/index.html  the public page, https://workshops.casabe.studio/canvas-pouch/
+  index.html               redirect from the bare address to the page
+  artifact.html            the page without <head>, for the claude.ai artifact copy
 
 Brand sources are read from the sibling checkouts in ~/Git Library.
 """
@@ -40,7 +41,8 @@ page = body.replace("<!--SITE_CSS-->", "<style>\n" + fonts + "\n" + site + "\n</
 (here / "artifact.html").write_text(page)
 
 title = re.search(r"<title>.*?</title>", page).group(0)
-(here / "index.html").write_text(
+(here / "canvas-pouch").mkdir(exist_ok=True)
+(here / "canvas-pouch/index.html").write_text(
     '<!doctype html>\n<html lang="en" data-direction="bold">\n<head>\n'
     '<meta charset="utf-8">\n'
     '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
@@ -49,4 +51,17 @@ title = re.search(r"<title>.*?</title>", page).group(0)
     + title + "\n</head>\n<body>\n"
     + page.replace(title, "", 1)
     + "\n</body>\n</html>\n")
-print("index.html", (here / "index.html").stat().st_size, "bytes")
+
+# The bare workshops.casabe.studio address has no page of its own yet; send
+# people to the one workshop there is.
+(here / "index.html").write_text(
+    '<!doctype html>\n<html lang="en">\n<head>\n'
+    '<meta charset="utf-8">\n'
+    '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+    '<meta name="robots" content="noindex">\n'
+    '<meta http-equiv="refresh" content="0; url=canvas-pouch/">\n'
+    '<title>Casabe Workshops</title>\n'
+    '</head>\n<body>\n'
+    '<p><a href="canvas-pouch/">Canvas zip pouch workshop</a></p>\n'
+    '</body>\n</html>\n')
+print("canvas-pouch/index.html", (here / "canvas-pouch/index.html").stat().st_size, "bytes")
