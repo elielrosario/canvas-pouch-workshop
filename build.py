@@ -24,6 +24,18 @@ site = (LIB / "batey-platform/site/styles.css").read_text()
 site = site.replace("html:not(.theme-light) {", 'html:not(.theme-light):not([data-theme="light"]) {')
 
 body = (here / "src/body.html").read_text()
+
+# Step diagrams: shared styles/defs go in above the nav; each figure goes into
+# its step, just above the Done button.
+diagrams = (here / "src/diagrams.html").read_text()
+shared, _, _ = diagrams.partition('<figure class="step-fig"')
+body = body.replace('<header class="main-nav">', shared.strip() + '\n\n<header class="main-nav">', 1)
+for fig in re.findall(r'<figure class="step-fig" data-step="\d+">.*?</figure>', diagrams, flags=re.S):
+    n = re.search(r'data-step="(\d+)"', fig).group(1)
+    done = '<label class="step-done"><input class="checkbox" type="checkbox" data-track="step-%s">' % n
+    assert body.count(done) == 1, "no single Done button for step " + n
+    body = body.replace(done, fig + "\n          " + done)
+
 page = body.replace("<!--SITE_CSS-->", "<style>\n" + fonts + "\n" + site + "\n</style>")
 (here / "artifact.html").write_text(page)
 
@@ -32,7 +44,7 @@ title = re.search(r"<title>.*?</title>", page).group(0)
     '<!doctype html>\n<html lang="en" data-direction="bold">\n<head>\n'
     '<meta charset="utf-8">\n'
     '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
-    '<meta name="description" content="Handout for the canvas zip pouch workshop: what to bring, cutting chart and step-by-step instructions.">\n'
+    '<meta name="description" content="Handout for the canvas zip pouch workshop: materials, colors and step-by-step instructions with diagrams.">\n'
     '<meta name="robots" content="noindex">\n'
     + title + "\n</head>\n<body>\n"
     + page.replace(title, "", 1)
