@@ -26,7 +26,7 @@ The counter is a true knockout — the surface shows through it. Never paint it.
 
 ## Lockups
 
-**Horizontal.** The mark is 1.25× the wordmark's ascender height, with the **bar's bottom edge sitting on the text baseline** (the mark's ground line is the word's ground line). Gap between mark and wordmark = 1 module at lockup scale. The mark rises above the ascender; that's intended.
+**Horizontal.** The mark's **block top sits on the cap line and the bar's top edge sits on the baseline** — the word stands on the bar, and the bar hangs below the baseline as foundation. This makes the mark 1.271× the cap height and puts its ink centroid within 3 units of the wordmark's (measured; the bar-bottom-on-baseline alternative left the mark a quarter cap-height too high). Gap between mark and wordmark = 1.5 modules at lockup scale.
 
 **Stacked.** Mark centred over the wordmark; wordmark width = 1.6× the mark's width; gap = 1.5 modules.
 
@@ -36,7 +36,7 @@ The counter is a true knockout — the surface shows through it. Never paint it.
 
 - **Clear space:** one module (12 units, i.e. 12% of the mark's width) on all sides, measured from the block and bar edges — not from the counter.
 - **Minimum size, mark alone:** 18px tall. Below that the counter closes. The 16px favicon is the exception and works because the bar is orange and the triangle is still 4–5px.
-- **Minimum size, horizontal lockup:** 28px tall (mark height), which puts the wordmark at ~22px.
+- **Minimum size, horizontal lockup:** 30px total height, which puts the cap height at ~24px and the mark's bar still 2px clear of the block.
 
 ## Colour
 
