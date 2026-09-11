@@ -80,6 +80,13 @@ progress = (here / "src/progress.html").read_text()
 progress = progress.replace("<!--SITE_CSS-->", site_css).replace("<!--STEPS_JSON-->", stages_js)
 write(here / "canvas-pouch/progress/index.html", full_page(progress, "Instructor progress view for the canvas zip pouch workshop."))
 
+# ---- printable QR sign ----
+# canvas-pouch/qr.svg and qr.png are generated once (they only change if the
+# address does) and checked by decoding them back to the URL.
+qr_svg = (here / "canvas-pouch/qr.svg").read_text().replace("<svg ", '<svg aria-hidden="true" ', 1)
+sign = (here / "src/sign.html").read_text().replace("<!--SITE_CSS-->", site_css).replace("<!--QR_SVG-->", qr_svg)
+write(here / "canvas-pouch/qr/index.html", full_page(sign, "Printable QR code sign for the canvas zip pouch workshop."))
+
 # ---- bare address: send people to the one workshop there is ----
 write(here / "index.html",
       '<!doctype html>\n<html lang="en">\n<head>\n'
