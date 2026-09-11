@@ -5,6 +5,8 @@
 /* Instructor progress page. Phone first: it gets glanced at between helping people. */
 body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--body); color: var(--color--text); background: var(--color--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 #theme-toggle { flex: none; }
+.brand-lockup { display: block; width: auto; height: 28px; }
+.main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
 .pg { padding: var(--space--lg) 0 var(--space--2xl); }
 .pg_head { display: grid; gap: var(--space--xs); margin-bottom: var(--space--lg); }
 .pg_live { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); font-variant-numeric: tabular-nums; }
@@ -55,7 +57,7 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 
 <header class="main-nav">
   <div class="container is-nav">
-    <a class="main-nav_logo" href="../">Casabe</a>
+    <a class="main-nav_logo" href="../" aria-label="Casabe — back to the workshop page"><!--LOCKUP--></a>
     <nav class="main-nav_menu" aria-label="Page">
       <button id="theme-toggle" class="button is-outline-sm" type="button" aria-label="Switch color theme">Dark</button>
     </nav>

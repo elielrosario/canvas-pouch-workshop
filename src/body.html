@@ -23,6 +23,11 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .nav-links { display: flex; gap: var(--space--lg); }
 .main-nav_link { font-size: var(--type--small); }
 #theme-toggle { flex: none; }
+/* Casabe lockup (src/brand): block and wordmark follow the text colour, the bar stays orange */
+.brand-lockup { display: block; width: auto; height: 28px; }
+.main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
+.footer_logo { margin-bottom: var(--space--sm); color: var(--color--on-inverse-strong); }
+.footer_logo .brand-lockup { height: 32px; }
 
 /* hero */
 .hero_facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space--md) var(--space--lg); margin: var(--space--xs) 0 0; padding-top: var(--space--md); border-top: 1px solid var(--color--on-inverse-faint); }
@@ -142,7 +147,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 
 <header class="main-nav">
   <div class="container is-nav">
-    <a class="main-nav_logo" href="#top">Casabe</a>
+    <a class="main-nav_logo" href="#top" aria-label="Casabe"><!--LOCKUP--></a>
     <nav class="main-nav_menu" aria-label="Sections">
       <div class="nav-links">
         <a class="main-nav_link" href="#materials">Materials</a>
@@ -387,7 +392,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   <div class="container">
     <div class="footer_layout">
       <div>
-        <p class="footer_heading">Casabe</p>
+        <div class="footer_logo" role="img" aria-label="Casabe"><!--LOCKUP--></div>
         <p class="footer_copyright">Canvas zip pouch workshop handout</p>
       </div>
     </div>

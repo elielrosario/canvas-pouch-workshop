@@ -26,6 +26,18 @@ site = (LIB / "batey-platform/site/styles.css").read_text()
 site = site.replace("html:not(.theme-light) {", 'html:not(.theme-light):not([data-theme="light"]) {')
 site_css = "<style>\n" + fonts + "\n" + site + "\n</style>"
 
+# Casabe lockup (spec: src/brand/README.md). The currentColor file, with its bar set
+# to brand orange: the two-tone lockup that follows the text colour on light and dark.
+lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
+bar = '<path fill="currentColor" d="M8 70 H92 V89 H8 Z"/>'
+assert lockup.count(bar) == 1, "lockup bar path not found"
+lockup = lockup.replace(bar, bar.replace("currentColor", "#ff7900")).replace(
+    "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
+
+ICONS = ('<link rel="icon" href="/assets/brand/casabe-favicon.svg" type="image/svg+xml">\n'
+         '<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">\n'
+         '<link rel="apple-touch-icon" href="/assets/brand/casabe-icon-ink-180.png">\n')
+
 
 def full_page(page, description):
     title = re.search(r"<title>.*?</title>", page).group(0)
@@ -34,7 +46,7 @@ def full_page(page, description):
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             '<meta name="description" content="' + description + '">\n'
             '<meta name="robots" content="noindex">\n'
-            + title + "\n</head>\n<body>\n"
+            + ICONS + title + "\n</head>\n<body>\n"
             + page.replace(title, "", 1)
             + "\n</body>\n</html>\n")
 
@@ -59,7 +71,7 @@ for fig in re.findall(r'<figure class="step-fig" data-step="\d+">.*?</figure>', 
     assert page.count(done) == 1, "no single Done button for step " + n
     page = page.replace(done, fig + "\n          " + done)
 
-page = page.replace("<!--SITE_CSS-->", site_css)
+page = page.replace("<!--SITE_CSS-->", site_css).replace("<!--LOCKUP-->", lockup)
 write(here / "artifact.html", page)
 write(here / "canvas-pouch/index.html", full_page(
     page, "Handout for the canvas zip pouch workshop: materials, colors and step-by-step instructions with diagrams."))
@@ -77,14 +89,14 @@ assert sum(len(s["steps"]) for s in stages) == 19, "expected 19 steps across the
 stages_js = "<script>var STAGES = " + json.dumps(stages).replace("</", "<\\/") + ";</script>"
 
 progress = (here / "src/progress.html").read_text()
-progress = progress.replace("<!--SITE_CSS-->", site_css).replace("<!--STEPS_JSON-->", stages_js)
+progress = progress.replace("<!--SITE_CSS-->", site_css).replace("<!--LOCKUP-->", lockup).replace("<!--STEPS_JSON-->", stages_js)
 write(here / "canvas-pouch/progress/index.html", full_page(progress, "Instructor progress view for the canvas zip pouch workshop."))
 
 # ---- printable QR sign ----
 # canvas-pouch/qr.svg and qr.png are generated once (they only change if the
 # address does) and checked by decoding them back to the URL.
 qr_svg = (here / "canvas-pouch/qr.svg").read_text().replace("<svg ", '<svg aria-hidden="true" ', 1)
-sign = (here / "src/sign.html").read_text().replace("<!--SITE_CSS-->", site_css).replace("<!--QR_SVG-->", qr_svg)
+sign = (here / "src/sign.html").read_text().replace("<!--SITE_CSS-->", site_css).replace("<!--QR_SVG-->", qr_svg).replace("<!--LOCKUP-->", lockup)
 write(here / "canvas-pouch/qr/index.html", full_page(sign, "Printable QR code sign for the canvas zip pouch workshop."))
 
 # ---- bare address: send people to the one workshop there is ----
@@ -94,7 +106,11 @@ write(here / "index.html",
       '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
       '<meta name="robots" content="noindex">\n'
       '<meta http-equiv="refresh" content="0; url=canvas-pouch/">\n'
+      + ICONS +
       '<title>Casabe Workshops</title>\n'
       '</head>\n<body>\n'
       '<p><a href="canvas-pouch/">Canvas zip pouch workshop</a></p>\n'
       '</body>\n</html>\n')
+
+for name in ("canvas-pouch/index.html", "canvas-pouch/progress/index.html", "canvas-pouch/qr/index.html"):
+    assert "<!--LOCKUP-->" not in (here / name).read_text(), name + " still has a logo placeholder"
