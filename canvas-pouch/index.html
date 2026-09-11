@@ -1610,18 +1610,20 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .phase-nav { display: flex; flex-wrap: wrap; gap: var(--space--xs); }
 .phase-nav .pill { padding: 0.45rem 0.8rem; font-size: var(--type--small); color: var(--color--text); }
 .phase-nav .pill span { font-family: var(--type--family-mono); font-weight: 500; color: var(--color--text-mu); }
-/* sign-up: a name, nothing else, so the instructor can follow along */
-.signup { display: grid; gap: var(--space--sm); margin-bottom: var(--space--xl); padding: var(--space--md); background: var(--color--surface); border: 1px solid var(--color--border); border-left: 4px solid var(--color--primary); border-radius: var(--radius--md); }
-.signup_title { font-family: var(--type--family-heading); font-size: 1.125rem; font-weight: 700; color: var(--color--text); }
-.signup_text { font-size: var(--type--small); color: var(--color--text-mu); max-width: 52ch; }
-.signup_form { display: flex; flex-wrap: wrap; gap: var(--space--sm); }
+/* sign-up: a name, nothing else, so the instructor can follow along. Sits in the dark hero band. */
+.signup { display: grid; gap: var(--space--sm); margin-top: var(--space--xs); padding: var(--space--md); background: var(--color--on-inverse-wash); border: 1px solid var(--color--on-inverse-faint); border-left: 4px solid var(--color--primary); border-radius: var(--radius--md); }
+.signup_title { font-family: var(--type--family-heading); font-size: 1.125rem; font-weight: 700; color: var(--color--text-inverse); }
+.signup_text { font-size: var(--type--small); color: var(--color--on-inverse-body); max-width: 52ch; }
+.signup_form { display: flex; flex-wrap: wrap; gap: var(--space--sm); margin-top: var(--space--xs); }
 .signup_form .input { flex: 1 1 12rem; min-width: 0; min-height: 44px; }
 .signup_form .button { min-height: 44px; }
-.signup_who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space--xs) var(--space--md); }
-.signup_name { font-weight: 700; color: var(--color--text); }
-.signup_status { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); }
-.signup_status.is-error { color: var(--color--danger); }
-.signup_change { font-size: var(--type--small); font-weight: 600; color: var(--color--text); text-decoration: underline; text-underline-offset: 2px; background: none; border: 0; padding: 0.4rem 0; cursor: pointer; }
+.signup_who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space--xs) var(--space--md); color: var(--color--on-inverse-body); }
+.signup_name { font-weight: 700; color: var(--color--text-inverse); }
+.signup_status { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--on-inverse-mu); }
+.signup_status.is-error { color: var(--color--danger-300); }
+.signup_change { font-size: var(--type--small); font-weight: 600; color: var(--color--text-inverse); text-decoration: underline; text-underline-offset: 2px; background: none; border: 0; padding: 0.4rem 0; cursor: pointer; }
+.signup_change:focus-visible { outline: 2px solid var(--color--primary); outline-offset: 3px; border-radius: 2px; }
+@media (max-width: 767px) { .signup_form .button { flex: 1 1 100%; } }
 .phase + .phase { margin-top: var(--space--xl); }
 .phase_title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space--sm); padding-bottom: var(--space--sm); border-bottom: 2px solid var(--color--primary); font-family: var(--type--family-heading); font-size: var(--type--h3); font-weight: 700; letter-spacing: -0.01em; color: var(--color--text); }
 .phase_range { font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color--text-mu); }
@@ -1767,6 +1769,21 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
         <div class="hero_fact"><dt class="hero_fact-label">Colors</dt><dd class="hero_fact-value">Navy, black or natural</dd></div>
       </dl>
       <a class="button is-primary hero_cta" href="#steps">Go to the steps</a>
+      <div class="signup" id="signup">
+        <div id="signup-ask">
+          <p class="signup_title">Add your name</p>
+          <p class="signup_text">So your instructor can see how far along you are. No account or password.</p>
+          <form class="signup_form" id="signup-form">
+            <input class="input is-on-inverse" id="signup-name" name="name" type="text" autocomplete="given-name" maxlength="60" placeholder="Your name" aria-label="Your name" required>
+            <button class="button is-outline-inverse" id="signup-submit" type="submit">Start</button>
+          </form>
+        </div>
+        <div class="signup_who" id="signup-who" hidden>
+          <span>Sewing as <span class="signup_name" id="signup-current"></span></span>
+          <span class="signup_status" id="signup-status" role="status"></span>
+          <button class="signup_change" id="signup-change" type="button">Change name</button>
+        </div>
+      </div>
     </div>
     <div class="hero_plate" role="img" aria-label="Line drawing of a canvas pouch with a zipper along the top edge.">
       <svg class="pouch-art" viewBox="0 0 300 200" aria-hidden="true">
@@ -1829,22 +1846,6 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
         <a class="pill is-outline" href="#side-two">Second side <span>13&ndash;16</span></a>
         <a class="pill is-outline" href="#finish">Finish <span>17&ndash;19</span></a>
       </nav>
-    </div>
-
-    <div class="signup" id="signup">
-      <div id="signup-ask">
-        <p class="signup_title">Add your name</p>
-        <p class="signup_text">So your instructor can see how far along you are. No account or password.</p>
-        <form class="signup_form" id="signup-form">
-          <input class="input" id="signup-name" name="name" type="text" autocomplete="given-name" maxlength="60" placeholder="Your name" aria-label="Your name" required>
-          <button class="button is-primary" id="signup-submit" type="submit">Start</button>
-        </form>
-      </div>
-      <div class="signup_who" id="signup-who" hidden>
-        <span>Sewing as <span class="signup_name" id="signup-current"></span></span>
-        <span class="signup_status" id="signup-status" role="status"></span>
-        <button class="signup_change" id="signup-change" type="button">Change name</button>
-      </div>
     </div>
 
     <div class="phase" id="prep">
