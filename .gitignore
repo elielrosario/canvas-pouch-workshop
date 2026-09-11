@@ -1,1 +1,5 @@
 artifact.html
+node_modules/
+.wrangler/
+.dev.vars
+.dashboard-link

@@ -1,0 +1,14 @@
+{
+  "name": "casabe-workshops-api",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --local --port 8787 --var ALLOWED_ORIGINS:http://127.0.0.1:8770",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.131.0"
+  },
+  "allowScripts": {
+    "workerd@1.20260910.1": true
+  }
+}

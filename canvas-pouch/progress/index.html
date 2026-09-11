@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Handout for the canvas zip pouch workshop: materials, colors and step-by-step instructions with diagrams.">
+<meta name="description" content="Instructor progress view for the canvas zip pouch workshop.">
 <meta name="robots" content="noindex">
-<title>Canvas Pouch Workshop</title>
+<title>Canvas Pouch Progress</title>
 </head>
 <body>
 
@@ -1554,834 +1554,262 @@ html[data-direction="warm"] .cta-section .button.is-primary:hover {
 
 </style>
 <style>
-/* ---- page-level: only what the marketing site has no vocabulary for ----
-   Most people open this on a phone at the sewing table, so the base rules are
-   the phone layout and wider screens are the override. */
+/* Instructor progress page. Phone first: it gets glanced at between helping people. */
 body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--body); color: var(--color--text); background: var(--color--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-/* The artifact host stamps data-theme on <html>; the site themes by class. The
-   script bridges the two — this block only covers the moment before it runs. */
-html[data-theme="dark"]:not(.theme-light) {
-  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: #1f1f23;
-  --color--surface-inverse: #1f1f23; --color--border: #3b3b42; --color--accent-deep: #e9560c;
-  --color--success: #5fd08a; --color--warning: #f0b544; --color--danger: #f28b82;
-}
-section[id], .phase[id], .steps_item[id] { scroll-margin-top: 4.25rem; }
-.heading-2xl, .heading-xl, .steps_title, .phase_title { text-wrap: balance; }
-.main-nav_link:focus-visible, .step-bar:focus-visible, .phase-nav a:focus-visible { outline: 2px solid var(--color--primary); outline-offset: 3px; border-radius: 2px; }
-.step-done .checkbox { width: 1.35rem; height: 1.35rem; }
-h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
-
-/* nav */
-.nav-links { display: flex; gap: var(--space--lg); }
-.main-nav_link { font-size: var(--type--small); }
 #theme-toggle { flex: none; }
+.pg { padding: var(--space--lg) 0 var(--space--2xl); }
+.pg_head { display: grid; gap: var(--space--xs); margin-bottom: var(--space--lg); }
+.pg_live { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); font-variant-numeric: tabular-nums; }
+.pg_live.is-error { color: var(--color--danger); }
 
-/* hero */
-.hero_facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space--md) var(--space--lg); margin: var(--space--xs) 0 0; padding-top: var(--space--md); border-top: 1px solid var(--color--on-inverse-faint); }
-.hero_fact { display: grid; gap: 0.1rem; }
-.hero_fact-label { font-family: var(--type--family-mono); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color--on-inverse-mu); }
-.hero_fact-value { margin: 0; font-weight: 600; color: var(--color--on-inverse-strong); font-variant-numeric: tabular-nums; }
-.hero_cta { justify-self: start; margin-top: var(--space--xs); }
-.pouch-art { display: block; width: 100%; max-width: 320px; height: auto; margin: auto; }
-.pouch-art .body { fill: var(--color--on-inverse-wash); stroke: var(--color--on-inverse-strong); stroke-width: 2; }
-.pouch-art .teeth { fill: none; stroke: var(--color--primary); stroke-width: 5; stroke-dasharray: 2 2.5; }
-.pouch-art .part { fill: var(--color--on-inverse-faint); stroke: var(--color--on-inverse-strong); stroke-width: 1.5; }
-.pouch-art .stitch { fill: none; stroke: var(--color--on-inverse-mu); stroke-width: 1; stroke-dasharray: 4 3; }
+.tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 var(--space--lg); border: 1px solid var(--color--border); border-radius: var(--radius--md); overflow: hidden; }
+.tally_item { padding: var(--space--sm) var(--space--md); border-left: 1px solid var(--color--border); }
+.tally_item:first-child { border-left: 0; }
+.tally_label { font-family: var(--type--family-mono); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color--text-mu); }
+.tally_value { margin: 0; font-family: var(--type--family-heading); font-size: 1.75rem; font-weight: 700; line-height: 1.2; color: var(--color--text); font-variant-numeric: tabular-nums; }
 
-/* materials: the real fabric and zipper colors, drawn as swatches */
-.swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space--md); margin-top: var(--space--sm); }
-.swatch { display: grid; gap: var(--space--xs); }
-.swatch_chip { position: relative; display: block; aspect-ratio: 4 / 3; border: 1px solid var(--color--border); border-radius: var(--radius--sm); background-color: var(--swatch); overflow: hidden; }
-.swatch_name { font-size: var(--type--small); font-weight: 500; color: var(--color--text); line-height: 1.3; }
-.swatch_chip.is-navy { --swatch: #26344f; --swatch-thread: rgba(255, 255, 255, 0.10); --swatch-teeth: rgba(255, 255, 255, 0.55); }
-.swatch_chip.is-black { --swatch: #1c1c20; --swatch-thread: rgba(255, 255, 255, 0.08); --swatch-teeth: rgba(255, 255, 255, 0.50); }
-.swatch_chip.is-natural { --swatch: #e4d9c1; --swatch-thread: rgba(80, 60, 30, 0.10); --swatch-teeth: rgba(60, 45, 25, 0.45); }
-/* canvas: a plain weave */
-.swatch_chip.is-canvas { background-image: repeating-linear-gradient(0deg, var(--swatch-thread) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, var(--swatch-thread) 0 1px, transparent 1px 3px); }
-/* zipper: tape with a row of teeth down the middle */
-.swatch_chip.is-zipper::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 3px); height: 6px; background: repeating-linear-gradient(90deg, var(--swatch-teeth) 0 2px, transparent 2px 4px); }
+/* how many people are in each stage right now */
+.stages-now { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-bottom: var(--space--lg); background: var(--color--border); border: 1px solid var(--color--border); border-radius: var(--radius--md); overflow: hidden; }
+.stages-now_cell { display: grid; gap: 0; padding: var(--space--xs) var(--space--sm); background: var(--color--surface); }
+.stages-now_name { font-size: var(--type--small); color: var(--color--text-mu); line-height: 1.3; }
+.stages-now_count { font-family: var(--type--family-mono); font-weight: 700; color: var(--color--text); font-variant-numeric: tabular-nums; }
+.stages-now_cell.is-empty .stages-now_count { color: var(--color--text-mu); font-weight: 500; }
 
-/* steps */
-.steps-head { display: grid; gap: var(--space--md); margin-bottom: var(--space--lg); }
-.steps-head .title-set { margin-bottom: 0; }
-.step-tally { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space--sm) var(--space--md); }
-.step-progress { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.step-progress strong { color: var(--color--text); }
-.phase-nav { display: flex; flex-wrap: wrap; gap: var(--space--xs); }
-.phase-nav .pill { padding: 0.45rem 0.8rem; font-size: var(--type--small); color: var(--color--text); }
-.phase-nav .pill span { font-family: var(--type--family-mono); font-weight: 500; color: var(--color--text-mu); }
-/* sign-up: a name, nothing else, so the instructor can follow along */
-.signup { display: grid; gap: var(--space--sm); margin-bottom: var(--space--xl); padding: var(--space--md); background: var(--color--surface); border: 1px solid var(--color--border); border-left: 4px solid var(--color--primary); border-radius: var(--radius--md); }
-.signup_title { font-family: var(--type--family-heading); font-size: 1.125rem; font-weight: 700; color: var(--color--text); }
-.signup_text { font-size: var(--type--small); color: var(--color--text-mu); max-width: 52ch; }
-.signup_form { display: flex; flex-wrap: wrap; gap: var(--space--sm); }
-.signup_form .input { flex: 1 1 12rem; min-width: 0; min-height: 44px; }
-.signup_form .button { min-height: 44px; }
-.signup_who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space--xs) var(--space--md); }
-.signup_name { font-weight: 700; color: var(--color--text); }
-.signup_status { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); }
-.signup_status.is-error { color: var(--color--danger); }
-.signup_change { font-size: var(--type--small); font-weight: 600; color: var(--color--text); text-decoration: underline; text-underline-offset: 2px; background: none; border: 0; padding: 0.4rem 0; cursor: pointer; }
-.phase + .phase { margin-top: var(--space--xl); }
-.phase_title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space--sm); padding-bottom: var(--space--sm); border-bottom: 2px solid var(--color--primary); font-family: var(--type--family-heading); font-size: var(--type--h3); font-weight: 700; letter-spacing: -0.01em; color: var(--color--text); }
-.phase_range { font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color--text-mu); }
-/* each stage is its own list, so each one resumes the step count */
-.steps.is-from-4 { counter-reset: step 3; }
-.steps.is-from-9 { counter-reset: step 8; }
-.steps.is-from-13 { counter-reset: step 12; }
-.steps.is-from-17 { counter-reset: step 16; }
-.steps_item.is-timeline { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space--sm); }
-/* the step number masks the timeline line; match the tinted band it sits on */
-.section.is-alt .steps_item.is-timeline::before { background: var(--color--surface-alt); }
-.steps_text { max-width: 62ch; }
-.step-specs { display: flex; flex-wrap: wrap; gap: var(--space--xs); }
-.step-specs .pill { font-family: var(--type--family-mono); font-weight: 500; }
-.steps_item .message { max-width: 62ch; }
-.step-done { display: inline-flex; align-items: center; gap: var(--space--sm); justify-self: start; min-height: 44px; margin-top: var(--space--xs); padding: 0.5rem 1.1rem 0.5rem 0.8rem; border: var(--border--control-width) solid var(--color--border); border-radius: var(--radius--control); background: var(--color--surface); font-size: var(--type--small); font-weight: 600; color: var(--color--text); cursor: pointer; }
-.steps_item.is-done { border-left-color: var(--color--primary); }
-.steps_item.is-done::before { color: var(--color--success); }
-.steps_item.is-done .steps_title { color: var(--color--text-mu); text-decoration: line-through; text-decoration-color: var(--color--primary); }
-.steps_item.is-done .step-done { border-color: var(--color--primary); }
+.controls { display: flex; flex-wrap: wrap; gap: var(--space--sm) var(--space--lg); margin-bottom: var(--space--md); }
+.seg { display: inline-flex; border: var(--border--control-width) solid var(--color--border); border-radius: var(--radius--control); overflow: hidden; }
+.seg button { min-height: 40px; padding: 0.35rem 0.9rem; font: inherit; font-size: var(--type--small); font-weight: 600; color: var(--color--text-mu); background: var(--color--surface); border: 0; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--color--border); }
+.seg button[aria-pressed="true"] { color: var(--color--text); background: var(--color--surface-alt); box-shadow: inset 0 -2px 0 var(--color--primary); }
+.seg button:focus-visible { outline: 2px solid var(--color--primary); outline-offset: -2px; }
 
-/* floating "next step" bar — phones only, only while the steps are on screen */
-.step-bar { display: none; }
-.step-bar_count { flex: none; font-family: var(--type--family-mono); font-weight: 700; color: var(--color--accent-on-inverse); font-variant-numeric: tabular-nums; }
-.step-bar_next { display: grid; flex: 1; min-width: 0; line-height: 1.3; }
-.step-bar_label { font-family: var(--type--family-mono); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color--on-inverse-mu); }
-.step-bar_title { font-weight: 600; color: var(--color--text-inverse); }
-.step-bar_go { flex: none; font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 700; color: var(--color--accent-on-inverse); }
+.people { display: grid; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--color--border); }
+.person { display: grid; gap: 0.35rem; padding: var(--space--md) 0; border-bottom: 1px solid var(--color--border); }
+.person_top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space--md); }
+.person_name { min-width: 0; font-weight: 700; color: var(--color--text); overflow-wrap: anywhere; }
+.person_count { flex: none; font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 700; color: var(--color--text); font-variant-numeric: tabular-nums; }
+/* one cell per step, so a skipped step shows as a gap */
+.bar { display: grid; grid-template-columns: repeat(19, minmax(0, 1fr)); gap: 2px; }
+.bar_cell { height: 10px; border-radius: 2px; background: var(--color--neutral-200); }
+.bar_cell.is-done { background: var(--color--primary); }
+.person_meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--space--md); font-size: var(--type--small); color: var(--color--text-mu); }
+.person_next b { font-weight: 600; color: var(--color--text); }
+.person_seen { font-family: var(--type--family-mono); font-variant-numeric: tabular-nums; }
+.person_seen.is-idle { color: var(--color--warning); }
+.person.is-finished .person_next b { color: var(--color--success); }
 
-@media (max-width: 767px) {
-  html[data-direction] { --space--section: 3.5rem; }
-  .title-set { margin-bottom: var(--space--lg); }
-  .heading-xl { font-size: 1.625rem; }
-  .steps_title { font-size: 1.1875rem; }
-  .phase_title { font-size: 1.25rem; }
-  .container.is-nav { flex-wrap: nowrap; gap: var(--space--md); }
-  .main-nav_menu { flex-wrap: nowrap; min-width: 0; gap: var(--space--sm); }
-  .nav-links { gap: 0.9rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-  .nav-links::-webkit-scrollbar { display: none; }
-  .main-nav_link { padding: 0.6rem 0; white-space: nowrap; }
-  .hero_cta { justify-self: stretch; }
-  .card.is-flush { padding: var(--space--md); }
-  .steps_item.is-timeline { padding-left: 1.6rem; padding-bottom: var(--space--lg); }
-  #steps { padding-bottom: calc(var(--space--section) + 4.5rem); }
-  .step-bar {
-    position: fixed; z-index: 20;
-    left: var(--space--sm); right: var(--space--sm); bottom: calc(var(--space--sm) + env(safe-area-inset-bottom, 0px));
-    display: flex; align-items: center; gap: var(--space--md);
-    padding: 0.7rem var(--space--md);
-    background: var(--color--surface-inverse); color: var(--color--text-inverse);
-    border: 1px solid var(--color--on-inverse-line); border-radius: var(--radius--lg);
-    box-shadow: var(--effect--shadow-2);
-    transform: translateY(calc(100% + 2rem)); visibility: hidden;
-    transition: transform var(--effect--transition-base), visibility 0s linear 0.2s;
-  }
-  .step-bar.is-shown { transform: none; visibility: visible; transition: transform var(--effect--transition-base); }
-}
+.empty { padding: var(--space--lg) 0; color: var(--color--text-mu); max-width: 52ch; }
+
 @media (min-width: 768px) {
-  .hero_facts { grid-template-columns: repeat(2, auto); justify-content: start; column-gap: var(--space--xl); }
-  .steps-head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
-  .phase-nav { grid-column: 1 / -1; }
+  .stages-now { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .button, .step-bar, .step-bar.is-shown { transition: none; }
-}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 </style>
-
-<!--
-  Step diagrams. build.py puts everything before the first <figure> at the top
-  of the page, and drops each <figure data-step="N"> into step N, just above
-  its Done button. Colors come only from the site's theme tokens, so every
-  drawing flips with light/dark.
-  Orange (primary) = what you do in this step: marks, stitching, tape.
--->
-<style>
-.dg-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.step-fig { margin: 0; max-width: 360px; padding: var(--space--sm); background: var(--color--surface); border: 1px solid var(--color--border); border-radius: var(--radius--md); }
-.step-fig svg { display: block; width: 100%; height: auto; }
-.step-fig text { font-family: var(--type--family-mono); font-size: 11px; fill: var(--color--text-mu); }
-.step-fig text.dg-strong { font-family: var(--type--family-sans); font-size: 12px; font-weight: 600; fill: var(--color--text); }
-.dg-canvas { fill: color-mix(in srgb, var(--color--primary) 10%, var(--color--surface)); stroke: var(--color--text-mu); stroke-width: 1.5; }
-.dg-paper { fill: var(--color--surface); stroke: var(--color--text); stroke-width: 1.5; }
-.dg-plate { fill: var(--color--surface-alt); stroke: var(--color--border); stroke-width: 1.5; }
-.dg-tape { fill: var(--color--neutral-800); }
-.dg-tape-back { fill: var(--color--neutral-200); stroke: var(--color--neutral-500); stroke-width: 1; stroke-dasharray: 3 2; }
-.dg-teeth { fill: none; stroke: var(--color--neutral-400); stroke-width: 7; stroke-dasharray: 2 2; }
-.dg-teeth-back { fill: none; stroke: var(--color--neutral-500); stroke-width: 1; stroke-dasharray: 2 3; }
-.dg-pull { fill: var(--color--neutral-500); stroke: var(--color--neutral-800); stroke-width: 1; }
-.dg-pull-back { fill: none; stroke: var(--color--neutral-500); stroke-width: 1.2; stroke-dasharray: 2 2; }
-.dg-act { fill: none; stroke: var(--color--primary); stroke-width: 2.5; stroke-linecap: round; }
-.dg-stitch { fill: none; stroke: var(--color--primary); stroke-width: 2; stroke-dasharray: 5 4; }
-.dg-basting { fill: color-mix(in srgb, var(--color--primary) 55%, transparent); }
-.dg-zig { fill: none; stroke: var(--color--primary); stroke-width: 1.5; }
-.dg-line { fill: none; stroke: var(--color--text-mu); stroke-width: 1.2; }
-.dg-mark-old { fill: none; stroke: var(--color--text-mu); stroke-width: 2.5; stroke-linecap: round; }
-.dg-edge { fill: none; stroke: var(--color--text); stroke-width: 2; }
-.dg-arrow { fill: none; stroke: var(--color--text); stroke-width: 1.5; marker-end: url(#dg-head); }
-.dg-head { fill: var(--color--text); }
-.dg-foot { fill: none; stroke: var(--color--text); stroke-width: 1.5; }
-.dg-needle { fill: var(--color--text); }
-.dg-pencil { fill: var(--color--text-mu); }
-.dg-pencil-tip { fill: var(--color--text); }
-.dg-xs-canvas { fill: none; stroke: var(--color--neutral-400); stroke-width: 6; }
-.dg-xs-tape { fill: none; stroke: var(--color--neutral-800); stroke-width: 3; }
-.dg-xs-teeth { fill: var(--color--neutral-500); }
-</style>
-<svg class="dg-defs" aria-hidden="true" focusable="false">
-  <defs>
-    <marker id="dg-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path class="dg-head" d="M0 0 L10 5 L0 10 Z"></path>
-    </marker>
-    <pattern id="dg-overlock-v" width="8" height="6" patternUnits="userSpaceOnUse">
-      <path class="dg-zig" d="M0 0 L8 3 L0 6"></path>
-    </pattern>
-    <pattern id="dg-overlock-h" width="6" height="8" patternUnits="userSpaceOnUse">
-      <path class="dg-zig" d="M0 0 L3 8 L6 0"></path>
-    </pattern>
-  </defs>
-</svg>
 
 <header class="main-nav">
   <div class="container is-nav">
-    <a class="main-nav_logo" href="#top">Casabe</a>
-    <nav class="main-nav_menu" aria-label="Sections">
-      <div class="nav-links">
-        <a class="main-nav_link" href="#materials">Materials</a>
-        <a class="main-nav_link" href="#steps">Steps</a>
-      </div>
+    <a class="main-nav_logo" href="../">Casabe</a>
+    <nav class="main-nav_menu" aria-label="Page">
       <button id="theme-toggle" class="button is-outline-sm" type="button" aria-label="Switch color theme">Dark</button>
     </nav>
   </div>
 </header>
 
-<section class="hero" id="top">
-  <div class="container is-hero-split">
-    <div class="hero_content">
-      <span class="eyebrow is-on-inverse-tight">Workshop handout</span>
-      <h1 class="heading-2xl is-on-inverse">Sew a canvas zip pouch</h1>
-      <p class="text-lg is-on-inverse">Pick your colors, then follow the steps in order. Tick each one off as you sew and the page moves you on to the next.</p>
-      <dl class="hero_facts">
-        <div class="hero_fact"><dt class="hero_fact-label">Steps</dt><dd class="hero_fact-value">19</dd></div>
-        <div class="hero_fact"><dt class="hero_fact-label">Colors</dt><dd class="hero_fact-value">Navy, black or natural</dd></div>
-      </dl>
-      <a class="button is-primary hero_cta" href="#steps">Go to the steps</a>
-    </div>
-    <div class="hero_plate" role="img" aria-label="Line drawing of a canvas pouch with a zipper along the top edge.">
-      <svg class="pouch-art" viewBox="0 0 300 200" aria-hidden="true">
-        <rect class="body" x="40" y="40" width="220" height="130" rx="10"></rect>
-        <line class="teeth" x1="58" y1="56" x2="242" y2="56"></line>
-        <rect class="part" x="164" y="49" width="16" height="14" rx="3"></rect>
-        <rect class="part" x="167" y="65" width="10" height="22" rx="5"></rect>
-        <line class="stitch" x1="50" y1="68" x2="160" y2="68"></line>
-        <line class="stitch" x1="184" y1="68" x2="250" y2="68"></line>
-      </svg>
-      <span class="hero_plate-label">Canvas zip pouch</span>
-      <span class="hero_plate-rule"></span>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="materials">
-  <div class="container">
-    <div class="title-set">
-      <span class="eyebrow">Materials</span>
-      <h2 class="heading-xl">Canvas and a zipper</h2>
-      <p class="text-base">Each comes in three colors. You&rsquo;ll choose yours in step 1.</p>
-    </div>
-    <div class="grid-cols is-2col is-1col-sm">
-      <div class="card is-flush">
-        <h3 class="card_title">Canvas</h3>
-        <ul class="swatches">
-          <li class="swatch"><span class="swatch_chip is-canvas is-navy"></span><span class="swatch_name">Navy blue</span></li>
-          <li class="swatch"><span class="swatch_chip is-canvas is-black"></span><span class="swatch_name">Black</span></li>
-          <li class="swatch"><span class="swatch_chip is-canvas is-natural"></span><span class="swatch_name">Natural</span></li>
-        </ul>
-      </div>
-      <div class="card is-flush">
-        <h3 class="card_title">Zipper</h3>
-        <ul class="swatches">
-          <li class="swatch"><span class="swatch_chip is-zipper is-navy"></span><span class="swatch_name">Navy blue</span></li>
-          <li class="swatch"><span class="swatch_chip is-zipper is-black"></span><span class="swatch_name">Black</span></li>
-          <li class="swatch"><span class="swatch_chip is-zipper is-natural"></span><span class="swatch_name">Natural</span></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="section is-alt" id="steps">
+<main class="pg">
   <div class="container is-8c">
-    <div class="steps-head">
-      <div class="title-set">
-        <span class="eyebrow">At the machine</span>
-        <h2 class="heading-xl">Step by step</h2>
-      </div>
-      <div class="step-tally">
-        <p class="step-progress" id="step-progress" role="status" aria-live="polite"><strong>0</strong> of 19 steps done</p>
-        <button id="step-reset" class="button is-outline-sm" type="button">Clear checkmarks</button>
-      </div>
-      <nav class="phase-nav" aria-label="Jump to a stage">
-        <a class="pill is-outline" href="#prep">Prep <span>1&ndash;3</span></a>
-        <a class="pill is-outline" href="#mark">Mark the zipper <span>4&ndash;8</span></a>
-        <a class="pill is-outline" href="#side-one">First side <span>9&ndash;12</span></a>
-        <a class="pill is-outline" href="#side-two">Second side <span>13&ndash;16</span></a>
-        <a class="pill is-outline" href="#finish">Finish <span>17&ndash;19</span></a>
-      </nav>
+    <div class="pg_head">
+      <span class="eyebrow">Instructor view &middot; Canvas zip pouch</span>
+      <h1 class="heading-xl">Who&rsquo;s where</h1>
+      <p class="pg_live" id="live" role="status">Loading&hellip;</p>
     </div>
 
-    <div class="signup" id="signup">
-      <div id="signup-ask">
-        <p class="signup_title">Add your name</p>
-        <p class="signup_text">So your instructor can see how far along you are. No account or password.</p>
-        <form class="signup_form" id="signup-form">
-          <input class="input" id="signup-name" name="name" type="text" autocomplete="given-name" maxlength="60" placeholder="Your name" aria-label="Your name" required>
-          <button class="button is-primary" id="signup-submit" type="submit">Start</button>
-        </form>
+    <dl class="tally">
+      <div class="tally_item"><dt class="tally_label">People</dt><dd class="tally_value" id="t-people">&ndash;</dd></div>
+      <div class="tally_item"><dt class="tally_label">Finished</dt><dd class="tally_value" id="t-finished">&ndash;</dd></div>
+      <div class="tally_item"><dt class="tally_label">Active</dt><dd class="tally_value" id="t-active">&ndash;</dd></div>
+    </dl>
+
+    <div class="stages-now" id="stages-now" aria-label="People currently in each stage"></div>
+
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Show">
+        <button type="button" data-show="today" aria-pressed="true">Today</button>
+        <button type="button" data-show="all" aria-pressed="false">Everyone</button>
       </div>
-      <div class="signup_who" id="signup-who" hidden>
-        <span>Sewing as <span class="signup_name" id="signup-current"></span></span>
-        <span class="signup_status" id="signup-status" role="status"></span>
-        <button class="signup_change" id="signup-change" type="button">Change name</button>
+      <div class="seg" role="group" aria-label="Sort">
+        <button type="button" data-sort="behind" aria-pressed="true">Furthest behind</button>
+        <button type="button" data-sort="name" aria-pressed="false">A&ndash;Z</button>
       </div>
     </div>
 
-    <div class="phase" id="prep">
-      <h3 class="phase_title">Prep <span class="phase_range">Steps 1&ndash;3</span></h3>
-      <ol class="steps is-timeline" start="1">
-        <li class="steps_item is-timeline" id="step-1">
-          <h4 class="steps_title">Select a color and trace the pattern</h4>
-          <figure class="step-fig" data-step="1">
-  <svg viewBox="0 0 320 200" role="img" aria-label="A paper pattern laid on the canvas, with its outline being traced in pencil.">
-    <rect class="dg-canvas" x="16" y="16" width="288" height="168" rx="2"></rect>
-    <text x="28" y="36">Canvas</text>
-    <rect class="dg-paper" x="104" y="34" width="112" height="140"></rect>
-    <text class="dg-strong" x="160" y="108" text-anchor="middle">Pattern</text>
-    <path class="dg-act" d="M104 34 V174 H176"></path>
-    <g transform="translate(176 174) rotate(-40)">
-      <rect class="dg-pencil" x="0" y="-4" width="46" height="8"></rect>
-      <path class="dg-pencil-tip" d="M0 -4 L-9 0 L0 4 Z"></path>
-    </g>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-1">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-2">
-          <h4 class="steps_title">Cut</h4>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-2">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-3">
-          <h4 class="steps_title">Serge the edges</h4>
-          <figure class="step-fig" data-step="3">
-  <svg viewBox="0 0 320 200" role="img" aria-label="The cut canvas with a serged zigzag finish along all four edges.">
-    <rect class="dg-canvas" x="100" y="20" width="120" height="160"></rect>
-    <rect x="96" y="20" width="8" height="160" fill="url(#dg-overlock-v)"></rect>
-    <rect x="216" y="20" width="8" height="160" fill="url(#dg-overlock-v)"></rect>
-    <rect x="100" y="16" width="120" height="8" fill="url(#dg-overlock-h)"></rect>
-    <rect x="100" y="176" width="120" height="8" fill="url(#dg-overlock-h)"></rect>
-    <path class="dg-line" d="M226 70 H248"></path>
-    <text x="252" y="68">Serge all</text>
-    <text x="252" y="82">4 edges</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-3">Done</label>
-        </li>
-      </ol>
-    </div>
-
-    <div class="phase" id="mark">
-      <h3 class="phase_title">Mark the zipper <span class="phase_range">Steps 4&ndash;8</span></h3>
-      <ol class="steps is-timeline is-from-4" start="4">
-        <li class="steps_item is-timeline" id="step-4">
-          <h4 class="steps_title">Lay out the canvas</h4>
-          <p class="steps_text">Place the fabric front side up, with the short sides at the top and bottom.</p>
-          <figure class="step-fig" data-step="4">
-  <svg viewBox="0 0 320 224" role="img" aria-label="The canvas front side up, standing tall, with the short sides at the top and bottom.">
-    <rect class="dg-canvas" x="110" y="32" width="100" height="160"></rect>
-    <text x="160" y="24" text-anchor="middle">Short side</text>
-    <text x="160" y="210" text-anchor="middle">Short side</text>
-    <text transform="translate(98 112) rotate(-90)" text-anchor="middle">Long side</text>
-    <text class="dg-strong" x="160" y="108" text-anchor="middle">Front</text>
-    <text class="dg-strong" x="160" y="124" text-anchor="middle">side up</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-4">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-5">
-          <h4 class="steps_title">Line up the zipper</h4>
-          <p class="steps_text">Align the zipper to the top edge, with the zipper pull on your left and facing down.</p>
-          <div class="step-specs"><span class="pill is-outline">Pull on your left</span><span class="pill is-outline">Facing down</span></div>
-          <figure class="step-fig" data-step="5">
-  <svg viewBox="0 0 320 224" role="img" aria-label="The zipper lying face down along the top edge of the canvas, with the pull at the left end.">
-    <rect class="dg-canvas" x="110" y="32" width="100" height="160"></rect>
-    <rect class="dg-tape-back" x="94" y="32" width="132" height="16"></rect>
-    <line class="dg-teeth-back" x1="122" y1="40" x2="202" y2="40"></line>
-    <rect class="dg-pull-back" x="110" y="34" width="11" height="12" rx="2"></rect>
-    <path class="dg-line" d="M110 44 L66 76"></path>
-    <text x="16" y="90">Pull on</text>
-    <text x="16" y="104">your left</text>
-    <path class="dg-line" d="M226 44 L244 70"></path>
-    <text x="234" y="84">Zipper</text>
-    <text x="234" y="98">face down</text>
-    <text x="160" y="124" text-anchor="middle">Front side up</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-5">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-6">
-          <h4 class="steps_title">Mark where the zipper starts and stops</h4>
-          <p class="steps_text">Mark the zipper fabric at the stop and the start.</p>
-          <div class="message is-callout"><p class="message_text">Make matching marks on the canvas. They help you line things up later.</p></div>
-          <figure class="step-fig" data-step="6">
-  <svg viewBox="0 0 320 224" role="img" aria-label="Marks across the zipper tape where the zipper starts and stops, with matching marks on the canvas just below.">
-    <rect class="dg-canvas" x="110" y="32" width="100" height="160"></rect>
-    <rect class="dg-tape-back" x="94" y="32" width="132" height="16"></rect>
-    <line class="dg-teeth-back" x1="122" y1="40" x2="202" y2="40"></line>
-    <rect class="dg-pull-back" x="110" y="34" width="11" height="12" rx="2"></rect>
-    <path class="dg-act" d="M122 26 V52 M202 26 V52"></path>
-    <text x="122" y="18" text-anchor="middle">Start</text>
-    <text x="202" y="18" text-anchor="middle">Stop</text>
-    <path class="dg-act" d="M122 58 V68 M202 58 V68"></path>
-    <path class="dg-line" d="M206 66 L236 92"></path>
-    <text x="234" y="106">Matching</text>
-    <text x="234" y="120">marks on</text>
-    <text x="234" y="134">canvas</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-6">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-7">
-          <h4 class="steps_title">Mark the bottom edge</h4>
-          <p class="steps_text">Slide the zipper down to the bottom edge and mark again.</p>
-          <figure class="step-fig" data-step="7">
-  <svg viewBox="0 0 320 224" role="img" aria-label="The zipper slid down to the bottom edge of the canvas, with new marks at its start and stop. The first marks stay at the top edge.">
-    <rect class="dg-canvas" x="110" y="32" width="100" height="160"></rect>
-    <path class="dg-mark-old" d="M122 32 V44 M202 32 V44"></path>
-    <rect class="dg-tape-back" x="94" y="176" width="132" height="16"></rect>
-    <line class="dg-teeth-back" x1="122" y1="184" x2="202" y2="184"></line>
-    <rect class="dg-pull-back" x="110" y="178" width="11" height="12" rx="2"></rect>
-    <path class="dg-act" d="M122 158 V168 M202 158 V168 M122 172 V196 M202 172 V196"></path>
-    <path class="dg-arrow" d="M86 56 V164"></path>
-    <text x="16" y="106">Slide</text>
-    <text x="16" y="120">down</text>
-    <path class="dg-line" d="M206 162 L236 138"></path>
-    <text x="236" y="132">Mark again</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-7">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-8">
-          <h4 class="steps_title">Flip the zipper and add basting tape</h4>
-          <p class="steps_text">Flip the zipper over so the pull is on your left and facing up. Add basting tape to the top edge of the zipper fabric.</p>
-          <div class="step-specs"><span class="pill is-outline">Pull on your left</span><span class="pill is-outline">Facing up</span></div>
-          <figure class="step-fig" data-step="8">
-  <svg viewBox="0 0 320 170" role="img" aria-label="The zipper flipped face up with the pull on the left, and a strip of basting tape along its top edge.">
-    <rect class="dg-tape" x="24" y="64" width="272" height="44"></rect>
-    <rect class="dg-basting" x="24" y="64" width="272" height="10"></rect>
-    <line class="dg-teeth" x1="66" y1="88" x2="276" y2="88"></line>
-    <rect class="dg-pull" x="46" y="80" width="18" height="16" rx="3"></rect>
-    <rect class="dg-pull" x="28" y="84" width="20" height="8" rx="4"></rect>
-    <path class="dg-line" d="M200 66 L218 40"></path>
-    <text x="220" y="34">Basting tape</text>
-    <path class="dg-line" d="M40 98 V130"></path>
-    <text x="24" y="146">Pull on your left, facing up</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-8">Done</label>
-        </li>
-      </ol>
-    </div>
-
-    <div class="phase" id="side-one">
-      <h3 class="phase_title">Sew the first side <span class="phase_range">Steps 9&ndash;12</span></h3>
-      <ol class="steps is-timeline is-from-9" start="9">
-        <li class="steps_item is-timeline" id="step-9">
-          <h4 class="steps_title">Realign the zipper</h4>
-          <p class="steps_text">Line the zipper back up with the top edge of the canvas, zipper facing down.</p>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-9">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-10">
-          <h4 class="steps_title">Sew the zipper to the top edge</h4>
-          <p class="steps_text">Sew the top edge of the zipper and canvas together, lining the fabric up with the &ldquo;10&rdquo; mark on your right.</p>
-          <div class="step-specs"><span class="pill is-outline">Fabric edge on &ldquo;10&rdquo;</span></div>
-          <figure class="step-fig" data-step="10">
-  <svg viewBox="0 0 320 216" role="img" aria-label="Top view of the machine: the needle sews through the canvas and zipper while the fabric edge runs along the line marked 10, to the right of the needle.">
-    <rect class="dg-plate" x="12" y="12" width="296" height="176" rx="10"></rect>
-    <path class="dg-line" d="M232 22 V178 M260 22 V178"></path>
-    <rect class="dg-canvas" x="12" y="12" width="192" height="176"></rect>
-    <path class="dg-act" d="M204 12 V188"></path>
-    <text class="dg-strong" x="212" y="176">10</text>
-    <path class="dg-stitch" d="M120 14 V98"></path>
-    <rect class="dg-foot" x="96" y="66" width="48" height="76" rx="10"></rect>
-    <circle class="dg-needle" cx="120" cy="104" r="3.5"></circle>
-    <path class="dg-line" d="M124 100 L154 58"></path>
-    <text x="156" y="54">Needle</text>
-    <text x="24" y="178">Canvas + zipper</text>
-    <text x="160" y="208" text-anchor="middle">Fabric edge on the 10 line</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-10">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-11">
-          <h4 class="steps_title">Fold and crease</h4>
-          <p class="steps_text">Fold the zipper over and crease it with your fingers.</p>
-          <figure class="step-fig" data-step="11">
-  <svg viewBox="0 0 340 150" role="img" aria-label="Side view. Before: the zipper lies face down on the canvas, sewn near the edge. After: the zipper is folded out past the canvas edge, face up, and the fold is creased.">
-    <text x="16" y="24">Before</text>
-    <path class="dg-xs-canvas" d="M16 84 H150"></path>
-    <rect class="dg-xs-teeth" x="100" y="74" width="10" height="8" rx="2"></rect>
-    <path class="dg-xs-tape" d="M104 74 H150"></path>
-    <path class="dg-act" d="M138 62 V96"></path>
-    <text x="16" y="112">Canvas</text>
-    <text x="60" y="56">Zipper face down</text>
-    <path class="dg-arrow" d="M162 84 H186"></path>
-    <text x="198" y="24">After</text>
-    <path class="dg-xs-canvas" d="M198 84 H300 Q308 84 308 92 Q308 100 300 100 H288"></path>
-    <path class="dg-xs-tape" d="M308 84 H338"></path>
-    <rect class="dg-xs-teeth" x="324" y="76" width="10" height="8" rx="2"></rect>
-    <text x="220" y="56">Zipper faces up</text>
-    <path class="dg-line" d="M312 104 L306 122"></path>
-    <text class="dg-strong" x="258" y="136">Crease</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-11">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-12">
-          <h4 class="steps_title">Sew along the canvas edge</h4>
-          <p class="steps_text">Sew along the edge of the canvas with the zipper facing right.</p>
-          <div class="step-specs"><span class="pill is-outline">Zipper facing right</span></div>
-          <figure class="step-fig" data-step="12">
-  <svg viewBox="0 0 320 214" role="img" aria-label="Top view: the canvas on the left, the zipper on the right, stitching running along the canvas edge.">
-    <rect class="dg-canvas" x="20" y="16" width="170" height="164"></rect>
-    <rect class="dg-tape" x="190" y="16" width="64" height="164"></rect>
-    <line class="dg-teeth" x1="222" y1="16" x2="222" y2="180"></line>
-    <path class="dg-edge" d="M190 16 V180"></path>
-    <path class="dg-stitch" d="M178 18 V98"></path>
-    <rect class="dg-foot" x="156" y="70" width="44" height="72" rx="10"></rect>
-    <circle class="dg-needle" cx="178" cy="104" r="3.5"></circle>
-    <text x="32" y="36">Canvas</text>
-    <text x="222" y="200" text-anchor="middle">Zipper on the right</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-12">Done</label>
-        </li>
-      </ol>
-    </div>
-
-    <div class="phase" id="side-two">
-      <h3 class="phase_title">Sew the second side <span class="phase_range">Steps 13&ndash;16</span></h3>
-      <ol class="steps is-timeline is-from-13" start="13">
-        <li class="steps_item is-timeline" id="step-13">
-          <h4 class="steps_title">Fold to the opposite edge</h4>
-          <p class="steps_text">Fold the canvas so the zipper lines up with the top of the opposite edge, with the back of the zipper facing you. Line up your marks.</p>
-          <figure class="step-fig" data-step="13">
-  <svg viewBox="0 0 320 224" role="img" aria-label="The zipper, now sewn to the top edge, is folded down to the opposite short edge so the marks on the zipper meet the marks on that edge.">
-    <rect class="dg-canvas" x="110" y="48" width="100" height="150"></rect>
-    <rect class="dg-tape" x="94" y="28" width="132" height="20"></rect>
-    <line class="dg-teeth" x1="124" y1="38" x2="202" y2="38"></line>
-    <rect class="dg-pull" x="110" y="31" width="11" height="14" rx="2"></rect>
-    <path class="dg-act" d="M122 22 V54 M202 22 V54"></path>
-    <path class="dg-act" d="M122 184 V198 M202 184 V198"></path>
-    <path class="dg-arrow" d="M232 38 C288 38 288 192 220 194"></path>
-    <text class="dg-strong" x="160" y="116" text-anchor="middle">Line up</text>
-    <text class="dg-strong" x="160" y="132" text-anchor="middle">your marks</text>
-    <text x="160" y="216" text-anchor="middle">Opposite edge</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-13">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-14">
-          <h4 class="steps_title">Sew the second zipper edge</h4>
-          <p class="steps_text">Sew with the fabric edge at the &ldquo;10&rdquo; mark on your right.</p>
-          <div class="step-specs"><span class="pill is-outline">Fabric edge on &ldquo;10&rdquo;</span></div>
-          <figure class="step-fig" data-step="14">
-  <svg viewBox="0 0 320 216" role="img" aria-label="Top view of the machine: the fabric edge runs along the line marked 10, to the right of the needle.">
-    <rect class="dg-plate" x="12" y="12" width="296" height="176" rx="10"></rect>
-    <path class="dg-line" d="M232 22 V178 M260 22 V178"></path>
-    <rect class="dg-canvas" x="12" y="12" width="192" height="176"></rect>
-    <path class="dg-act" d="M204 12 V188"></path>
-    <text class="dg-strong" x="212" y="176">10</text>
-    <path class="dg-stitch" d="M120 14 V98"></path>
-    <rect class="dg-foot" x="96" y="66" width="48" height="76" rx="10"></rect>
-    <circle class="dg-needle" cx="120" cy="104" r="3.5"></circle>
-    <path class="dg-line" d="M124 100 L154 58"></path>
-    <text x="156" y="54">Needle</text>
-    <text x="160" y="208" text-anchor="middle">Fabric edge on the 10 line</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-14">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-15">
-          <h4 class="steps_title">Turn and crease</h4>
-          <p class="steps_text">Turn it right side out and crease the edge where the canvas meets the zipper fabric with your fingers.</p>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-15">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-16">
-          <h4 class="steps_title">Sew along the canvas edge</h4>
-          <p class="steps_text">Sew along the edge of the canvas with the zipper facing left.</p>
-          <div class="step-specs"><span class="pill is-outline">Zipper facing left</span></div>
-          <figure class="step-fig" data-step="16">
-  <svg viewBox="0 0 320 214" role="img" aria-label="Top view: the zipper on the left, the canvas on the right, stitching running along the canvas edge.">
-    <rect class="dg-canvas" x="130" y="16" width="170" height="164"></rect>
-    <rect class="dg-tape" x="66" y="16" width="64" height="164"></rect>
-    <line class="dg-teeth" x1="98" y1="16" x2="98" y2="180"></line>
-    <path class="dg-edge" d="M130 16 V180"></path>
-    <path class="dg-stitch" d="M142 18 V98"></path>
-    <rect class="dg-foot" x="120" y="70" width="44" height="72" rx="10"></rect>
-    <circle class="dg-needle" cx="142" cy="104" r="3.5"></circle>
-    <text x="288" y="36" text-anchor="end">Canvas</text>
-    <text x="98" y="200" text-anchor="middle">Zipper on the left</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-16">Done</label>
-        </li>
-      </ol>
-    </div>
-
-    <div class="phase" id="finish">
-      <h3 class="phase_title">Finish <span class="phase_range">Steps 17&ndash;19</span></h3>
-      <ol class="steps is-timeline is-from-17" start="17">
-        <li class="steps_item is-timeline" id="step-17">
-          <h4 class="steps_title">Sew the side edges</h4>
-          <div class="message is-warning">
-            <p class="message_title">Open the zipper at least halfway first</p>
-            <p class="message_text">If it&rsquo;s closed, you won&rsquo;t be able to turn the pouch right side out.</p>
-          </div>
-          <p class="steps_text">Turn it inside out and sew down both the left and right edges.</p>
-          <figure class="step-fig" data-step="17">
-  <svg viewBox="0 0 320 132" role="img" aria-label="A zipper opened at least halfway: the pull sits in the middle, with the left half of the zipper open.">
-    <path class="dg-tape" d="M160 44 L20 12 L20 34 L160 64 Z"></path>
-    <path class="dg-tape" d="M160 64 L20 94 L20 116 L160 84 Z"></path>
-    <rect class="dg-tape" x="160" y="44" width="140" height="40"></rect>
-    <line class="dg-teeth" x1="160" y1="64" x2="292" y2="64"></line>
-    <path class="dg-teeth" d="M158 60 L22 30 M158 68 L22 98"></path>
-    <rect class="dg-pull" x="148" y="54" width="22" height="20" rx="4"></rect>
-    <rect class="dg-pull" x="168" y="60" width="22" height="8" rx="4"></rect>
-    <text class="dg-strong" x="230" y="112" text-anchor="middle">At least halfway open</text>
-  </svg>
-</figure>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-17">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-18">
-          <h4 class="steps_title">Sew the bottom center line</h4>
-          <p class="steps_text">Crease the bottom center line and sew along it, on both sides.</p>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-18">Done</label>
-        </li>
-        <li class="steps_item is-timeline" id="step-19">
-          <h4 class="steps_title">Turn it right side out</h4>
-          <label class="step-done"><input class="checkbox" type="checkbox" data-track="step-19">Done</label>
-        </li>
-      </ol>
-    </div>
+    <div class="people" id="people"></div>
   </div>
-</section>
+</main>
 
-<a class="step-bar" id="step-bar" href="#step-1">
-  <span class="step-bar_count" id="step-bar-count">0/19</span>
-  <span class="step-bar_next"><span class="step-bar_label" id="step-bar-label">First step</span><span class="step-bar_title" id="step-bar-title">Select a color and trace the pattern</span></span>
-  <span class="step-bar_go">Go</span>
-</a>
-
-<footer class="footer">
-  <div class="container">
-    <div class="footer_layout">
-      <div>
-        <p class="footer_heading">Casabe</p>
-        <p class="footer_copyright">Canvas zip pouch workshop handout</p>
-      </div>
-    </div>
-  </div>
-</footer>
-
+<script>var STAGES = [{"title": "Prep", "steps": [[1, "Select a color and trace the pattern"], [2, "Cut"], [3, "Serge the edges"]]}, {"title": "Mark the zipper", "steps": [[4, "Lay out the canvas"], [5, "Line up the zipper"], [6, "Mark where the zipper starts and stops"], [7, "Mark the bottom edge"], [8, "Flip the zipper and add basting tape"]]}, {"title": "Sew the first side", "steps": [[9, "Realign the zipper"], [10, "Sew the zipper to the top edge"], [11, "Fold and crease"], [12, "Sew along the canvas edge"]]}, {"title": "Sew the second side", "steps": [[13, "Fold to the opposite edge"], [14, "Sew the second zipper edge"], [15, "Turn and crease"], [16, "Sew along the canvas edge"]]}, {"title": "Finish", "steps": [[17, "Sew the side edges"], [18, "Sew the bottom center line"], [19, "Turn it right side out"]]}];</script>
 <script>
-/* Theme: the site themes by .theme-dark/.theme-light on <html>; the artifact
-   host signals its choice with data-theme. Host choice, then OS preference;
-   the in-page toggle overrides both until the host changes again. */
 (function () {
   var root = document.documentElement;
   var toggle = document.getElementById("theme-toggle");
   var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
-  var chosen = null;
-  function host() { var t = root.getAttribute("data-theme"); return t === "dark" || t === "light" ? t : null; }
   function apply(mode) {
     var dark = mode === "dark";
     root.classList.toggle("theme-dark", dark);
     root.classList.toggle("theme-light", !dark);
-    if (toggle) toggle.textContent = dark ? "Light" : "Dark";
+    toggle.textContent = dark ? "Light" : "Dark";
   }
-  function sync() { apply(chosen || host() || (mq && mq.matches ? "dark" : "light")); }
-  sync();
-  if (mq && mq.addEventListener) mq.addEventListener("change", function () { if (!chosen && !host()) sync(); });
-  if (window.MutationObserver) new MutationObserver(function () { chosen = null; sync(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
-  if (toggle) toggle.addEventListener("click", function () { chosen = root.classList.contains("theme-dark") ? "light" : "dark"; apply(chosen); });
+  apply(mq && mq.matches ? "dark" : "light");
+  toggle.addEventListener("click", function () { apply(root.classList.contains("theme-dark") ? "light" : "dark"); });
 })();
 
-/* Step checkmarks, remembered on this device only, plus the phone's floating
-   "next step" bar. v2: the step list changed, so old checkmarks don't carry. */
 (function () {
-  var KEY = "casabe-canvas-pouch-v2";
-  var state = {};
-  try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* storage blocked: checkmarks last for this visit */ } }
-  var steps = Array.prototype.slice.call(document.querySelectorAll('input[data-track^="step-"]'));
-  var progress = document.getElementById("step-progress");
-  var bar = document.getElementById("step-bar");
-  var barCount = document.getElementById("step-bar-count");
-  var barLabel = document.getElementById("step-bar-label");
-  var barTitle = document.getElementById("step-bar-title");
-
-  function paint() {
-    var done = 0, next = null;
-    steps.forEach(function (b) {
-      var item = b.closest(".steps_item");
-      item.classList.toggle("is-done", b.checked);
-      if (b.checked) done++;
-      else if (!next) next = item;
-    });
-    if (progress) progress.innerHTML = "<strong>" + done + "</strong> of " + steps.length + " steps done";
-    if (bar) {
-      barCount.textContent = done + "/" + steps.length;
-      if (next) {
-        barLabel.textContent = done ? "Next step" : "First step";
-        barTitle.textContent = next.querySelector(".steps_title").textContent;
-        bar.setAttribute("href", "#" + next.id);
-      } else {
-        barLabel.textContent = "All steps done";
-        barTitle.textContent = "Your pouch is finished";
-        bar.setAttribute("href", "#steps");
-      }
-    }
-  }
-
-  /* Sharing progress with the instructor: a name (no login) plus a random id
-     this device keeps. Every change is sent; a send that fails is retried when
-     the connection comes back and every 30 s until it lands. */
   var API = /^(127\.0\.0\.1|localhost)$/.test(location.hostname)
     ? "http://127.0.0.1:8787/v1/progress"
     : "https://workshops-api.casabe.studio/v1/progress";
-  var PROFILE_KEY = "casabe-workshop-profile";
-  var profile = null;
-  try { profile = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch (e) { profile = null; }
-  var ask = document.getElementById("signup-ask");
-  var who = document.getElementById("signup-who");
-  var form = document.getElementById("signup-form");
-  var nameInput = document.getElementById("signup-name");
-  var submit = document.getElementById("signup-submit");
-  var current = document.getElementById("signup-current");
-  var status = document.getElementById("signup-status");
-  var syncTimer = null, pending = false, sending = false;
+  var REFRESH_MS = 10000, ACTIVE_MS = 5 * 60000, IDLE_MS = 15 * 60000;
+  var key = new URLSearchParams(location.hash.slice(1)).get("k") || "";
+  var live = document.getElementById("live");
+  var list = document.getElementById("people");
+  var stagesNow = document.getElementById("stages-now");
+  var view = { show: "today", sort: "behind" };
+  var last = null, lastLoadedAt = 0;
 
-  function newId() {
-    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-    return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+  var stageOf = {}, titleOf = {};
+  STAGES.forEach(function (stage) {
+    stage.steps.forEach(function (s) { stageOf[s[0]] = stage.title; titleOf[s[0]] = s[1]; });
+  });
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
   }
-  function showProfile() {
-    var named = !!(profile && profile.name);
-    ask.hidden = named;
-    who.hidden = !named;
-    if (named) current.textContent = profile.name;
+  function ago(ms) {
+    var s = Math.max(0, Math.round(ms / 1000));
+    if (s < 60) return "just now";
+    var m = Math.round(s / 60);
+    if (m < 60) return m + " min ago";
+    var h = Math.round(m / 60);
+    if (h < 24) return h + " hr ago";
+    return Math.round(h / 24) + " d ago";
   }
-  function setStatus(text, isError) {
-    status.textContent = text;
-    status.classList.toggle("is-error", !!isError);
+  function nextStep(p) {
+    for (var n = 1; n <= p.total; n++) if (p.done.indexOf(n) === -1) return n;
+    return null;
   }
-  function queueSync(delay) {
-    if (!profile || !profile.name) return;
-    pending = true;
-    clearTimeout(syncTimer);
-    syncTimer = setTimeout(send, delay == null ? 600 : delay);
+  function setLive(text, isError) {
+    live.textContent = text;
+    live.classList.toggle("is-error", !!isError);
   }
-  function send() {
-    if (!pending || sending || !profile) return;
-    sending = true;
-    pending = false;
-    setStatus("Saving…");
-    var done = steps.filter(function (b) { return b.checked; })
-      .map(function (b) { return Number(b.getAttribute("data-track").slice(5)); });
-    fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ workshop: "canvas-pouch", participant: profile.id, name: profile.name, done: done }),
-      keepalive: true
-    })
-      .then(function (r) { return r.ok; })
-      .catch(function () { return false; })
-      .then(function (ok) {
-        sending = false;
-        clearTimeout(syncTimer);
-        if (ok) {
-          setStatus(pending ? "Saving…" : "Saved");
-          if (pending) syncTimer = setTimeout(send, 600);
+
+  function render() {
+    if (!last) return;
+    var now = last.now + (Date.now() - lastLoadedAt);
+    var midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+    var people = last.people.filter(function (p) { return view.show === "all" || p.updated_at >= midnight.getTime(); });
+
+    var finished = people.filter(function (p) { return p.done.length >= p.total; }).length;
+    var active = people.filter(function (p) { return now - p.updated_at < ACTIVE_MS; }).length;
+    document.getElementById("t-people").textContent = people.length;
+    document.getElementById("t-finished").textContent = finished;
+    document.getElementById("t-active").textContent = active;
+
+    var counts = {};
+    people.forEach(function (p) {
+      var n = nextStep(p);
+      var label = n ? stageOf[n] : "All done";
+      counts[label] = (counts[label] || 0) + 1;
+    });
+    stagesNow.textContent = "";
+    STAGES.map(function (s) { return s.title; }).concat("All done").forEach(function (label) {
+      var c = counts[label] || 0;
+      var cell = el("div", "stages-now_cell" + (c ? "" : " is-empty"));
+      cell.appendChild(el("span", "stages-now_name", label));
+      cell.appendChild(el("span", "stages-now_count", String(c)));
+      stagesNow.appendChild(cell);
+    });
+
+    people.sort(view.sort === "name"
+      ? function (a, b) { return a.name.localeCompare(b.name); }
+      : function (a, b) { return (a.done.length - b.done.length) || a.name.localeCompare(b.name); });
+
+    list.textContent = "";
+    if (!people.length) {
+      list.appendChild(el("p", "empty", view.show === "today"
+        ? "No one has added their name today. Attendees see a name box above the steps."
+        : "No one has added their name yet. Attendees see a name box above the steps."));
+      return;
+    }
+    people.forEach(function (p) {
+      var n = nextStep(p);
+      var row = el("div", "person" + (n ? "" : " is-finished"));
+      var top = el("div", "person_top");
+      top.appendChild(el("span", "person_name", p.name));
+      top.appendChild(el("span", "person_count", p.done.length + "/" + p.total));
+      row.appendChild(top);
+
+      var bar = el("div", "bar");
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label", p.done.length + " of " + p.total + " steps done");
+      for (var i = 1; i <= p.total; i++) bar.appendChild(el("span", "bar_cell" + (p.done.indexOf(i) !== -1 ? " is-done" : "")));
+      row.appendChild(bar);
+
+      var meta = el("div", "person_meta");
+      var next = el("span", "person_next");
+      if (n) {
+        next.appendChild(document.createTextNode("Next: "));
+        next.appendChild(el("b", null, n + ". " + titleOf[n]));
+        next.appendChild(document.createTextNode(" · " + stageOf[n]));
+      } else {
+        next.appendChild(el("b", null, "Finished"));
+      }
+      meta.appendChild(next);
+      var idle = n && now - p.updated_at > IDLE_MS;
+      meta.appendChild(el("span", "person_seen" + (idle ? " is-idle" : ""), (idle ? "No update " : "Updated ") + ago(now - p.updated_at)));
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  }
+
+  function load() {
+    fetch(API + "?workshop=canvas-pouch", { headers: { Authorization: "Bearer " + key }, cache: "no-store" })
+      .then(function (r) {
+        if (r.status === 401) throw new Error("key");
+        if (!r.ok) throw new Error("http");
+        return r.json();
+      })
+      .then(function (data) {
+        last = data;
+        lastLoadedAt = Date.now();
+        setLive("Updated " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " · refreshes every 10 s");
+        render();
+      })
+      .catch(function (err) {
+        if (err.message === "key") {
+          setLive("This link’s key isn’t right. Open the full progress link you were given.", true);
+          clearInterval(timer);
         } else {
-          pending = true;
-          setStatus("Not saved yet. It will retry when you’re back online.", true);
-          syncTimer = setTimeout(send, 30000);
+          setLive("Can’t reach the progress service right now. Retrying every 10 s.", true);
         }
       });
   }
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var name = nameInput.value.replace(/\s+/g, " ").trim().slice(0, 60);
-      if (!name) { nameInput.focus(); return; }
-      profile = { id: (profile && profile.id) || newId(), name: name };
-      try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (err) { /* storage blocked: the name lasts for this visit */ }
-      showProfile();
-      queueSync(0);
-    });
-    document.getElementById("signup-change").addEventListener("click", function () {
-      nameInput.value = profile ? profile.name : "";
-      submit.textContent = "Save";
-      ask.hidden = false;
-      who.hidden = true;
-      nameInput.focus();
-    });
-    window.addEventListener("online", function () { if (pending) send(); });
-    showProfile();
-    queueSync(0);
-  }
 
-  /* Ticking a step done moves on to the next step that isn't done yet. The
-     pause lets the tick land first. */
-  var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function advance(box) {
-    var target = null;
-    for (var j = steps.indexOf(box) + 1; j < steps.length; j++) {
-      if (!steps[j].checked) { target = steps[j].closest(".steps_item"); break; }
-    }
-    if (!target) return;
-    setTimeout(function () {
-      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
-      var heading = target.querySelector(".steps_title");
-      heading.setAttribute("tabindex", "-1");
-      heading.focus({ preventScroll: true });
-    }, 350);
-  }
-
-  steps.forEach(function (b) {
-    b.checked = !!state[b.getAttribute("data-track")];
-    b.addEventListener("change", function () {
-      state[b.getAttribute("data-track")] = b.checked; save(); paint();
-      queueSync();
-      if (b.checked) advance(b);
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var group = b.hasAttribute("data-show") ? "show" : "sort";
+      view[group] = b.getAttribute("data-" + group);
+      b.parentNode.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      render();
     });
   });
-  var reset = document.getElementById("step-reset");
-  if (reset) reset.addEventListener("click", function () {
-    steps.forEach(function (b) { b.checked = false; });
-    state = {}; save(); paint();
-    queueSync(0);
-  });
-  paint();
 
-  /* Show the bar while the steps are on screen but their own counter isn't. */
-  if (bar && window.IntersectionObserver) {
-    var inSteps = false, headVisible = true;
-    var update = function () { bar.classList.toggle("is-shown", inSteps && !headVisible); };
-    new IntersectionObserver(function (e) { inSteps = e[0].isIntersecting; update(); }).observe(document.getElementById("steps"));
-    new IntersectionObserver(function (e) { headVisible = e[0].isIntersecting; update(); }).observe(document.querySelector(".steps-head"));
+  if (!key) {
+    setLive("This link is missing its key. Open the full progress link you were given.", true);
+    return;
   }
+  var timer = setInterval(load, REFRESH_MS);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
+  load();
 })();
 </script>
 

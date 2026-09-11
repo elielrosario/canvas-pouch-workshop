@@ -1,0 +1,262 @@
+<title>Canvas Pouch Progress</title>
+<script>document.documentElement.setAttribute("data-direction", "bold");</script>
+<!--SITE_CSS-->
+<style>
+/* Instructor progress page. Phone first: it gets glanced at between helping people. */
+body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--body); color: var(--color--text); background: var(--color--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+#theme-toggle { flex: none; }
+.pg { padding: var(--space--lg) 0 var(--space--2xl); }
+.pg_head { display: grid; gap: var(--space--xs); margin-bottom: var(--space--lg); }
+.pg_live { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); font-variant-numeric: tabular-nums; }
+.pg_live.is-error { color: var(--color--danger); }
+
+.tally { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 var(--space--lg); border: 1px solid var(--color--border); border-radius: var(--radius--md); overflow: hidden; }
+.tally_item { padding: var(--space--sm) var(--space--md); border-left: 1px solid var(--color--border); }
+.tally_item:first-child { border-left: 0; }
+.tally_label { font-family: var(--type--family-mono); font-size: 0.6875rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color--text-mu); }
+.tally_value { margin: 0; font-family: var(--type--family-heading); font-size: 1.75rem; font-weight: 700; line-height: 1.2; color: var(--color--text); font-variant-numeric: tabular-nums; }
+
+/* how many people are in each stage right now */
+.stages-now { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-bottom: var(--space--lg); background: var(--color--border); border: 1px solid var(--color--border); border-radius: var(--radius--md); overflow: hidden; }
+.stages-now_cell { display: grid; gap: 0; padding: var(--space--xs) var(--space--sm); background: var(--color--surface); }
+.stages-now_name { font-size: var(--type--small); color: var(--color--text-mu); line-height: 1.3; }
+.stages-now_count { font-family: var(--type--family-mono); font-weight: 700; color: var(--color--text); font-variant-numeric: tabular-nums; }
+.stages-now_cell.is-empty .stages-now_count { color: var(--color--text-mu); font-weight: 500; }
+
+.controls { display: flex; flex-wrap: wrap; gap: var(--space--sm) var(--space--lg); margin-bottom: var(--space--md); }
+.seg { display: inline-flex; border: var(--border--control-width) solid var(--color--border); border-radius: var(--radius--control); overflow: hidden; }
+.seg button { min-height: 40px; padding: 0.35rem 0.9rem; font: inherit; font-size: var(--type--small); font-weight: 600; color: var(--color--text-mu); background: var(--color--surface); border: 0; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--color--border); }
+.seg button[aria-pressed="true"] { color: var(--color--text); background: var(--color--surface-alt); box-shadow: inset 0 -2px 0 var(--color--primary); }
+.seg button:focus-visible { outline: 2px solid var(--color--primary); outline-offset: -2px; }
+
+.people { display: grid; grid-template-columns: minmax(0, 1fr); border-top: 1px solid var(--color--border); }
+.person { display: grid; gap: 0.35rem; padding: var(--space--md) 0; border-bottom: 1px solid var(--color--border); }
+.person_top { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space--md); }
+.person_name { min-width: 0; font-weight: 700; color: var(--color--text); overflow-wrap: anywhere; }
+.person_count { flex: none; font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 700; color: var(--color--text); font-variant-numeric: tabular-nums; }
+/* one cell per step, so a skipped step shows as a gap */
+.bar { display: grid; grid-template-columns: repeat(19, minmax(0, 1fr)); gap: 2px; }
+.bar_cell { height: 10px; border-radius: 2px; background: var(--color--neutral-200); }
+.bar_cell.is-done { background: var(--color--primary); }
+.person_meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 var(--space--md); font-size: var(--type--small); color: var(--color--text-mu); }
+.person_next b { font-weight: 600; color: var(--color--text); }
+.person_seen { font-family: var(--type--family-mono); font-variant-numeric: tabular-nums; }
+.person_seen.is-idle { color: var(--color--warning); }
+.person.is-finished .person_next b { color: var(--color--success); }
+
+.empty { padding: var(--space--lg) 0; color: var(--color--text-mu); max-width: 52ch; }
+
+@media (min-width: 768px) {
+  .stages-now { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+
+<header class="main-nav">
+  <div class="container is-nav">
+    <a class="main-nav_logo" href="../">Casabe</a>
+    <nav class="main-nav_menu" aria-label="Page">
+      <button id="theme-toggle" class="button is-outline-sm" type="button" aria-label="Switch color theme">Dark</button>
+    </nav>
+  </div>
+</header>
+
+<main class="pg">
+  <div class="container is-8c">
+    <div class="pg_head">
+      <span class="eyebrow">Instructor view &middot; Canvas zip pouch</span>
+      <h1 class="heading-xl">Who&rsquo;s where</h1>
+      <p class="pg_live" id="live" role="status">Loading&hellip;</p>
+    </div>
+
+    <dl class="tally">
+      <div class="tally_item"><dt class="tally_label">People</dt><dd class="tally_value" id="t-people">&ndash;</dd></div>
+      <div class="tally_item"><dt class="tally_label">Finished</dt><dd class="tally_value" id="t-finished">&ndash;</dd></div>
+      <div class="tally_item"><dt class="tally_label">Active</dt><dd class="tally_value" id="t-active">&ndash;</dd></div>
+    </dl>
+
+    <div class="stages-now" id="stages-now" aria-label="People currently in each stage"></div>
+
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Show">
+        <button type="button" data-show="today" aria-pressed="true">Today</button>
+        <button type="button" data-show="all" aria-pressed="false">Everyone</button>
+      </div>
+      <div class="seg" role="group" aria-label="Sort">
+        <button type="button" data-sort="behind" aria-pressed="true">Furthest behind</button>
+        <button type="button" data-sort="name" aria-pressed="false">A&ndash;Z</button>
+      </div>
+    </div>
+
+    <div class="people" id="people"></div>
+  </div>
+</main>
+
+<!--STEPS_JSON-->
+<script>
+(function () {
+  var root = document.documentElement;
+  var toggle = document.getElementById("theme-toggle");
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  function apply(mode) {
+    var dark = mode === "dark";
+    root.classList.toggle("theme-dark", dark);
+    root.classList.toggle("theme-light", !dark);
+    toggle.textContent = dark ? "Light" : "Dark";
+  }
+  apply(mq && mq.matches ? "dark" : "light");
+  toggle.addEventListener("click", function () { apply(root.classList.contains("theme-dark") ? "light" : "dark"); });
+})();
+
+(function () {
+  var API = /^(127\.0\.0\.1|localhost)$/.test(location.hostname)
+    ? "http://127.0.0.1:8787/v1/progress"
+    : "https://workshops-api.casabe.studio/v1/progress";
+  var REFRESH_MS = 10000, ACTIVE_MS = 5 * 60000, IDLE_MS = 15 * 60000;
+  var key = new URLSearchParams(location.hash.slice(1)).get("k") || "";
+  var live = document.getElementById("live");
+  var list = document.getElementById("people");
+  var stagesNow = document.getElementById("stages-now");
+  var view = { show: "today", sort: "behind" };
+  var last = null, lastLoadedAt = 0;
+
+  var stageOf = {}, titleOf = {};
+  STAGES.forEach(function (stage) {
+    stage.steps.forEach(function (s) { stageOf[s[0]] = stage.title; titleOf[s[0]] = s[1]; });
+  });
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function ago(ms) {
+    var s = Math.max(0, Math.round(ms / 1000));
+    if (s < 60) return "just now";
+    var m = Math.round(s / 60);
+    if (m < 60) return m + " min ago";
+    var h = Math.round(m / 60);
+    if (h < 24) return h + " hr ago";
+    return Math.round(h / 24) + " d ago";
+  }
+  function nextStep(p) {
+    for (var n = 1; n <= p.total; n++) if (p.done.indexOf(n) === -1) return n;
+    return null;
+  }
+  function setLive(text, isError) {
+    live.textContent = text;
+    live.classList.toggle("is-error", !!isError);
+  }
+
+  function render() {
+    if (!last) return;
+    var now = last.now + (Date.now() - lastLoadedAt);
+    var midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+    var people = last.people.filter(function (p) { return view.show === "all" || p.updated_at >= midnight.getTime(); });
+
+    var finished = people.filter(function (p) { return p.done.length >= p.total; }).length;
+    var active = people.filter(function (p) { return now - p.updated_at < ACTIVE_MS; }).length;
+    document.getElementById("t-people").textContent = people.length;
+    document.getElementById("t-finished").textContent = finished;
+    document.getElementById("t-active").textContent = active;
+
+    var counts = {};
+    people.forEach(function (p) {
+      var n = nextStep(p);
+      var label = n ? stageOf[n] : "All done";
+      counts[label] = (counts[label] || 0) + 1;
+    });
+    stagesNow.textContent = "";
+    STAGES.map(function (s) { return s.title; }).concat("All done").forEach(function (label) {
+      var c = counts[label] || 0;
+      var cell = el("div", "stages-now_cell" + (c ? "" : " is-empty"));
+      cell.appendChild(el("span", "stages-now_name", label));
+      cell.appendChild(el("span", "stages-now_count", String(c)));
+      stagesNow.appendChild(cell);
+    });
+
+    people.sort(view.sort === "name"
+      ? function (a, b) { return a.name.localeCompare(b.name); }
+      : function (a, b) { return (a.done.length - b.done.length) || a.name.localeCompare(b.name); });
+
+    list.textContent = "";
+    if (!people.length) {
+      list.appendChild(el("p", "empty", view.show === "today"
+        ? "No one has added their name today. Attendees see a name box above the steps."
+        : "No one has added their name yet. Attendees see a name box above the steps."));
+      return;
+    }
+    people.forEach(function (p) {
+      var n = nextStep(p);
+      var row = el("div", "person" + (n ? "" : " is-finished"));
+      var top = el("div", "person_top");
+      top.appendChild(el("span", "person_name", p.name));
+      top.appendChild(el("span", "person_count", p.done.length + "/" + p.total));
+      row.appendChild(top);
+
+      var bar = el("div", "bar");
+      bar.setAttribute("role", "img");
+      bar.setAttribute("aria-label", p.done.length + " of " + p.total + " steps done");
+      for (var i = 1; i <= p.total; i++) bar.appendChild(el("span", "bar_cell" + (p.done.indexOf(i) !== -1 ? " is-done" : "")));
+      row.appendChild(bar);
+
+      var meta = el("div", "person_meta");
+      var next = el("span", "person_next");
+      if (n) {
+        next.appendChild(document.createTextNode("Next: "));
+        next.appendChild(el("b", null, n + ". " + titleOf[n]));
+        next.appendChild(document.createTextNode(" · " + stageOf[n]));
+      } else {
+        next.appendChild(el("b", null, "Finished"));
+      }
+      meta.appendChild(next);
+      var idle = n && now - p.updated_at > IDLE_MS;
+      meta.appendChild(el("span", "person_seen" + (idle ? " is-idle" : ""), (idle ? "No update " : "Updated ") + ago(now - p.updated_at)));
+      row.appendChild(meta);
+      list.appendChild(row);
+    });
+  }
+
+  function load() {
+    fetch(API + "?workshop=canvas-pouch", { headers: { Authorization: "Bearer " + key }, cache: "no-store" })
+      .then(function (r) {
+        if (r.status === 401) throw new Error("key");
+        if (!r.ok) throw new Error("http");
+        return r.json();
+      })
+      .then(function (data) {
+        last = data;
+        lastLoadedAt = Date.now();
+        setLive("Updated " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) + " · refreshes every 10 s");
+        render();
+      })
+      .catch(function (err) {
+        if (err.message === "key") {
+          setLive("This link’s key isn’t right. Open the full progress link you were given.", true);
+          clearInterval(timer);
+        } else {
+          setLive("Can’t reach the progress service right now. Retrying every 10 s.", true);
+        }
+      });
+  }
+
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var group = b.hasAttribute("data-show") ? "show" : "sort";
+      view[group] = b.getAttribute("data-" + group);
+      b.parentNode.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      render();
+    });
+  });
+
+  if (!key) {
+    setLive("This link is missing its key. Open the full progress link you were given.", true);
+    return;
+  }
+  var timer = setInterval(load, REFRESH_MS);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) load(); });
+  load();
+})();
+</script>

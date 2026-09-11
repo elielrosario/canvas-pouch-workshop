@@ -1,0 +1,19 @@
+# Workshop progress API. Deploy from this folder: npx wrangler deploy
+# The progress-page key is a secret, never in this file:
+#   npx wrangler secret put DASHBOARD_KEY
+name = "casabe-workshops-api"
+main = "src/worker.js"
+compatibility_date = "2026-09-01"
+account_id = "69435948ffccb5dee9f158770e0d8084"  # the Cloudflare account that holds casabe.studio
+
+routes = [
+  { pattern = "workshops-api.casabe.studio", custom_domain = true }
+]
+
+[vars]
+ALLOWED_ORIGINS = "https://workshops.casabe.studio"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "casabe-workshops"
+database_id = "cbb88026-f957-4622-952a-cbae278dcee8"

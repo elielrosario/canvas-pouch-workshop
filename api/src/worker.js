@@ -1,0 +1,123 @@
+/*
+ * Workshop progress API — https://workshops-api.casabe.studio
+ *
+ *   POST /v1/progress   an attendee's page saves their name and ticked steps.
+ *                       No login: the attendee is a random id their phone keeps.
+ *   GET  /v1/progress   the instructor's progress page reads everyone.
+ *                       Needs "Authorization: Bearer <DASHBOARD_KEY>", the key
+ *                       carried in the secret progress-page link.
+ *
+ * Storage is one D1 table (schema.sql), one row per attendee per workshop.
+ */
+
+// Workshops this API accepts, and how many steps each has.
+const WORKSHOPS = { "canvas-pouch": 19 };
+
+const MAX_BODY_BYTES = 4096;
+const MAX_NAME = 60;
+const PARTICIPANT_ID = /^[A-Za-z0-9-]{16,64}$/;
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const cors = corsHeaders(request.headers.get("Origin"), env);
+
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (url.pathname !== "/v1/progress") return json({ error: "Not found" }, 404, cors);
+
+    try {
+      if (request.method === "POST") return await save(request, env, cors);
+      if (request.method === "GET") return await list(request, url, env, cors);
+      return json({ error: "Use GET or POST" }, 405, cors);
+    } catch (err) {
+      console.error(err);
+      return json({ error: "Something went wrong saving progress. Try again." }, 500, cors);
+    }
+  },
+};
+
+async function save(request, env, cors) {
+  const raw = await request.text();
+  if (raw.length > MAX_BODY_BYTES) return json({ error: "Request too large" }, 413, cors);
+
+  let body;
+  try { body = JSON.parse(raw); } catch { return json({ error: "Body must be JSON" }, 400, cors); }
+
+  const workshop = String(body.workshop || "");
+  const total = WORKSHOPS[workshop];
+  if (!total) return json({ error: "Unknown workshop" }, 400, cors);
+
+  const participant = String(body.participant || "");
+  if (!PARTICIPANT_ID.test(participant)) return json({ error: "Missing or malformed participant id" }, 400, cors);
+
+  const name = String(body.name || "").replace(/\s+/g, " ").trim().slice(0, MAX_NAME);
+  if (!name) return json({ error: "Add a name first" }, 400, cors);
+
+  if (!Array.isArray(body.done)) return json({ error: "done must be a list of step numbers" }, 400, cors);
+  const done = [...new Set(body.done.map(Number))]
+    .filter((n) => Number.isInteger(n) && n >= 1 && n <= total)
+    .sort((a, b) => a - b);
+
+  const now = Date.now();
+  await env.DB.prepare(
+    `INSERT INTO progress (workshop, participant, name, done, total, created_at, updated_at)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?6)
+     ON CONFLICT (workshop, participant)
+     DO UPDATE SET name = excluded.name, done = excluded.done, total = excluded.total, updated_at = excluded.updated_at`
+  ).bind(workshop, participant, name, JSON.stringify(done), total, now).run();
+
+  return json({ ok: true, saved_at: now }, 200, cors);
+}
+
+async function list(request, url, env, cors) {
+  if (!env.DASHBOARD_KEY || !(await sameSecret(bearer(request), env.DASHBOARD_KEY))) {
+    return json({ error: "This progress link's key isn't right" }, 401, cors);
+  }
+  const workshop = url.searchParams.get("workshop") || "";
+  if (!WORKSHOPS[workshop]) return json({ error: "Unknown workshop" }, 400, cors);
+
+  const { results } = await env.DB.prepare(
+    `SELECT participant, name, done, total, created_at, updated_at
+     FROM progress WHERE workshop = ?1 ORDER BY updated_at DESC LIMIT 500`
+  ).bind(workshop).all();
+
+  const people = results.map((r) => ({ ...r, done: JSON.parse(r.done) }));
+  return json({ workshop, total: WORKSHOPS[workshop], now: Date.now(), people }, 200, { ...cors, "Cache-Control": "no-store" });
+}
+
+function bearer(request) {
+  const h = request.headers.get("Authorization") || "";
+  return h.startsWith("Bearer ") ? h.slice(7) : "";
+}
+
+// Compare digests so the check takes the same time however much of the key matches.
+async function sameSecret(given, expected) {
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(given)),
+    crypto.subtle.digest("SHA-256", enc.encode(expected)),
+  ]);
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  let diff = 0;
+  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0;
+}
+
+function corsHeaders(origin, env) {
+  const allowed = String(env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const headers = {
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  };
+  if (origin && allowed.includes(origin)) headers["Access-Control-Allow-Origin"] = origin;
+  return headers;
+}
+
+function json(data, status, headers) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...headers, "Content-Type": "application/json; charset=utf-8" },
+  });
+}

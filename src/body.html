@@ -58,6 +58,18 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .phase-nav { display: flex; flex-wrap: wrap; gap: var(--space--xs); }
 .phase-nav .pill { padding: 0.45rem 0.8rem; font-size: var(--type--small); color: var(--color--text); }
 .phase-nav .pill span { font-family: var(--type--family-mono); font-weight: 500; color: var(--color--text-mu); }
+/* sign-up: a name, nothing else, so the instructor can follow along */
+.signup { display: grid; gap: var(--space--sm); margin-bottom: var(--space--xl); padding: var(--space--md); background: var(--color--surface); border: 1px solid var(--color--border); border-left: 4px solid var(--color--primary); border-radius: var(--radius--md); }
+.signup_title { font-family: var(--type--family-heading); font-size: 1.125rem; font-weight: 700; color: var(--color--text); }
+.signup_text { font-size: var(--type--small); color: var(--color--text-mu); max-width: 52ch; }
+.signup_form { display: flex; flex-wrap: wrap; gap: var(--space--sm); }
+.signup_form .input { flex: 1 1 12rem; min-width: 0; min-height: 44px; }
+.signup_form .button { min-height: 44px; }
+.signup_who { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space--xs) var(--space--md); }
+.signup_name { font-weight: 700; color: var(--color--text); }
+.signup_status { font-family: var(--type--family-mono); font-size: var(--type--small); color: var(--color--text-mu); }
+.signup_status.is-error { color: var(--color--danger); }
+.signup_change { font-size: var(--type--small); font-weight: 600; color: var(--color--text); text-decoration: underline; text-underline-offset: 2px; background: none; border: 0; padding: 0.4rem 0; cursor: pointer; }
 .phase + .phase { margin-top: var(--space--xl); }
 .phase_title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space--sm); padding-bottom: var(--space--sm); border-bottom: 2px solid var(--color--primary); font-family: var(--type--family-heading); font-size: var(--type--h3); font-weight: 700; letter-spacing: -0.01em; color: var(--color--text); }
 .phase_range { font-family: var(--type--family-mono); font-size: var(--type--small); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color--text-mu); }
@@ -212,6 +224,22 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
         <a class="pill is-outline" href="#side-two">Second side <span>13&ndash;16</span></a>
         <a class="pill is-outline" href="#finish">Finish <span>17&ndash;19</span></a>
       </nav>
+    </div>
+
+    <div class="signup" id="signup">
+      <div id="signup-ask">
+        <p class="signup_title">Add your name</p>
+        <p class="signup_text">So your instructor can see how far along you are. No account or password.</p>
+        <form class="signup_form" id="signup-form">
+          <input class="input" id="signup-name" name="name" type="text" autocomplete="given-name" maxlength="60" placeholder="Your name" aria-label="Your name" required>
+          <button class="button is-primary" id="signup-submit" type="submit">Start</button>
+        </form>
+      </div>
+      <div class="signup_who" id="signup-who" hidden>
+        <span>Sewing as <span class="signup_name" id="signup-current"></span></span>
+        <span class="signup_status" id="signup-status" role="status"></span>
+        <button class="signup_change" id="signup-change" type="button">Change name</button>
+      </div>
     </div>
 
     <div class="phase" id="prep">
@@ -425,6 +453,94 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
     }
   }
 
+  /* Sharing progress with the instructor: a name (no login) plus a random id
+     this device keeps. Every change is sent; a send that fails is retried when
+     the connection comes back and every 30 s until it lands. */
+  var API = /^(127\.0\.0\.1|localhost)$/.test(location.hostname)
+    ? "http://127.0.0.1:8787/v1/progress"
+    : "https://workshops-api.casabe.studio/v1/progress";
+  var PROFILE_KEY = "casabe-workshop-profile";
+  var profile = null;
+  try { profile = JSON.parse(localStorage.getItem(PROFILE_KEY) || "null"); } catch (e) { profile = null; }
+  var ask = document.getElementById("signup-ask");
+  var who = document.getElementById("signup-who");
+  var form = document.getElementById("signup-form");
+  var nameInput = document.getElementById("signup-name");
+  var submit = document.getElementById("signup-submit");
+  var current = document.getElementById("signup-current");
+  var status = document.getElementById("signup-status");
+  var syncTimer = null, pending = false, sending = false;
+
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+  }
+  function showProfile() {
+    var named = !!(profile && profile.name);
+    ask.hidden = named;
+    who.hidden = !named;
+    if (named) current.textContent = profile.name;
+  }
+  function setStatus(text, isError) {
+    status.textContent = text;
+    status.classList.toggle("is-error", !!isError);
+  }
+  function queueSync(delay) {
+    if (!profile || !profile.name) return;
+    pending = true;
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(send, delay == null ? 600 : delay);
+  }
+  function send() {
+    if (!pending || sending || !profile) return;
+    sending = true;
+    pending = false;
+    setStatus("Saving…");
+    var done = steps.filter(function (b) { return b.checked; })
+      .map(function (b) { return Number(b.getAttribute("data-track").slice(5)); });
+    fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ workshop: "canvas-pouch", participant: profile.id, name: profile.name, done: done }),
+      keepalive: true
+    })
+      .then(function (r) { return r.ok; })
+      .catch(function () { return false; })
+      .then(function (ok) {
+        sending = false;
+        clearTimeout(syncTimer);
+        if (ok) {
+          setStatus(pending ? "Saving…" : "Saved");
+          if (pending) syncTimer = setTimeout(send, 600);
+        } else {
+          pending = true;
+          setStatus("Not saved yet. It will retry when you’re back online.", true);
+          syncTimer = setTimeout(send, 30000);
+        }
+      });
+  }
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var name = nameInput.value.replace(/\s+/g, " ").trim().slice(0, 60);
+      if (!name) { nameInput.focus(); return; }
+      profile = { id: (profile && profile.id) || newId(), name: name };
+      try { localStorage.setItem(PROFILE_KEY, JSON.stringify(profile)); } catch (err) { /* storage blocked: the name lasts for this visit */ }
+      showProfile();
+      queueSync(0);
+    });
+    document.getElementById("signup-change").addEventListener("click", function () {
+      nameInput.value = profile ? profile.name : "";
+      submit.textContent = "Save";
+      ask.hidden = false;
+      who.hidden = true;
+      nameInput.focus();
+    });
+    window.addEventListener("online", function () { if (pending) send(); });
+    showProfile();
+    queueSync(0);
+  }
+
   /* Ticking a step done moves on to the next step that isn't done yet. The
      pause lets the tick land first. */
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -446,6 +562,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
     b.checked = !!state[b.getAttribute("data-track")];
     b.addEventListener("change", function () {
       state[b.getAttribute("data-track")] = b.checked; save(); paint();
+      queueSync();
       if (b.checked) advance(b);
     });
   });
@@ -453,6 +570,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   if (reset) reset.addEventListener("click", function () {
     steps.forEach(function (b) { b.checked = false; });
     state = {}; save(); paint();
+    queueSync(0);
   });
   paint();
 
