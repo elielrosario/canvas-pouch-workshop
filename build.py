@@ -6,7 +6,7 @@ Inlines the Casabe marketing-site stylesheet and the two brand fonts, so the
 pages fetch nothing but the progress API, and writes:
 
   canvas-pouch/index.html           the attendee page, https://workshops.casabe.studio/canvas-pouch/
-  canvas-pouch/progress/index.html  the instructor's progress page (data needs the secret link's key)
+  canvas-pouch/progress/index.html  the instructor's progress page
   index.html                        redirect from the bare address to the attendee page
   artifact.html                     the attendee page without <head>, for the claude.ai copy
 

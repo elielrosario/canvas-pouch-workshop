@@ -3,9 +3,8 @@
  *
  *   POST /v1/progress   an attendee's page saves their name and ticked steps.
  *                       No login: the attendee is a random id their phone keeps.
- *   GET  /v1/progress   the instructor's progress page reads everyone.
- *                       Needs "Authorization: Bearer <DASHBOARD_KEY>", the key
- *                       carried in the secret progress-page link.
+ *   GET  /v1/progress   the instructor's progress page reads everyone. Open by
+ *                       choice: names and ticks are not treated as private.
  *
  * Storage is one D1 table (schema.sql), one row per attendee per workshop.
  */
@@ -27,7 +26,7 @@ export default {
 
     try {
       if (request.method === "POST") return await save(request, env, cors);
-      if (request.method === "GET") return await list(request, url, env, cors);
+      if (request.method === "GET") return await list(url, env, cors);
       return json({ error: "Use GET or POST" }, 405, cors);
     } catch (err) {
       console.error(err);
@@ -69,10 +68,7 @@ async function save(request, env, cors) {
   return json({ ok: true, saved_at: now }, 200, cors);
 }
 
-async function list(request, url, env, cors) {
-  if (!env.DASHBOARD_KEY || !(await sameSecret(bearer(request), env.DASHBOARD_KEY))) {
-    return json({ error: "This progress link's key isn't right" }, 401, cors);
-  }
+async function list(url, env, cors) {
   const workshop = url.searchParams.get("workshop") || "";
   if (!WORKSHOPS[workshop]) return json({ error: "Unknown workshop" }, 400, cors);
 
@@ -85,29 +81,11 @@ async function list(request, url, env, cors) {
   return json({ workshop, total: WORKSHOPS[workshop], now: Date.now(), people }, 200, { ...cors, "Cache-Control": "no-store" });
 }
 
-function bearer(request) {
-  const h = request.headers.get("Authorization") || "";
-  return h.startsWith("Bearer ") ? h.slice(7) : "";
-}
-
-// Compare digests so the check takes the same time however much of the key matches.
-async function sameSecret(given, expected) {
-  const enc = new TextEncoder();
-  const [a, b] = await Promise.all([
-    crypto.subtle.digest("SHA-256", enc.encode(given)),
-    crypto.subtle.digest("SHA-256", enc.encode(expected)),
-  ]);
-  const x = new Uint8Array(a), y = new Uint8Array(b);
-  let diff = 0;
-  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
-  return diff === 0;
-}
-
 function corsHeaders(origin, env) {
   const allowed = String(env.ALLOWED_ORIGINS || "").split(",").map((s) => s.trim()).filter(Boolean);
   const headers = {
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };

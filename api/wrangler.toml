@@ -1,6 +1,4 @@
 # Workshop progress API. Deploy from this folder: npx wrangler deploy
-# The progress-page key is a secret, never in this file:
-#   npx wrangler secret put DASHBOARD_KEY
 name = "casabe-workshops-api"
 main = "src/worker.js"
 compatibility_date = "2026-09-01"
