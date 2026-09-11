@@ -1604,6 +1604,16 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 
 .empty { padding: var(--space--lg) 0; color: var(--color--text-mu); max-width: 52ch; }
 
+/* Clear list: at the bottom, away from the filters, with a confirm step and an undo */
+.clearbar { display: grid; gap: var(--space--xs); margin-top: var(--space--xl); padding-top: var(--space--md); border-top: 1px solid var(--color--border); font-size: var(--type--small); color: var(--color--text-mu); }
+.clearbar_row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space--sm) var(--space--md); }
+.clearbar_row b { color: var(--color--text); }
+.clearbar .button { min-height: 40px; }
+.clearbar_link { font: inherit; font-weight: 600; color: var(--color--text); text-decoration: underline; text-underline-offset: 2px; background: none; border: 0; padding: 0.5rem 0; cursor: pointer; }
+.clearbar_link:focus-visible { outline: 2px solid var(--color--primary); outline-offset: 2px; border-radius: 2px; }
+.clearbar_msg { margin: 0; }
+.clearbar_msg.is-error { color: var(--color--danger); }
+
 @media (min-width: 768px) {
   .stages-now { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
@@ -1647,6 +1657,23 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
     </div>
 
     <div class="people" id="people"></div>
+
+    <div class="clearbar">
+      <div class="clearbar_row" id="clear-idle">
+        <button type="button" class="button is-outline-sm" id="clear-start">Clear list</button>
+        <span>Hides everyone here, ready for the next workshop. You can undo it.</span>
+      </div>
+      <div class="clearbar_row" id="clear-ask" hidden>
+        <b id="clear-q">Remove everyone from this page?</b>
+        <button type="button" class="button is-primary-sm" id="clear-yes">Yes, clear</button>
+        <button type="button" class="clearbar_link" id="clear-no">Cancel</button>
+      </div>
+      <div class="clearbar_row" id="clear-done" hidden>
+        <b>List cleared.</b>
+        <button type="button" class="clearbar_link" id="clear-undo">Undo</button>
+      </div>
+      <p class="clearbar_msg" id="clear-msg" role="status"></p>
+    </div>
   </div>
 </main>
 
@@ -1708,6 +1735,7 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 
   function render() {
     if (!last) return;
+    syncClearbar();
     var now = last.now + (Date.now() - lastLoadedAt);
     var midnight = new Date(); midnight.setHours(0, 0, 0, 0);
     var people = last.people.filter(function (p) { return view.show === "all" || p.updated_at >= midnight.getTime(); });
@@ -1791,6 +1819,53 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
         setLive("Can’t reach the progress service right now. Retrying every 10 s.", true);
       });
   }
+
+  /* Clear list. The API never deletes: it records a clear, and the list only shows
+     people updated since. Undo removes that record. Undo is offered for 30 min. */
+  var UNDO_MS = 30 * 60000;
+  var clearMsg = document.getElementById("clear-msg");
+  var clearYes = document.getElementById("clear-yes");
+  function showClear(id) {
+    ["clear-idle", "clear-ask", "clear-done"].forEach(function (x) { document.getElementById(x).hidden = x !== id; });
+  }
+  function setClearMsg(text, isError) {
+    clearMsg.textContent = text;
+    clearMsg.classList.toggle("is-error", !!isError);
+  }
+  function syncClearbar() {
+    if (!document.getElementById("clear-ask").hidden) return;  // mid-confirm: leave it alone
+    var recent = last.cleared_at && last.now - last.cleared_at < UNDO_MS;
+    showClear(recent ? "clear-done" : "clear-idle");
+  }
+  function postClear(action) {
+    return fetch(API + "/" + action, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ workshop: "canvas-pouch" })
+    }).then(function (r) { if (!r.ok) throw new Error("http " + r.status); });
+  }
+  document.getElementById("clear-start").addEventListener("click", function () {
+    var n = last ? last.people.length : 0;
+    document.getElementById("clear-q").textContent = n === 1
+      ? "Remove the 1 person on this page?"
+      : "Remove all " + n + " people from this page?";
+    setClearMsg("");
+    showClear("clear-ask");
+    clearYes.focus();
+  });
+  document.getElementById("clear-no").addEventListener("click", function () { showClear("clear-idle"); });
+  clearYes.addEventListener("click", function () {
+    clearYes.disabled = true;
+    postClear("clear")
+      .then(function () { showClear("clear-done"); load(); })
+      .catch(function () { setClearMsg("Couldn’t clear the list. Check your connection and try again.", true); })
+      .then(function () { clearYes.disabled = false; });
+  });
+  document.getElementById("clear-undo").addEventListener("click", function () {
+    postClear("restore")
+      .then(function () { showClear("clear-idle"); setClearMsg("Everyone’s back on the list."); load(); })
+      .catch(function () { setClearMsg("Couldn’t undo. Check your connection and try again.", true); });
+  });
 
   document.querySelectorAll(".seg button").forEach(function (b) {
     b.addEventListener("click", function () {
