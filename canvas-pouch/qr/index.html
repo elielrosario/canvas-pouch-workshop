@@ -1554,39 +1554,48 @@ html[data-direction="warm"] .cta-section .button.is-primary:hover {
 
 </style>
 <style>
-/* A printable sign for the table. Always light: it gets printed, and a QR code needs dark on light. */
+/* A one-page printable handout for the table: the QR code and how to use the page.
+   Always light: it gets printed, and a QR code needs dark on light. */
 @page { size: letter; margin: 0.5in; }
 body { margin: 0; font-family: var(--type--family-sans); color: var(--color--text); background: #ffffff; -webkit-font-smoothing: antialiased; }
-.sign { box-sizing: border-box; min-height: 100vh; max-width: 7.5in; margin: 0 auto; padding: 0.6in 0.4in; display: grid; align-content: center; justify-items: center; gap: 0.22in; text-align: center; }
+.sign { box-sizing: border-box; max-width: 7.5in; margin: 0 auto; padding: 0.5in 0.4in; display: grid; justify-items: center; gap: 0.2in; text-align: center; }
+.sign_top { display: flex; align-items: baseline; justify-content: space-between; width: 100%; padding-bottom: 0.1in; border-bottom: 3px solid var(--color--primary); }
 .sign_brand { font-family: var(--type--family-heading); font-weight: 700; font-size: 18px; letter-spacing: -0.02em; }
-.sign_eyebrow { font-family: var(--type--family-mono); font-size: 14px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color--text); padding-bottom: 6px; border-bottom: 3px solid var(--color--primary); }
-.sign_title { margin: 0; font-family: var(--type--family-heading); font-size: 60px; font-weight: 800; line-height: 1.02; letter-spacing: -0.036em; text-wrap: balance; }
-.sign_qr { width: 4.2in; max-width: 80vw; padding: 0.12in; border: 3px solid var(--color--text); border-radius: 6px; background: #ffffff; }
+.sign_eyebrow { font-family: var(--type--family-mono); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.sign_title { margin: 0.08in 0 0; font-family: var(--type--family-heading); font-size: 50px; font-weight: 800; line-height: 1.02; letter-spacing: -0.036em; text-wrap: balance; }
+.sign_qr { width: 3.3in; max-width: 80vw; padding: 0.1in; border: 3px solid var(--color--text); border-radius: 6px; background: #ffffff; }
 .sign_qr svg { display: block; width: 100%; height: auto; }
-.sign_scan { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.01em; }
-.sign_url { margin: 0; font-family: var(--type--family-mono); font-size: 17px; color: var(--color--text-mu); overflow-wrap: anywhere; }
-.sign_then { margin: 0; font-size: 18px; color: var(--color--text); max-width: 34ch; }
+.sign_url { margin: -0.06in 0 0; font-family: var(--type--family-mono); font-size: 15px; color: var(--color--text-mu); overflow-wrap: anywhere; }
+
+.how { width: 100%; max-width: 5.6in; margin: 0.06in 0 0; padding: 0; list-style: none; counter-reset: how; text-align: left; display: grid; gap: 0.14in; }
+.how li { counter-increment: how; display: grid; grid-template-columns: 0.5in minmax(0, 1fr); align-items: baseline; }
+.how li::before { content: counter(how); font-family: var(--type--family-mono); font-size: 26px; font-weight: 700; color: var(--color--primary); }
+.how_do { display: block; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; }
+.how_note { display: block; margin-top: 2px; font-size: 15px; line-height: 1.4; color: var(--color--text-mu); }
+
 .sign_print { margin-top: 0.1in; }
 @media print {
-  .sign { min-height: auto; padding: 0; }
+  .sign { padding: 0; }
   .sign_print { display: none; }
 }
 @media (max-width: 600px) {
-  .sign_title { font-size: 40px; }
-  .sign_scan { font-size: 21px; }
+  .sign_title { font-size: 36px; }
 }
 </style>
 
 <main class="sign">
-  <span class="sign_brand">Casabe</span>
-  <span class="sign_eyebrow">Workshop</span>
+  <div class="sign_top"><span class="sign_brand">Casabe</span><span class="sign_eyebrow">Workshop handout</span></div>
   <h1 class="sign_title">Sew a canvas zip pouch</h1>
   <div class="sign_qr" role="img" aria-label="QR code that opens workshops.casabe.studio/canvas-pouch"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h41v41H0z"/><path stroke="#16161a" d="M4 4.5h7m1 0h1m1 0h3m3 0h4m2 0h2m2 0h7M4 5.5h1m5 0h1m1 0h1m2 0h2m2 0h2m1 0h4m1 0h2m1 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h5m2 0h2m2 0h2m1 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h1m3 0h1m3 0h2m1 0h1m2 0h2m2 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m2 0h4m1 0h1m2 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m2 0h3m3 0h1m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h2m2 0h1m2 0h5m1 0h1m2 0h1M5 12.5h2m1 0h1m1 0h2m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m1 0h1m4 0h1m1 0h5M4 13.5h2m1 0h3m1 0h1m1 0h3m2 0h1m5 0h2m2 0h4m4 0h1M4 14.5h3m1 0h4m5 0h5m3 0h2m2 0h1m1 0h1m2 0h3M4 15.5h1m3 0h2m1 0h5m1 0h1m5 0h1m1 0h2m3 0h1m1 0h1m2 0h2M4 16.5h1m1 0h1m3 0h9m5 0h4m2 0h1m2 0h1m1 0h1M4 17.5h4m3 0h3m2 0h1m2 0h1m4 0h1m3 0h3m2 0h1m2 0h1M4 18.5h3m1 0h1m1 0h4m1 0h2m1 0h4m3 0h1m2 0h2m1 0h3m1 0h2M4 19.5h1m2 0h1m5 0h1m2 0h2m2 0h2m3 0h2m1 0h1m1 0h3m2 0h1M7 20.5h5m3 0h1m1 0h2m1 0h1m3 0h2m1 0h4m2 0h1M6 21.5h1m1 0h2m5 0h2m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1m1 0h2m3 0h2M5 22.5h1m2 0h1m1 0h1m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m5 0h2m4 0h1m1 0h1M4 23.5h1m3 0h2m1 0h1m1 0h5m2 0h1m4 0h2m3 0h3M4 24.5h1m1 0h3m1 0h2m1 0h2m3 0h1m3 0h1m1 0h2m2 0h3m2 0h1m1 0h2M5 25.5h5m1 0h3m1 0h2m1 0h4m2 0h3m1 0h3m4 0h2M4 26.5h1m1 0h1m2 0h2m1 0h4m3 0h1m1 0h2m3 0h1m2 0h2m1 0h1m1 0h3M5 27.5h1m2 0h2m1 0h2m1 0h1m1 0h1m2 0h2m1 0h4m1 0h1m2 0h1M4 28.5h1m1 0h2m2 0h4m1 0h3m1 0h4m1 0h2m2 0h6m1 0h1M12 29.5h5m1 0h4m2 0h3m1 0h1m3 0h2m1 0h2M4 30.5h7m1 0h3m5 0h2m2 0h1m1 0h3m1 0h1m1 0h1m1 0h3M4 31.5h1m5 0h1m3 0h3m1 0h1m2 0h2m1 0h2m2 0h1m3 0h1m2 0h2M4 32.5h1m1 0h3m1 0h1m1 0h2m1 0h3m1 0h2m1 0h2m1 0h1m2 0h6m2 0h1M4 33.5h1m1 0h3m1 0h1m2 0h1m1 0h5m1 0h1m2 0h2m2 0h1m3 0h1m2 0h2M4 34.5h1m1 0h3m1 0h1m1 0h2m3 0h2m6 0h3m4 0h3m1 0h1M4 35.5h1m5 0h1m1 0h1m1 0h2m1 0h1m1 0h1m2 0h1m1 0h6m2 0h1m2 0h1M4 36.5h7m2 0h8m1 0h8m2 0h1m2 0h2"/></svg>
 </div>
-  <p class="sign_scan">Scan with your phone camera</p>
   <p class="sign_url">workshops.casabe.studio/canvas-pouch</p>
-  <p class="sign_then">Then add your name at the top of the page and follow the steps.</p>
-  <button class="button is-primary sign_print" type="button" onclick="window.print()">Print this sign</button>
+  <ol class="how">
+    <li><span><span class="how_do">Scan the code with your phone camera</span><span class="how_note">Or type the address above into your browser.</span></span></li>
+    <li><span><span class="how_do">Add your name at the top of the page</span><span class="how_note">No account or password. It lets your instructor see how you&rsquo;re doing.</span></span></li>
+    <li><span><span class="how_do">Pick your canvas and zipper colors</span><span class="how_note">Navy blue, black or natural.</span></span></li>
+    <li><span><span class="how_do">Follow the steps and tap Done after each one</span><span class="how_note">The page moves you to the next step. Stuck? Ask your instructor.</span></span></li>
+  </ol>
+  <button class="button is-primary sign_print" type="button" onclick="window.print()">Print this page</button>
 </main>
 
 </body>
