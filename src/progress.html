@@ -5,7 +5,7 @@
 /* Instructor progress page. Phone first: it gets glanced at between helping people. */
 body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--body); color: var(--color--text); background: var(--color--surface); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 #theme-toggle { flex: none; }
-.brand-lockup { display: block; width: auto; height: 30px; }  /* spec minimum for the horizontal lockup */
+.brand-lockup { display: block; width: auto; height: 30.6px; }  /* svg height = mark height x 1552/1522 (viewBox includes the wordmark descender): 30px mark */
 .main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
 .pg { padding: var(--space--lg) 0 var(--space--2xl); }
 .pg_head { display: grid; gap: var(--space--xs); margin-bottom: var(--space--lg); }
@@ -59,6 +59,7 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 .clearbar_msg { margin: 0; }
 .clearbar_msg.is-error { color: var(--color--danger); }
 
+@media (max-width: 767px) { .brand-lockup { height: 22.4px; } }  /* 22px mark, matching the attendee page nav */
 @media (min-width: 768px) {
   .stages-now { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }

@@ -44,9 +44,9 @@
   --color--surface-inverse: var(--direction--surface-inverse-light);
   --color--text-inverse: var(--direction--text-inverse-light);
   --color--surface: #ffffff;
-  --color--primary: #f1511b;
-  --color--accent: #e9560c;
-  --color--accent-deep: #1f1f23;
+  --color--primary: #e8480c;
+  --color--accent: #e8480c;
+  --color--accent-deep: #16161a;
   --color--success: #166534;
   --color--warning: #b45309;
   --color--danger: #b91c1c;
@@ -56,7 +56,7 @@
   --color--neutral-400: #9a9aa2;
   --color--neutral-500: #6b6b73;
   --color--neutral-700: #3b3b42;
-  --color--neutral-800: #1f1f23;
+  --color--neutral-800: #16161a;
   --color--neutral-900: #16161a;
   /* Ink that sits ON the primary orange fill — fixed dark ink in both themes
      (see .button.is-primary below), independent of the neutral scale so the
@@ -66,11 +66,11 @@
      NOT redefined per theme: the neutral scale inverts in dark, so anything
      that must stay ink in both themes cannot draw from it. */
   --color--ink-fixed: #16161a;
-  --color--primary-500: #f1511b;
-  --color--primary-600: #e9560c;
-  --color--primary-700: #1f1f23;
-  --color--accent-500: #e9560c;
-  --color--accent-600: #1f1f23;
+  --color--primary-500: #e8480c;
+  --color--primary-600: #eb5e29;
+  --color--primary-700: #16161a;
+  --color--accent-500: #e8480c;
+  --color--accent-600: #16161a;
   --color--success-300: #5fd08a;
   --color--success-500: #166534;
   --color--warning-300: #f0b544;
@@ -146,10 +146,10 @@
   --color--surface: #16161a;
   --color--surface-alt: var(--direction--surface-alt-dark);
   --color--surface-inverse: var(--direction--surface-inverse-dark);
-  --color--primary: #f1511b;
+  --color--primary: #e8480c;
   --color--border: var(--direction--border-dark);
-  --color--accent: #e9560c;
-  --color--accent-deep: #e9560c;
+  --color--accent: #e8480c;
+  --color--accent-deep: #e8480c;
   --color--success: #5fd08a;
   --color--warning: #f0b544;
   --color--danger: #f28b82;
@@ -192,10 +192,10 @@
     --color--surface: #16161a;
     --color--surface-alt: var(--direction--surface-alt-dark);
     --color--surface-inverse: var(--direction--surface-inverse-dark);
-    --color--primary: #f1511b;
+    --color--primary: #e8480c;
     --color--border: var(--direction--border-dark);
-    --color--accent: #e9560c;
-    --color--accent-deep: #e9560c;
+    --color--accent: #e8480c;
+    --color--accent-deep: #e8480c;
     --color--success: #5fd08a;
     --color--warning: #f0b544;
     --color--danger: #f28b82;
@@ -295,7 +295,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    text (--color--on-primary) in both light and dark mode. */
 .button.is-primary { background: var(--color--primary); color: var(--color--on-primary); }
 .button.is-primary:hover { background: var(--color--primary-600); transform: translateY(-2px); box-shadow: var(--effect--shadow-sm); }
-.button.is-secondary { background: var(--color--accent); color: var(--color--text-inverse); }
+.button.is-secondary { background: var(--color--accent); color: var(--color--on-primary); }
 .button.is-outline { background: transparent; border-color: currentColor; color: var(--color--accent-deep); }
 .button.is-outline:hover { background: var(--color--surface-alt); }
 .button-group { display: flex; gap: var(--space--md); flex-wrap: wrap; }
@@ -319,16 +319,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .site-nav_link.is-menu-cta { display: none; }
 .site-nav_logo { display: inline-flex; flex-direction: row; align-items: flex-end; color: var(--color--text, var(--text, #16161a)); text-decoration: none; font-weight: 700; font-size: 1.0625rem; line-height: 1; letter-spacing: -0.01em; }
 .site-nav_mark { display: block; width: 35.1px; height: 32px; }
-.site-nav_seed { fill: var(--color--primary, var(--primary, #f1511b)); }
+.site-nav_seed { fill: var(--color--primary, var(--primary, #e8480c)); }
 .site-nav_name { display: block; overflow: hidden; max-width: 130px; margin-left: 12.5px; opacity: 1; transition: max-width .25s ease, margin-left .25s ease, opacity .15s ease; }
 .site-nav_name.is-collapsed { max-width: 0; margin-left: 0; opacity: 0; }
 .site-nav_wordmark { display: block; width: 113.5px; height: 26.9px; }
-.site-nav_cta { display: inline-flex; align-items: center; padding: 0.6rem 1.15rem; border: 2px solid transparent; border-radius: 4px; background: var(--color--primary, var(--primary, #f1511b)); color: var(--color--on-primary, #16161a); font-weight: 600; text-decoration: none; white-space: nowrap; transition: transform .2s ease, background .2s ease; }
-.site-nav_cta:hover { background: var(--color--primary-600, #e9560c); transform: translateY(-2px); }
-.site-nav_theme, .site-nav_menu-button { display: inline-flex; align-items: center; padding: 0.4rem 0.9rem; border: 2px solid currentColor; border-radius: 4px; background: transparent; color: var(--color--accent-deep, var(--text, #1f1f23)); font: inherit; font-size: 0.875rem; font-weight: 600; line-height: 1.2; cursor: pointer; }
+.site-nav_cta { display: inline-flex; align-items: center; padding: 0.6rem 1.15rem; border: 2px solid transparent; border-radius: 4px; background: var(--color--primary, var(--primary, #e8480c)); color: var(--color--on-primary, #16161a); font-weight: 600; text-decoration: none; white-space: nowrap; transition: transform .2s ease, background .2s ease; }
+.site-nav_cta:hover { background: var(--color--primary-600, #eb5e29); transform: translateY(-2px); }
+.site-nav_theme, .site-nav_menu-button { display: inline-flex; align-items: center; padding: 0.4rem 0.9rem; border: 2px solid currentColor; border-radius: 4px; background: transparent; color: var(--color--accent-deep, var(--text, #16161a)); font: inherit; font-size: 0.875rem; font-weight: 600; line-height: 1.2; cursor: pointer; }
 .site-nav_theme:hover, .site-nav_menu-button:hover { background: var(--color--surface-alt, var(--surface-alt, #f7f7f8)); }
 .site-nav_menu-button { display: none; }
-.site-nav_theme:focus-visible, .site-nav_menu-button:focus-visible, .site-nav_cta:focus-visible, .site-nav_link:focus-visible, .site-nav_logo:focus-visible { outline: 2px solid var(--color--primary, var(--primary, #f1511b)); outline-offset: 2px; }
+.site-nav_theme:focus-visible, .site-nav_menu-button:focus-visible, .site-nav_cta:focus-visible, .site-nav_link:focus-visible, .site-nav_logo:focus-visible { outline: 2px solid var(--color--primary, var(--primary, #e8480c)); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .site-nav_inner, .site-nav_name, .site-nav_cta { transition: none; } }
 @media (max-width: 767px) {
   .site-nav_inner { padding-top: 10px; padding-bottom: 10px; column-gap: 0.75rem; }
@@ -337,7 +337,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .site-nav_links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 4px 1rem 1rem; background: var(--color--surface, var(--surface, #ffffff)); box-shadow: 0 1px 0 var(--color--border, var(--border, #e1e1e4)), 0 12px 24px -12px rgba(16, 16, 20, 0.25); }
   .site-nav_links.is-open { display: flex; }
   .site-nav_link { padding: 0.85rem 0; border-bottom: 1px solid var(--color--border, var(--border, #e1e1e4)); }
-  .site-nav_link.is-menu-cta { display: flex; justify-content: center; margin-top: 1rem; padding: 0.75rem 1rem; border: 0; border-radius: 4px; background: var(--color--primary, var(--primary, #f1511b)); color: var(--color--on-primary, #16161a); font-weight: 600; }
+  .site-nav_link.is-menu-cta { display: flex; justify-content: center; margin-top: 1rem; padding: 0.75rem 1rem; border: 0; border-radius: 4px; background: var(--color--primary, var(--primary, #e8480c)); color: var(--color--on-primary, #16161a); font-weight: 600; }
   .site-nav_cta.is-hidden-in-menu { display: none; }
   .site-nav_mark { width: 30.7px; height: 28px; }
   .site-nav_name { max-width: 110px; margin-left: 11px; }
@@ -498,13 +498,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Pill — rounded inline label ---------- */
 .pill { display: inline-flex; align-items: center; gap: var(--space--xs); padding: 0.25em 0.75em; border-radius: 999px; font-size: var(--type--small); font-weight: 600; line-height: 1.4; background: var(--color--surface-alt); color: var(--color--text); }
 .pill.is-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.pill.is-accent { background: var(--color--accent); color: var(--color--text-inverse); }
+.pill.is-accent { background: var(--color--accent); color: var(--color--on-primary); }
 .pill.is-outline { background: transparent; border: 1px solid var(--color--border); color: var(--color--text-mu); }
 
 /* ---------- Tag — compact label ---------- */
 .tag { display: inline-flex; align-items: center; gap: var(--space--xs); padding: 0.15em 0.55em; border-radius: var(--radius--sm); font-size: var(--type--small); font-weight: 500; line-height: 1.5; background: var(--color--surface-alt); color: var(--color--text-mu); border: 1px solid var(--color--border); }
 .tag.is-primary { background: var(--color--primary); color: var(--color--on-primary); border-color: transparent; }
-.tag.is-accent { background: var(--color--accent); color: var(--color--text-inverse); border-color: transparent; }
+.tag.is-accent { background: var(--color--accent); color: var(--color--on-primary); border-color: transparent; }
 .tag.is-sm { font-size: 0.75rem; padding: 0.1em 0.4em; }
 
 /* ---------- Dot — status indicator ---------- */
@@ -799,7 +799,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .u-bg-surface-alt { background: var(--color--surface-alt); }
 .u-bg-surface-inverse { background: var(--color--surface-inverse); color: var(--color--text-inverse); }
 .u-bg-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.u-bg-accent { background: var(--color--accent); }
+.u-bg-accent { background: var(--color--accent); color: var(--color--on-primary); }
 
 /* ---------- Spacing (margin u-m*, padding u-p*; steps 0 xs sm md lg xl 2xl) ---------- */
 .u-mt-0 { margin-top: 0; }
@@ -1105,7 +1105,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .status-view { max-width: 520px; margin: var(--space--md) auto 0; text-align: left; display: grid; grid-template-columns: 1fr; gap: var(--space--md); }
 .status-view_token { color: var(--color--on-inverse-body); font-size: var(--type--small); }
 .status-view_token code {
-  font-family: var(--type--family-mono); color: var(--color--primary);
+  font-family: var(--type--family-mono); color: var(--color--accent-on-inverse);
   background: rgba(0, 0, 0, 0.3); border-radius: var(--radius--sm); padding: 0.1em 0.4em;
 }
 /* `status-view_note`, matching `status-view_token` above, not
@@ -1205,7 +1205,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* 0.4 measured at 3.83:1 on --color--surface-inverse — below the 4.5:1 AA
    floor for body text. 0.5 gives 5.27:1 in light theme, 5.09:1 in dark. */
 .terminal_dim { color: var(--color--on-inverse-mu); }
-.terminal_accent { color: var(--color--primary); }
+.terminal_accent { color: var(--color--accent-on-inverse); }
 /* ---------- Metric ---------- */
 .metric { display: grid; grid-template-columns: 1fr; gap: var(--space--xs); }
 .metric.is-center { justify-items: center; text-align: center; }
@@ -1368,8 +1368,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   --color--on-inverse-faint: rgba(22,22,26,0.16);
   --color--on-inverse-wash: rgba(22,22,26,0.08);
   /* Receipt doesn't distinguish light/dark theme either — same both halves. */
-  --direction--surface-inverse-light: #f1511b;
-  --direction--surface-inverse-dark: #f1511b;
+  --direction--surface-inverse-light: #e8480c;
+  --direction--surface-inverse-dark: #e8480c;
   --direction--text-inverse-light: #16161a;
   --direction--text-inverse-dark: #16161a;
   /* Kankles is a heavy display face. Render-tested 2026-09-18 at every size
@@ -1519,7 +1519,7 @@ html[data-direction="receipt"] .hero_widget.is-receipt { width: 100%; max-width:
   box-shadow: 0 0 0 2px var(--color--surface), 0 0 0 4px var(--color--text);
 }
 .dirswitch_label { font-family: var(--type--family-mono); font-size: var(--type--small); white-space: nowrap; }
-.dirswitch_num { color: var(--color--primary); }
+.dirswitch_num { color: var(--color--accent-deep); }
 .dirswitch_sep { opacity: 0.5; }
 .dirswitch_live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
@@ -1558,7 +1558,7 @@ html[data-direction="receipt"] .hero_widget[data-widget="receipt"] { display: fl
 .hero_widget-tag {
   font-family: var(--type--family-mono); font-size: var(--type--small);
   letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--color--primary);
+  color: var(--color--accent-on-inverse);
 }
 
 /* Pitch — the plate has to read as a panel against whatever band it sits on.
@@ -1670,11 +1670,13 @@ html[data-direction="receipt"] .hero_receipt-no {
    Anything using --color--primary as a FOREGROUND on an inverse band vanishes
    when that band is itself orange (receipt). Route those through their own
    token so a direction can move them without touching the accent everywhere
-   else. Measured: #16161a on #f1511b is 5.10:1; white on the same is 3.54:1,
+   else. Measured: #16161a on #e8480c is 4.61:1; white on the same is 3.92:1,
    which is why receipt inverts to ink rather than lightening.
    -------------------------------------------------------------------------- */
 :root { --color--accent-on-inverse: var(--color--primary); }
-.direction-proof   { --color--accent-on-inverse: var(--color--accent); }
+/* Proof's inverse bands are light paper in both themes, so orange text on
+   them would fail the kit's rule (small text is never orange on light). */
+.direction-proof   { --color--accent-on-inverse: #16161a; }
 .direction-receipt { --color--accent-on-inverse: #16161a; }
 
 .eyebrow.is-on-inverse,
@@ -1737,7 +1739,10 @@ html[data-direction="receipt"] .cta-section .button.is-primary:hover {
 .hero-capture_input.is-url { flex: 1; min-width: 220px; }
 .hero-capture_checkbox { margin-top: 0.2em; }
 /* Card eyebrows on the three-directions strip. */
-.eyebrow.is-primary { color: var(--color--primary); }
+/* accent-deep, not primary: ink on light, orange on dark (kit rule: small text is never orange on light). */
+.eyebrow.is-primary { color: var(--color--accent-deep); }
+/* The minimal hero is a LIGHT band in light theme, so its eyebrow can't use the orange on-inverse tone. */
+.hero.is-minimal .eyebrow.is-on-inverse-tight { color: var(--color--accent-deep); }
 
 .text-sm.is-on-inverse-mu { color: var(--color--on-inverse-mu); max-width: none; }
 /* "Trusted by local businesses" lead-in. */
@@ -1919,8 +1924,8 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 /* The artifact host stamps data-theme on <html>; the site themes by class. The
    script bridges the two — this block only covers the moment before it runs. */
 html[data-theme="dark"]:not(.theme-light) {
-  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: #1f1f23;
-  --color--surface-inverse: #1f1f23; --color--border: #3b3b42; --color--accent-deep: #e9560c;
+  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: var(--direction--surface-alt-dark);
+  --color--surface-inverse: var(--direction--surface-inverse-dark); --color--border: var(--direction--border-dark); --color--accent-deep: var(--color--primary);
   --color--success: #5fd08a; --color--warning: #f0b544; --color--danger: #f28b82;
 }
 section[id], .phase[id], .steps_item[id] { scroll-margin-top: 4.25rem; }
@@ -1933,11 +1938,11 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .nav-links { display: flex; gap: var(--space--lg); }
 .main-nav_link { font-size: var(--type--small); }
 #theme-toggle { flex: none; }
-/* Casabe lockup (src/brand): block and wordmark follow the text colour, the bar stays orange */
-.brand-lockup { display: block; width: auto; height: 30px; }  /* spec minimum for the horizontal lockup */
+/* Casabe lockup (src/brand): block and wordmark follow the text colour, the seed follows the orange token */
+.brand-lockup { display: block; width: auto; height: 30.6px; }  /* svg height = mark height x 1552/1522 (viewBox includes the wordmark descender): 30px mark */
 .main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
 .footer_logo { margin-bottom: var(--space--sm); color: var(--color--on-inverse-strong); }
-.footer_logo .brand-lockup { height: 32px; }
+.footer_logo .brand-lockup { height: 32.6px; }  /* 32px mark */
 
 /* hero */
 .hero_facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space--md) var(--space--lg); margin: var(--space--xs) 0 0; padding-top: var(--space--md); border-top: 1px solid var(--color--on-inverse-faint); }
@@ -2022,6 +2027,8 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   .heading-xl { font-size: 1.625rem; }
   .steps_title { font-size: 1.1875rem; }
   .phase_title { font-size: 1.25rem; }
+  .brand-lockup { height: 22.4px; }  /* 22px mark (152px wide, as before) so the nav links are not clipped at 375px */
+  .footer_logo .brand-lockup { height: 24.5px; }
   .container.is-nav { flex-wrap: nowrap; gap: var(--space--sm); }
   .main-nav_menu { flex-wrap: nowrap; min-width: 0; gap: var(--space--sm); }
   .nav-links { gap: 0.9rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
@@ -2110,7 +2117,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 
 <header class="main-nav">
   <div class="container is-nav">
-    <a class="main-nav_logo" href="#top" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -85.5 6325.88 1271"><g transform="scale(24.336283) translate(-6.3 -9.4)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" fill="#e8480c"/></g><g transform="translate(1450.88 1086.18) scale(1.250000)"><path fill="currentColor" d="M387 15Q217 15 123.5 -92.0Q30 -199 30 -390Q30 -579 122.0 -687.0Q214 -795 386 -795Q489 -795 562.0 -756.5Q635 -718 676.0 -650.0Q717 -582 724 -494H557Q549 -576 504.0 -622.5Q459 -669 387 -669Q296 -669 250.0 -596.0Q204 -523 204 -389Q204 -250 251.5 -180.5Q299 -111 386 -111Q461 -111 505.5 -159.0Q550 -207 557 -286H724Q717 -198 676.0 -130.0Q635 -62 562.5 -23.5Q490 15 387 15Z M1004.0 12Q920.0 12 866.0 -28.5Q812.0 -69 786.0 -140.0Q760.0 -211 760.0 -301Q760.0 -394 786.5 -464.0Q813.0 -534 867.0 -573.0Q921.0 -612 1003.0 -612Q1066.0 -612 1106.5 -587.5Q1147.0 -563 1168.0 -522H1192.0V-600H1342.0V0H1192.0V-78H1168.0Q1147.0 -40 1107.0 -14.0Q1067.0 12 1004.0 12ZM1046.0 -102Q1107.0 -102 1143.5 -155.5Q1180.0 -209 1180.0 -300Q1180.0 -392 1143.5 -445.0Q1107.0 -498 1046.0 -498Q991.0 -498 959.5 -448.5Q928.0 -399 928.0 -300Q928.0 -201 959.5 -151.5Q991.0 -102 1046.0 -102Z M1690.0 15Q1590.0 15 1530.5 -16.5Q1471.0 -48 1443.5 -96.0Q1416.0 -144 1412.0 -192H1566.0Q1571.0 -166 1587.5 -144.5Q1604.0 -123 1631.5 -111.0Q1659.0 -99 1698.0 -99Q1746.0 -99 1767.0 -115.5Q1788.0 -132 1788.0 -158Q1788.0 -182 1768.5 -198.5Q1749.0 -215 1705.0 -229L1633.0 -253Q1581.0 -271 1537.0 -292.5Q1493.0 -314 1466.5 -348.0Q1440.0 -382 1440.0 -436Q1440.0 -516 1501.0 -565.5Q1562.0 -615 1674.0 -615Q1755.0 -615 1806.5 -590.0Q1858.0 -565 1884.0 -523.5Q1910.0 -482 1914.0 -432H1766.0Q1761.0 -468 1736.0 -487.5Q1711.0 -507 1668.0 -507Q1629.0 -507 1609.5 -492.0Q1590.0 -477 1590.0 -451Q1590.0 -425 1611.0 -408.0Q1632.0 -391 1675.0 -377L1747.0 -354Q1799.0 -338 1842.5 -316.5Q1886.0 -295 1912.0 -260.5Q1938.0 -226 1938.0 -171Q1938.0 -87 1874.5 -36.0Q1811.0 15 1690.0 15Z M2216.0 12Q2132.0 12 2078.0 -28.5Q2024.0 -69 1998.0 -140.0Q1972.0 -211 1972.0 -301Q1972.0 -394 1998.5 -464.0Q2025.0 -534 2079.0 -573.0Q2133.0 -612 2215.0 -612Q2278.0 -612 2318.5 -587.5Q2359.0 -563 2380.0 -522H2404.0V-600H2554.0V0H2404.0V-78H2380.0Q2359.0 -40 2319.0 -14.0Q2279.0 12 2216.0 12ZM2258.0 -102Q2319.0 -102 2355.5 -155.5Q2392.0 -209 2392.0 -300Q2392.0 -392 2355.5 -445.0Q2319.0 -498 2258.0 -498Q2203.0 -498 2171.5 -448.5Q2140.0 -399 2140.0 -300Q2140.0 -201 2171.5 -151.5Q2203.0 -102 2258.0 -102Z M3020.0 12Q2953.0 12 2913.0 -14.0Q2873.0 -40 2852.0 -78H2828.0V0H2678.0V-800H2840.0V-534H2864.0Q2886.0 -570 2924.0 -591.0Q2962.0 -612 3020.0 -612Q3100.0 -612 3153.5 -573.0Q3207.0 -534 3233.5 -464.0Q3260.0 -394 3260.0 -301Q3260.0 -211 3234.0 -140.0Q3208.0 -69 3155.0 -28.5Q3102.0 12 3020.0 12ZM2974.0 -102Q3029.0 -102 3060.5 -151.5Q3092.0 -201 3092.0 -300Q3092.0 -399 3060.5 -448.5Q3029.0 -498 2974.0 -498Q2913.0 -498 2876.5 -445.0Q2840.0 -392 2840.0 -300Q2840.0 -209 2876.5 -155.5Q2913.0 -102 2974.0 -102Z M3595.0 15Q3453.0 15 3378.5 -70.0Q3304.0 -155 3304.0 -301Q3304.0 -399 3337.5 -469.0Q3371.0 -539 3435.5 -577.0Q3500.0 -615 3593.0 -615Q3727.0 -615 3798.5 -534.0Q3870.0 -453 3870.0 -296V-262H3462.0Q3467.0 -186 3501.5 -142.5Q3536.0 -99 3595.0 -99Q3642.0 -99 3670.5 -127.0Q3699.0 -155 3708.0 -192H3862.0Q3853.0 -137 3822.0 -90.0Q3791.0 -43 3735.0 -14.0Q3679.0 15 3595.0 15ZM3462.0 -364H3712.0Q3708.0 -432 3678.0 -469.5Q3648.0 -507 3592.0 -507Q3537.0 -507 3503.5 -471.5Q3470.0 -436 3462.0 -364Z"/></g></svg></a>
+    <a class="main-nav_logo" href="#top" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1522 10503 1552"><!-- DRAFT: outlined from GT Maru Mono Bold TRIAL. Not for production until the font is licensed. Mark height = b ascender + 4%; gap = seed diameter. --><g transform="translate(-240.1 -1889.1) scale(34.9628)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" style="fill:var(--color--primary)"/></g><path fill="currentColor" d="M2773.992832858587 30C2955.992832858587 30 3107.992832858587 -32 3196.992832858587 -122C3257.992832858587 -183 3292.992832858587 -259 3292.992832858587 -312C3292.992832858587 -387 3231.992832858587 -442 3160.992832858587 -442C3101.992832858587 -442 3064.992832858587 -421 3024.992832858587 -369C2972.992832858587 -295 2897.992832858587 -245 2782.992832858587 -245C2614.992832858587 -245 2485.992832858587 -369 2485.992832858587 -550C2485.992832858587 -731 2614.992832858587 -855 2782.992832858587 -855C2886.992832858587 -855 2966.992832858587 -810 3015.992832858587 -743C3062.992832858587 -691 3102.992832858587 -666 3163.992832858587 -666C3236.992832858587 -666 3289.992832858587 -721 3289.992832858587 -794C3289.992832858587 -853 3254.992832858587 -926 3194.992832858587 -986C3107.992832858587 -1073 2966.992832858587 -1130 2773.992832858587 -1130C2431.992832858587 -1130 2176.992832858587 -890 2176.992832858587 -550C2176.992832858587 -210 2431.992832858587 30 2773.992832858587 30ZM4030.992832858587 29C4169.992832858587 29 4288.992832858587 -18 4368.992832858587 -101C4416.992832858587 -22 4498.992832858587 24 4600.992832858587 24C4681.992832858587 24 4766.992832858587 -16 4811.992832858587 -73C4846.992832858587 -116 4862.992832858587 -157 4862.992832858587 -208C4862.992832858587 -265 4827.992832858587 -309 4779.992832858587 -309C4756.992832858587 -309 4741.992832858587 -302 4722.992832858587 -285C4707.992832858587 -271 4692.992832858587 -262 4670.992832858587 -262C4634.992832858587 -262 4622.992832858587 -287 4622.992832858587 -316V-743C4622.992832858587 -998 4450.992832858587 -1130 4159.992832858587 -1130C3959.992832858587 -1130 3788.992832858587 -1064 3683.992832858587 -947C3645.992832858587 -905 3626.992832858587 -860 3626.992832858587 -815C3626.992832858587 -748 3677.992832858587 -704 3749.992832858587 -704C3794.992832858587 -704 3829.992832858587 -723 3889.992832858587 -769C3962.992832858587 -831 4060.992832858587 -872 4153.992832858587 -872C4256.992832858587 -872 4318.992832858587 -832 4318.992832858587 -766C4318.992832858587 -719 4292.992832858587 -694 4216.992832858587 -678L3953.992832858587 -620C3737.992832858587 -573 3631.992832858587 -465 3631.992832858587 -294C3631.992832858587 -100 3791.992832858587 29 4030.992832858587 29ZM3952.992832858587 -318C3952.992832858587 -380 4003.992832858587 -423 4103.992832858587 -443L4214.992832858587 -465C4260.992832858587 -475 4295.992832858587 -489 4319.992832858587 -508V-383C4319.992832858587 -284 4230.992832858587 -211 4110.992832858587 -211C4015.992832858587 -211 3952.992832858587 -254 3952.992832858587 -318ZM5635.992832858587 30C5975.992832858587 30 6182.992832858587 -110 6182.992832858587 -340C6182.992832858587 -513 6060.992832858587 -622 5810.992832858587 -666L5596.992832858587 -703C5485.992832858587 -722 5428.992832858587 -754 5428.992832858587 -804C5428.992832858587 -858 5502.992832858587 -891 5624.992832858587 -891C5724.992832858587 -891 5810.992832858587 -862 5880.992832858587 -819C5944.992832858587 -779 5991.992832858587 -746 6041.992832858587 -746C6112.992832858587 -746 6163.992832858587 -795 6163.992832858587 -861C6163.992832858587 -922 6118.992832858587 -984 6041.992832858587 -1032C5945.992832858587 -1092 5803.992832858587 -1130 5632.992832858587 -1130C5311.992832858587 -1130 5112.992832858587 -997 5112.992832858587 -783C5112.992832858587 -614 5247.992832858587 -499 5497.992832858587 -456L5699.992832858587 -421C5806.992832858587 -403 5865.992832858587 -371 5865.992832858587 -312C5865.992832858587 -252 5790.992832858587 -218 5658.992832858587 -218C5529.992832858587 -218 5435.992832858587 -256 5345.992832858587 -320C5283.992832858587 -364 5240.992832858587 -386 5191.992832858587 -386C5118.992832858587 -386 5068.992832858587 -339 5068.992832858587 -267C5068.992832858587 -218 5100.992832858587 -180 5148.992832858587 -135C5254.992832858587 -32 5436.992832858587 30 5635.992832858587 30ZM6910.992832858587 29C7049.992832858587 29 7168.992832858587 -18 7248.992832858587 -101C7296.992832858587 -22 7378.992832858587 24 7480.992832858587 24C7561.992832858587 24 7646.992832858587 -16 7691.992832858587 -73C7726.992832858587 -116 7742.992832858587 -157 7742.992832858587 -208C7742.992832858587 -265 7707.992832858587 -309 7659.992832858587 -309C7636.992832858587 -309 7621.992832858587 -302 7602.992832858587 -285C7587.992832858587 -271 7572.992832858587 -262 7550.992832858587 -262C7514.992832858587 -262 7502.992832858587 -287 7502.992832858587 -316V-743C7502.992832858587 -998 7330.992832858587 -1130 7039.992832858587 -1130C6839.992832858587 -1130 6668.992832858587 -1064 6563.992832858587 -947C6525.992832858587 -905 6506.992832858587 -860 6506.992832858587 -815C6506.992832858587 -748 6557.992832858587 -704 6629.992832858587 -704C6674.992832858587 -704 6709.992832858587 -723 6769.992832858587 -769C6842.992832858587 -831 6940.992832858587 -872 7033.992832858587 -872C7136.992832858587 -872 7198.992832858587 -832 7198.992832858587 -766C7198.992832858587 -719 7172.992832858587 -694 7096.992832858587 -678L6833.992832858587 -620C6617.992832858587 -573 6511.992832858587 -465 6511.992832858587 -294C6511.992832858587 -100 6671.992832858587 29 6910.992832858587 29ZM6832.992832858587 -318C6832.992832858587 -380 6883.992832858587 -423 6983.992832858587 -443L7094.992832858587 -465C7140.992832858587 -475 7175.992832858587 -489 7199.992832858587 -508V-383C7199.992832858587 -284 7110.992832858587 -211 6990.992832858587 -211C6895.992832858587 -211 6832.992832858587 -254 6832.992832858587 -318ZM8578.992832858587 30C8880.992832858587 30 9110.992832858587 -202 9110.992832858587 -550C9110.992832858587 -898 8880.992832858587 -1130 8578.992832858587 -1130C8444.992832858587 -1130 8330.992832858587 -1085 8253.992832858587 -1001V-1308C8253.992832858587 -1400 8192.992832858587 -1464 8104.992832858587 -1464C8016.992832858587 -1464 7954.992832858587 -1400 7954.992832858587 -1308V-132C7954.992832858587 -40 8016.992832858587 24 8104.992832858587 24C8180.992832858587 24 8235.992832858587 -23 8249.992832858587 -95C8330.992832858587 -8 8439.992832858587 30 8578.992832858587 30ZM8248.992832858587 -550C8248.992832858587 -724 8360.992832858587 -855 8525.992832858587 -855C8682.992832858587 -855 8802.992832858587 -735 8802.992832858587 -550C8802.992832858587 -365 8682.992832858587 -245 8525.992832858587 -245C8360.992832858587 -245 8248.992832858587 -376 8248.992832858587 -550ZM9992.992832858587 29C10174.992832858587 29 10354.992832858587 -34 10435.992832858587 -144C10458.992832858587 -175 10475.992832858587 -211 10475.992832858587 -247C10475.992832858587 -320 10439.992832858587 -365 10363.992832858587 -365C10316.992832858587 -365 10277.992832858587 -346 10236.992832858587 -320C10179.992832858587 -273 10107.992832858587 -246 10006.992832858587 -246C9832.992832858587 -246 9705.992832858587 -327 9686.992832858587 -459H10345.992832858587C10452.992832858587 -459 10502.992832858587 -511 10502.992832858587 -627C10502.992832858587 -919 10277.992832858587 -1130 9959.992832858587 -1130C9623.992832858587 -1130 9387.992832858587 -892 9387.992832858587 -548C9387.992832858587 -197 9627.992832858587 29 9992.992832858587 29ZM9686.992832858587 -689C9706.992832858587 -812 9804.992832858587 -893 9947.992832858587 -893C10092.992832858587 -893 10185.992832858587 -812 10206.992832858587 -689Z"/></svg></a>
     <nav class="main-nav_menu" aria-label="Sections">
       <div class="nav-links">
         <a class="main-nav_link" href="#materials">Materials</a>
@@ -2551,7 +2558,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   <div class="container">
     <div class="footer_layout">
       <div>
-        <div class="footer_logo" role="img" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -85.5 6325.88 1271"><g transform="scale(24.336283) translate(-6.3 -9.4)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" fill="#e8480c"/></g><g transform="translate(1450.88 1086.18) scale(1.250000)"><path fill="currentColor" d="M387 15Q217 15 123.5 -92.0Q30 -199 30 -390Q30 -579 122.0 -687.0Q214 -795 386 -795Q489 -795 562.0 -756.5Q635 -718 676.0 -650.0Q717 -582 724 -494H557Q549 -576 504.0 -622.5Q459 -669 387 -669Q296 -669 250.0 -596.0Q204 -523 204 -389Q204 -250 251.5 -180.5Q299 -111 386 -111Q461 -111 505.5 -159.0Q550 -207 557 -286H724Q717 -198 676.0 -130.0Q635 -62 562.5 -23.5Q490 15 387 15Z M1004.0 12Q920.0 12 866.0 -28.5Q812.0 -69 786.0 -140.0Q760.0 -211 760.0 -301Q760.0 -394 786.5 -464.0Q813.0 -534 867.0 -573.0Q921.0 -612 1003.0 -612Q1066.0 -612 1106.5 -587.5Q1147.0 -563 1168.0 -522H1192.0V-600H1342.0V0H1192.0V-78H1168.0Q1147.0 -40 1107.0 -14.0Q1067.0 12 1004.0 12ZM1046.0 -102Q1107.0 -102 1143.5 -155.5Q1180.0 -209 1180.0 -300Q1180.0 -392 1143.5 -445.0Q1107.0 -498 1046.0 -498Q991.0 -498 959.5 -448.5Q928.0 -399 928.0 -300Q928.0 -201 959.5 -151.5Q991.0 -102 1046.0 -102Z M1690.0 15Q1590.0 15 1530.5 -16.5Q1471.0 -48 1443.5 -96.0Q1416.0 -144 1412.0 -192H1566.0Q1571.0 -166 1587.5 -144.5Q1604.0 -123 1631.5 -111.0Q1659.0 -99 1698.0 -99Q1746.0 -99 1767.0 -115.5Q1788.0 -132 1788.0 -158Q1788.0 -182 1768.5 -198.5Q1749.0 -215 1705.0 -229L1633.0 -253Q1581.0 -271 1537.0 -292.5Q1493.0 -314 1466.5 -348.0Q1440.0 -382 1440.0 -436Q1440.0 -516 1501.0 -565.5Q1562.0 -615 1674.0 -615Q1755.0 -615 1806.5 -590.0Q1858.0 -565 1884.0 -523.5Q1910.0 -482 1914.0 -432H1766.0Q1761.0 -468 1736.0 -487.5Q1711.0 -507 1668.0 -507Q1629.0 -507 1609.5 -492.0Q1590.0 -477 1590.0 -451Q1590.0 -425 1611.0 -408.0Q1632.0 -391 1675.0 -377L1747.0 -354Q1799.0 -338 1842.5 -316.5Q1886.0 -295 1912.0 -260.5Q1938.0 -226 1938.0 -171Q1938.0 -87 1874.5 -36.0Q1811.0 15 1690.0 15Z M2216.0 12Q2132.0 12 2078.0 -28.5Q2024.0 -69 1998.0 -140.0Q1972.0 -211 1972.0 -301Q1972.0 -394 1998.5 -464.0Q2025.0 -534 2079.0 -573.0Q2133.0 -612 2215.0 -612Q2278.0 -612 2318.5 -587.5Q2359.0 -563 2380.0 -522H2404.0V-600H2554.0V0H2404.0V-78H2380.0Q2359.0 -40 2319.0 -14.0Q2279.0 12 2216.0 12ZM2258.0 -102Q2319.0 -102 2355.5 -155.5Q2392.0 -209 2392.0 -300Q2392.0 -392 2355.5 -445.0Q2319.0 -498 2258.0 -498Q2203.0 -498 2171.5 -448.5Q2140.0 -399 2140.0 -300Q2140.0 -201 2171.5 -151.5Q2203.0 -102 2258.0 -102Z M3020.0 12Q2953.0 12 2913.0 -14.0Q2873.0 -40 2852.0 -78H2828.0V0H2678.0V-800H2840.0V-534H2864.0Q2886.0 -570 2924.0 -591.0Q2962.0 -612 3020.0 -612Q3100.0 -612 3153.5 -573.0Q3207.0 -534 3233.5 -464.0Q3260.0 -394 3260.0 -301Q3260.0 -211 3234.0 -140.0Q3208.0 -69 3155.0 -28.5Q3102.0 12 3020.0 12ZM2974.0 -102Q3029.0 -102 3060.5 -151.5Q3092.0 -201 3092.0 -300Q3092.0 -399 3060.5 -448.5Q3029.0 -498 2974.0 -498Q2913.0 -498 2876.5 -445.0Q2840.0 -392 2840.0 -300Q2840.0 -209 2876.5 -155.5Q2913.0 -102 2974.0 -102Z M3595.0 15Q3453.0 15 3378.5 -70.0Q3304.0 -155 3304.0 -301Q3304.0 -399 3337.5 -469.0Q3371.0 -539 3435.5 -577.0Q3500.0 -615 3593.0 -615Q3727.0 -615 3798.5 -534.0Q3870.0 -453 3870.0 -296V-262H3462.0Q3467.0 -186 3501.5 -142.5Q3536.0 -99 3595.0 -99Q3642.0 -99 3670.5 -127.0Q3699.0 -155 3708.0 -192H3862.0Q3853.0 -137 3822.0 -90.0Q3791.0 -43 3735.0 -14.0Q3679.0 15 3595.0 15ZM3462.0 -364H3712.0Q3708.0 -432 3678.0 -469.5Q3648.0 -507 3592.0 -507Q3537.0 -507 3503.5 -471.5Q3470.0 -436 3462.0 -364Z"/></g></svg></div>
+        <div class="footer_logo" role="img" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1522 10503 1552"><!-- DRAFT: outlined from GT Maru Mono Bold TRIAL. Not for production until the font is licensed. Mark height = b ascender + 4%; gap = seed diameter. --><g transform="translate(-240.1 -1889.1) scale(34.9628)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" style="fill:var(--color--primary)"/></g><path fill="currentColor" d="M2773.992832858587 30C2955.992832858587 30 3107.992832858587 -32 3196.992832858587 -122C3257.992832858587 -183 3292.992832858587 -259 3292.992832858587 -312C3292.992832858587 -387 3231.992832858587 -442 3160.992832858587 -442C3101.992832858587 -442 3064.992832858587 -421 3024.992832858587 -369C2972.992832858587 -295 2897.992832858587 -245 2782.992832858587 -245C2614.992832858587 -245 2485.992832858587 -369 2485.992832858587 -550C2485.992832858587 -731 2614.992832858587 -855 2782.992832858587 -855C2886.992832858587 -855 2966.992832858587 -810 3015.992832858587 -743C3062.992832858587 -691 3102.992832858587 -666 3163.992832858587 -666C3236.992832858587 -666 3289.992832858587 -721 3289.992832858587 -794C3289.992832858587 -853 3254.992832858587 -926 3194.992832858587 -986C3107.992832858587 -1073 2966.992832858587 -1130 2773.992832858587 -1130C2431.992832858587 -1130 2176.992832858587 -890 2176.992832858587 -550C2176.992832858587 -210 2431.992832858587 30 2773.992832858587 30ZM4030.992832858587 29C4169.992832858587 29 4288.992832858587 -18 4368.992832858587 -101C4416.992832858587 -22 4498.992832858587 24 4600.992832858587 24C4681.992832858587 24 4766.992832858587 -16 4811.992832858587 -73C4846.992832858587 -116 4862.992832858587 -157 4862.992832858587 -208C4862.992832858587 -265 4827.992832858587 -309 4779.992832858587 -309C4756.992832858587 -309 4741.992832858587 -302 4722.992832858587 -285C4707.992832858587 -271 4692.992832858587 -262 4670.992832858587 -262C4634.992832858587 -262 4622.992832858587 -287 4622.992832858587 -316V-743C4622.992832858587 -998 4450.992832858587 -1130 4159.992832858587 -1130C3959.992832858587 -1130 3788.992832858587 -1064 3683.992832858587 -947C3645.992832858587 -905 3626.992832858587 -860 3626.992832858587 -815C3626.992832858587 -748 3677.992832858587 -704 3749.992832858587 -704C3794.992832858587 -704 3829.992832858587 -723 3889.992832858587 -769C3962.992832858587 -831 4060.992832858587 -872 4153.992832858587 -872C4256.992832858587 -872 4318.992832858587 -832 4318.992832858587 -766C4318.992832858587 -719 4292.992832858587 -694 4216.992832858587 -678L3953.992832858587 -620C3737.992832858587 -573 3631.992832858587 -465 3631.992832858587 -294C3631.992832858587 -100 3791.992832858587 29 4030.992832858587 29ZM3952.992832858587 -318C3952.992832858587 -380 4003.992832858587 -423 4103.992832858587 -443L4214.992832858587 -465C4260.992832858587 -475 4295.992832858587 -489 4319.992832858587 -508V-383C4319.992832858587 -284 4230.992832858587 -211 4110.992832858587 -211C4015.992832858587 -211 3952.992832858587 -254 3952.992832858587 -318ZM5635.992832858587 30C5975.992832858587 30 6182.992832858587 -110 6182.992832858587 -340C6182.992832858587 -513 6060.992832858587 -622 5810.992832858587 -666L5596.992832858587 -703C5485.992832858587 -722 5428.992832858587 -754 5428.992832858587 -804C5428.992832858587 -858 5502.992832858587 -891 5624.992832858587 -891C5724.992832858587 -891 5810.992832858587 -862 5880.992832858587 -819C5944.992832858587 -779 5991.992832858587 -746 6041.992832858587 -746C6112.992832858587 -746 6163.992832858587 -795 6163.992832858587 -861C6163.992832858587 -922 6118.992832858587 -984 6041.992832858587 -1032C5945.992832858587 -1092 5803.992832858587 -1130 5632.992832858587 -1130C5311.992832858587 -1130 5112.992832858587 -997 5112.992832858587 -783C5112.992832858587 -614 5247.992832858587 -499 5497.992832858587 -456L5699.992832858587 -421C5806.992832858587 -403 5865.992832858587 -371 5865.992832858587 -312C5865.992832858587 -252 5790.992832858587 -218 5658.992832858587 -218C5529.992832858587 -218 5435.992832858587 -256 5345.992832858587 -320C5283.992832858587 -364 5240.992832858587 -386 5191.992832858587 -386C5118.992832858587 -386 5068.992832858587 -339 5068.992832858587 -267C5068.992832858587 -218 5100.992832858587 -180 5148.992832858587 -135C5254.992832858587 -32 5436.992832858587 30 5635.992832858587 30ZM6910.992832858587 29C7049.992832858587 29 7168.992832858587 -18 7248.992832858587 -101C7296.992832858587 -22 7378.992832858587 24 7480.992832858587 24C7561.992832858587 24 7646.992832858587 -16 7691.992832858587 -73C7726.992832858587 -116 7742.992832858587 -157 7742.992832858587 -208C7742.992832858587 -265 7707.992832858587 -309 7659.992832858587 -309C7636.992832858587 -309 7621.992832858587 -302 7602.992832858587 -285C7587.992832858587 -271 7572.992832858587 -262 7550.992832858587 -262C7514.992832858587 -262 7502.992832858587 -287 7502.992832858587 -316V-743C7502.992832858587 -998 7330.992832858587 -1130 7039.992832858587 -1130C6839.992832858587 -1130 6668.992832858587 -1064 6563.992832858587 -947C6525.992832858587 -905 6506.992832858587 -860 6506.992832858587 -815C6506.992832858587 -748 6557.992832858587 -704 6629.992832858587 -704C6674.992832858587 -704 6709.992832858587 -723 6769.992832858587 -769C6842.992832858587 -831 6940.992832858587 -872 7033.992832858587 -872C7136.992832858587 -872 7198.992832858587 -832 7198.992832858587 -766C7198.992832858587 -719 7172.992832858587 -694 7096.992832858587 -678L6833.992832858587 -620C6617.992832858587 -573 6511.992832858587 -465 6511.992832858587 -294C6511.992832858587 -100 6671.992832858587 29 6910.992832858587 29ZM6832.992832858587 -318C6832.992832858587 -380 6883.992832858587 -423 6983.992832858587 -443L7094.992832858587 -465C7140.992832858587 -475 7175.992832858587 -489 7199.992832858587 -508V-383C7199.992832858587 -284 7110.992832858587 -211 6990.992832858587 -211C6895.992832858587 -211 6832.992832858587 -254 6832.992832858587 -318ZM8578.992832858587 30C8880.992832858587 30 9110.992832858587 -202 9110.992832858587 -550C9110.992832858587 -898 8880.992832858587 -1130 8578.992832858587 -1130C8444.992832858587 -1130 8330.992832858587 -1085 8253.992832858587 -1001V-1308C8253.992832858587 -1400 8192.992832858587 -1464 8104.992832858587 -1464C8016.992832858587 -1464 7954.992832858587 -1400 7954.992832858587 -1308V-132C7954.992832858587 -40 8016.992832858587 24 8104.992832858587 24C8180.992832858587 24 8235.992832858587 -23 8249.992832858587 -95C8330.992832858587 -8 8439.992832858587 30 8578.992832858587 30ZM8248.992832858587 -550C8248.992832858587 -724 8360.992832858587 -855 8525.992832858587 -855C8682.992832858587 -855 8802.992832858587 -735 8802.992832858587 -550C8802.992832858587 -365 8682.992832858587 -245 8525.992832858587 -245C8360.992832858587 -245 8248.992832858587 -376 8248.992832858587 -550ZM9992.992832858587 29C10174.992832858587 29 10354.992832858587 -34 10435.992832858587 -144C10458.992832858587 -175 10475.992832858587 -211 10475.992832858587 -247C10475.992832858587 -320 10439.992832858587 -365 10363.992832858587 -365C10316.992832858587 -365 10277.992832858587 -346 10236.992832858587 -320C10179.992832858587 -273 10107.992832858587 -246 10006.992832858587 -246C9832.992832858587 -246 9705.992832858587 -327 9686.992832858587 -459H10345.992832858587C10452.992832858587 -459 10502.992832858587 -511 10502.992832858587 -627C10502.992832858587 -919 10277.992832858587 -1130 9959.992832858587 -1130C9623.992832858587 -1130 9387.992832858587 -892 9387.992832858587 -548C9387.992832858587 -197 9627.992832858587 29 9992.992832858587 29ZM9686.992832858587 -689C9706.992832858587 -812 9804.992832858587 -893 9947.992832858587 -893C10092.992832858587 -893 10185.992832858587 -812 10206.992832858587 -689Z"/></svg></div>
         <p class="footer_copyright">Canvas zip pouch workshop handout</p>
       </div>
     </div>

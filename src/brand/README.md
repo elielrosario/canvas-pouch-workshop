@@ -4,12 +4,22 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 
 ## Lockup
 
-`casabe-lockup-currentcolor.svg` is the mark followed by the `Casabe` wordmark.
+**DRAFT, do not ship until the GT Maru license is bought.** `casabe-lockup-currentcolor.svg` is the mark followed by `casabe` outlined from the **trial** font GT Maru Mono Bold. Grilli Type's trial license forbids use in final files, so before this merges the outlines must be regenerated from the licensed font (source: the brand-kit lockup draft, `casabe-lockup-draft/`).
 
-- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is fixed orange `#e8480c`. Geometry is the kit's `mark/casabe-mark.svg`, metadata stripped.
-- **Wordmark:** the vectorised Familjen Grotesk 700 paths from the previous lockup, **unchanged**. The kit ships no wordmark because GT Maru is not yet licensed. When it is, outline the lockup from the licensed font and replace only the wordmark group.
-- **Layout (viewBox 6326 x 1271):** the mark is 1100 tall with its bottom edge on the wordmark baseline (1.1x the cap height), gap 200 (about two thirds of the seed diameter 292). The box adds 85 of empty space above and below so the lockup is no wider than the previous one at 30px tall (about 149px; it was 155px) and the mobile nav still fits. The mark itself renders about 26px tall at 30px.
-- **Sizes on the site:** 30px tall in the nav, 32px in the footer and on the QR sign (set in `src/body.html`, `src/progress.html`, `src/sign.html`).
+- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is `style="fill:var(--color--primary)"` (the draft file hardcodes `#e8480c`; it is swapped for the token), so it takes the site's orange and follows the colour switch. The build inlines the SVG into each page, which is what lets the variable resolve; the file on its own (opened as an image) renders the seed black. Geometry is the kit's `mark/casabe-mark.svg`.
+- **Wordmark:** five-letter `casabe` outlines, `currentColor`, in one path.
+- **Proportions (B+):** the mark's bottom sits on the text baseline; the mark is as tall as the "b" plus 4%; the gap between mark and "c" equals the seed's diameter; lockup width = mark height x 6.9. viewBox is `0 -1522 10503 1552`: the mark spans 1522 units, the extra 30 is the descender of the "c" and "e" overshoot below the baseline.
+- **Sizes on the site:** the SVG height is the mark height x 1552/1522 (x 1.0197), set in `src/body.html`, `src/progress.html`, `src/sign.html`.
+
+  | Place | Mark | SVG height | Width |
+  |---|---|---|---|
+  | Nav, 768px and up | 30px | 30.6px | 207px |
+  | Nav, below 768px | 22px | 22.4px | 152px (same as the old lockup) |
+  | Footer, 768px and up | 32px | 32.6px | 221px |
+  | Footer, below 768px | 24px | 24.5px | 166px |
+  | QR sign | 32px | 32.6px | 221px |
+
+  At 375px a 24px mark (166px wide) overflowed the nav links by 9px, so the nav mark is 22px there; at 375px the links have 5px to spare. At 360px the nav links still overflow by 10px (the old lockup was the same width, so this is unchanged).
 
 `build.py` injects the file at `<!--LOCKUP-->`, adding the `brand-lockup` class.
 
@@ -27,7 +37,9 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 | Paper | `#f7f7f8` |
 | Orange (seed) | `#e8480c` |
 
-The built pages inline a site stylesheet whose primary is `#ff7900`; the current `batey-platform/site/styles.css` has `#f1511b`. Both differ from the kit's orange. The site tokens are left as they are.
+The built pages inline batey-platform's `site/styles.css`, whose `--color--primary` is the kit orange `#e8480c` on the `claude/kit-colours` branch. The workshops CSS uses the tokens (`--color--primary`, `--color--ink-fixed`, the `--direction--*-dark` surfaces) and holds no orange or ink hex of its own.
+
+Accessibility (kit rules): small text is never orange on a light background (`#e8480c` on `#f7f7f8` is 3.66:1); buttons are ink text on orange; orange text is fine on dark. The large bold step numerals (24px, 26px on the QR sign) are the only orange text on light and pass the 3:1 large-text bar.
 
 ## Icons (`assets/brand/`, from the kit's `icons/`)
 
