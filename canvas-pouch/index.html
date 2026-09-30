@@ -32,14 +32,21 @@
 :root {
   --color--text: #16161a;
   --color--text-mu: #6b6b73;
-  --color--text-inverse: #ffffff;
+  /* --color--text-inverse, --color--surface-alt, --color--surface-inverse and
+     --color--border are set by BOTH axes (theme AND direction) — see the
+     "aliases: tokens set by both axes" comment in the DIRECTION AXIS section
+     below for what these var()s resolve through. The alias formula has to
+     stay THIS early in the file (before `.theme-dark`, same as it was raw
+     hex before): same-specificity (0,1,0) rules resolve by source order, and
+     `.theme-dark` below has to be able to override these. */
+  --color--surface-alt: var(--direction--surface-alt-light);
+  --color--border: var(--direction--border-light);
+  --color--surface-inverse: var(--direction--surface-inverse-light);
+  --color--text-inverse: var(--direction--text-inverse-light);
   --color--surface: #ffffff;
-  --color--surface-alt: #f7f7f8;
-  --color--surface-inverse: #16161a;
-  --color--primary: #ff7900;
-  --color--border: #e1e1e4;
-  --color--accent: #e9560c;
-  --color--accent-deep: #1f1f23;
+  --color--primary: #e8480c;
+  --color--accent: #e8480c;
+  --color--accent-deep: #16161a;
   --color--success: #166534;
   --color--warning: #b45309;
   --color--danger: #b91c1c;
@@ -49,7 +56,7 @@
   --color--neutral-400: #9a9aa2;
   --color--neutral-500: #6b6b73;
   --color--neutral-700: #3b3b42;
-  --color--neutral-800: #1f1f23;
+  --color--neutral-800: #16161a;
   --color--neutral-900: #16161a;
   /* Ink that sits ON the primary orange fill — fixed dark ink in both themes
      (see .button.is-primary below), independent of the neutral scale so the
@@ -59,11 +66,11 @@
      NOT redefined per theme: the neutral scale inverts in dark, so anything
      that must stay ink in both themes cannot draw from it. */
   --color--ink-fixed: #16161a;
-  --color--primary-500: #ff7900;
-  --color--primary-600: #e9560c;
-  --color--primary-700: #1f1f23;
-  --color--accent-500: #e9560c;
-  --color--accent-600: #1f1f23;
+  --color--primary-500: #e8480c;
+  --color--primary-600: #eb5e29;
+  --color--primary-700: #16161a;
+  --color--accent-500: #e8480c;
+  --color--accent-600: #16161a;
   --color--success-300: #5fd08a;
   --color--success-500: #166534;
   --color--warning-300: #f0b544;
@@ -81,8 +88,17 @@
   --color--on-inverse-line: rgba(255,255,255,0.28);
   --color--on-inverse-faint: rgba(255,255,255,0.14);
   --color--on-inverse-wash: rgba(255,255,255,0.08);
-  --effect--shadow-1: 0 1px 2px rgba(16, 16, 20, 0.06), 0 1px 3px rgba(16, 16, 20, 0.10);
-  --effect--shadow-2: 0 4px 12px -2px rgba(16, 16, 20, 0.12), 0 2px 4px -1px rgba(16, 16, 20, 0.08);
+  /* Hero process-panel schematic grays (BP-195/BP-231) — the mini pages in the
+     Pitch and Proof widgets are literal white pages whatever the band or
+     theme, so their chrome carries these exact fixed values rather than the
+     neutral ramp, which flips in dark mode. */
+  --color--schematic-fixed: #e1e1e4;
+  --color--schematic-mid-fixed: #c9c9ce;
+  --color--schematic-dark-fixed: #b5b5bb;
+  --color--schematic-on-dark-strong-fixed: rgba(255,255,255,0.55);
+  --color--schematic-on-dark-faint-fixed: rgba(255,255,255,0.16);
+  --effect--shadow-sm: 0 1px 2px rgba(16, 16, 20, 0.06), 0 1px 3px rgba(16, 16, 20, 0.10);
+  --effect--shadow-lg: 0 4px 12px -2px rgba(16, 16, 20, 0.12), 0 2px 4px -1px rgba(16, 16, 20, 0.08);
   --effect--transition-base: 0.2s ease;
   --radius--sm: 4px;
   --radius--md: 6px;
@@ -113,28 +129,27 @@
    to what the mode emits, so the local page and the published page resolve the
    same cascade — only the origin of the rule differs.
 
-   Bare `.theme-dark`, NOT `html.theme-dark`: (0,1,0) beats `:root` (0,1,0) on
-   source order (this block comes after), and LOSES to the direction blocks at
-   `html[data-direction=…]` (0,1,1). That loss is deliberate — direction owns
-   the four tokens both axes set (surface-alt, border, surface-inverse,
-   text-inverse). Writing it as `html.theme-dark` would raise this to (0,1,1)
-   and make the contest a source-order coin flip that Webflow would not
-   reproduce. Verified on the published page across all six combinations.
-
-   The DIRECTION axis stays hand-written CSS: theme and direction both redefine
-   those four tokens, and a Webflow style holds only one mode per collection, so
-   only one axis can be native. */
+   Bare `.theme-dark`, NOT `html.theme-dark`: Webflow always publishes a mode
+   class bare, at (0,1,0), same as `.direction-proof` / `.direction-receipt`
+   below (the DIRECTION axis's own native modes — see that section). The two
+   axes now compose as two independent mode classes on the same <html>
+   element rather than one hand-written and one native: this block and the
+   direction mode classes never redeclare the same custom property, so which
+   one comes later in source order never matters. The four tokens both axes
+   affect (surface-alt, border, surface-inverse, text-inverse) are ALIASES
+   declared in the DIRECTION AXIS section below — this block only sets the
+   theme-side half of each alias, `--direction--<name>-dark`. */
 .theme-dark {
   --color--text: #f7f7f8;
   --color--text-mu: #9a9aa2;
-  --color--text-inverse: #ffffff;
+  --color--text-inverse: var(--direction--text-inverse-dark);
   --color--surface: #16161a;
-  --color--surface-alt: #1f1f23;
-  --color--surface-inverse: #1f1f23;
-  --color--primary: #ff7900;
-  --color--border: #3b3b42;
-  --color--accent: #e9560c;
-  --color--accent-deep: #e9560c;
+  --color--surface-alt: var(--direction--surface-alt-dark);
+  --color--surface-inverse: var(--direction--surface-inverse-dark);
+  --color--primary: #e8480c;
+  --color--border: var(--direction--border-dark);
+  --color--accent: #e8480c;
+  --color--accent-deep: #e8480c;
   --color--success: #5fd08a;
   --color--warning: #f0b544;
   --color--danger: #f28b82;
@@ -165,22 +180,22 @@
      The toggle therefore always sets exactly one of the two.
 
      `html:not(…)` not `:root:not(…)`. `:root:not(.x)` computes to (0,2,0),
-     which outranks the direction blocks at (0,1,1) — warm's orange surface
-     lost to this block while warm's ink text still applied, giving dark-on-dark
-     copy in warm + dark. `html:not(.x)` is (0,1,1), tying with the direction
-     blocks so later source order lets them win. Also keeps this rule out of the
-     export's `:root` discard path. */
+     which outranks the direction blocks at (0,1,1) — receipt's orange surface
+     lost to this block while receipt's ink text still applied, giving
+     dark-on-dark copy in receipt + dark. `html:not(.x)` is (0,1,1), tying with
+     the direction blocks so later source order lets them win. Also keeps this
+     rule out of the export's `:root` discard path. */
   html:not(.theme-light):not([data-theme="light"]) {
     --color--text: #f7f7f8;
     --color--text-mu: #9a9aa2;
-    --color--text-inverse: #ffffff;
+    --color--text-inverse: var(--direction--text-inverse-dark);
     --color--surface: #16161a;
-    --color--surface-alt: #1f1f23;
-    --color--surface-inverse: #1f1f23;
-    --color--primary: #ff7900;
-    --color--border: #3b3b42;
-    --color--accent: #e9560c;
-    --color--accent-deep: #e9560c;
+    --color--surface-alt: var(--direction--surface-alt-dark);
+    --color--surface-inverse: var(--direction--surface-inverse-dark);
+    --color--primary: #e8480c;
+    --color--border: var(--direction--border-dark);
+    --color--accent: #e8480c;
+    --color--accent-deep: #e8480c;
     --color--success: #5fd08a;
     --color--warning: #f0b544;
     --color--danger: #f28b82;
@@ -222,8 +237,11 @@ h1, h2, h3, h4, p, blockquote { margin: 0; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
 /* ---------- Layout ---------- */
-.container { width: 100%; max-width: 1180px; margin: 0 auto; padding: 0 var(--space--md); }
-.container.is-8c { max-width: 780px; }
+/* `clip`, not `hidden`: hidden would make .page a scroll container and stop
+   the sticky .site-nav sticking. */
+.page { overflow-x: clip; }
+.container { width: 100%; max-width: 73.75rem; margin: 0 auto; padding: 0 var(--space--md); }
+.container.is-8c { max-width: 48.75rem; }
 .section { padding: var(--space--2xl) 0; }
 .section.is-alt { background: var(--color--surface-alt); }
 
@@ -276,8 +294,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* Safety Orange is too bright for light text — primary fills carry fixed ink
    text (--color--on-primary) in both light and dark mode. */
 .button.is-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.button.is-primary:hover { background: var(--color--primary-600); transform: translateY(-2px); box-shadow: var(--effect--shadow-1); }
-.button.is-secondary { background: var(--color--accent); color: var(--color--text-inverse); }
+.button.is-primary:hover { background: var(--color--primary-600); transform: translateY(-2px); box-shadow: var(--effect--shadow-sm); }
+.button.is-secondary { background: var(--color--accent); color: var(--color--on-primary); }
 .button.is-outline { background: transparent; border-color: currentColor; color: var(--color--accent-deep); }
 .button.is-outline:hover { background: var(--color--surface-alt); }
 .button-group { display: flex; gap: var(--space--md); flex-wrap: wrap; }
@@ -287,22 +305,47 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .button:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color--surface), 0 0 0 4px var(--color--primary); }
 
 /* ---------- Nav ---------- */
-.main-nav { position: sticky; top: 0; z-index: 10; background: var(--color--surface); box-shadow: var(--effect--shadow-1); }
-/* `container is-nav` not `.main-nav .container` — Webflow's Designer canvas
-   only expresses classes/combo classes, so a descendant selector has no
-   Webflow style and falls through to head custom code. */
-.container.is-nav { display: flex; align-items: center; justify-content: space-between; padding-top: var(--space--sm); padding-bottom: var(--space--sm); }
-.main-nav_logo { font-family: var(--type--family-heading); font-weight: 700; letter-spacing: -0.02em; color: var(--color--text); }
-.main-nav_menu { display: flex; gap: var(--space--lg); align-items: center; }
-.main-nav_link { font-weight: 500; color: var(--color--neutral-700); }
-.main-nav_link:hover { color: var(--color--accent-deep); }
-/* Below the landscape breakpoint the five-link menu + toggle no longer fits
-   the row: let both the container and the menu wrap, and tighten the gap so
-   wrapped items sit close together instead of drifting apart. */
+/* site-nav:start */
+.site-nav { position: sticky; top: 0; z-index: 50; background: var(--color--surface, var(--surface, #ffffff)); color: var(--color--text, var(--text, #16161a)); box-shadow: 0 1px 0 var(--color--border, var(--border, #e1e1e4)); }
+.site-nav_inner { box-sizing: border-box; width: 100%; max-width: 1180px; margin: 0 auto; padding: 14px 1rem 12px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; column-gap: 1.5rem; transition: padding .25s ease; }
+.site-nav_inner.is-narrow { max-width: 1040px; padding-left: 1.25rem; padding-right: 1.25rem; }
+.site-nav_inner.is-collapsed { padding-top: 10px; padding-bottom: 10px; }
+.site-nav_side { display: flex; align-items: center; gap: 1.5rem; min-width: 0; }
+.site-nav_side.is-left { justify-self: start; }
+.site-nav_side.is-right { justify-self: end; }
+.site-nav_links { display: flex; align-items: center; gap: 1.5rem; }
+.site-nav_link { font-weight: 500; color: var(--color--neutral-700, var(--text-mu, #3b3b42)); text-decoration: none; white-space: nowrap; }
+.site-nav_link:hover { color: var(--color--text, var(--text, #16161a)); }
+.site-nav_link.is-menu-cta { display: none; }
+.site-nav_logo { display: inline-flex; flex-direction: row; align-items: flex-end; color: var(--color--text, var(--text, #16161a)); text-decoration: none; font-weight: 700; font-size: 1.0625rem; line-height: 1; letter-spacing: -0.01em; }
+.site-nav_mark { display: block; width: 35.1px; height: 32px; }
+.site-nav_seed { fill: var(--color--primary, var(--primary, #e8480c)); }
+.site-nav_name { display: block; overflow: hidden; max-width: 130px; margin-left: 12.5px; opacity: 1; transition: max-width .25s ease, margin-left .25s ease, opacity .15s ease; }
+.site-nav_name.is-collapsed { max-width: 0; margin-left: 0; opacity: 0; }
+.site-nav_wordmark { display: block; width: 113.5px; height: 26.9px; }
+.site-nav_cta { display: inline-flex; align-items: center; padding: 0.6rem 1.15rem; border: 2px solid transparent; border-radius: 4px; background: var(--color--primary, var(--primary, #e8480c)); color: var(--color--on-primary, #16161a); font-weight: 600; text-decoration: none; white-space: nowrap; transition: transform .2s ease, background .2s ease; }
+.site-nav_cta:hover { background: var(--color--primary-600, #eb5e29); transform: translateY(-2px); }
+.site-nav_theme, .site-nav_menu-button { display: inline-flex; align-items: center; padding: 0.4rem 0.9rem; border: 2px solid currentColor; border-radius: 4px; background: transparent; color: var(--color--accent-deep, var(--text, #16161a)); font: inherit; font-size: 0.875rem; font-weight: 600; line-height: 1.2; cursor: pointer; }
+.site-nav_theme:hover, .site-nav_menu-button:hover { background: var(--color--surface-alt, var(--surface-alt, #f7f7f8)); }
+.site-nav_menu-button { display: none; }
+.site-nav_theme:focus-visible, .site-nav_menu-button:focus-visible, .site-nav_cta:focus-visible, .site-nav_link:focus-visible, .site-nav_logo:focus-visible { outline: 2px solid var(--color--primary, var(--primary, #e8480c)); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .site-nav_inner, .site-nav_name, .site-nav_cta { transition: none; } }
 @media (max-width: 767px) {
-  .container.is-nav { flex-wrap: wrap; row-gap: var(--space--sm); }
-  .main-nav_menu { flex-wrap: wrap; gap: var(--space--sm) var(--space--md); }
+  .site-nav_inner { padding-top: 10px; padding-bottom: 10px; column-gap: 0.75rem; }
+  .site-nav_menu-button { display: inline-flex; }
+  .site-nav_menu-button.is-open { background: var(--color--surface-alt, var(--surface-alt, #f7f7f8)); }
+  .site-nav_links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 4px 1rem 1rem; background: var(--color--surface, var(--surface, #ffffff)); box-shadow: 0 1px 0 var(--color--border, var(--border, #e1e1e4)), 0 12px 24px -12px rgba(16, 16, 20, 0.25); }
+  .site-nav_links.is-open { display: flex; }
+  .site-nav_link { padding: 0.85rem 0; border-bottom: 1px solid var(--color--border, var(--border, #e1e1e4)); }
+  .site-nav_link.is-menu-cta { display: flex; justify-content: center; margin-top: 1rem; padding: 0.75rem 1rem; border: 0; border-radius: 4px; background: var(--color--primary, var(--primary, #e8480c)); color: var(--color--on-primary, #16161a); font-weight: 600; }
+  .site-nav_cta.is-hidden-in-menu { display: none; }
+  .site-nav_mark { width: 30.7px; height: 28px; }
+  .site-nav_name { max-width: 110px; margin-left: 11px; }
+  .site-nav_wordmark { width: 99.3px; height: 23.5px; }
 }
+/* site-nav:end */
+/* The homepage's logo-cloud client names still use this old nav class. */
+.main-nav_logo { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--type--family-heading); font-weight: 700; letter-spacing: -0.02em; color: var(--color--text); }
 
 /* ---------- Hero ---------- */
 /* Hero — signature dark editorial band: ink surface, orange mono eyebrow,
@@ -327,7 +370,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .button.is-outline-inverse:hover { background: var(--color--on-inverse-wash); border-color: var(--color--on-inverse-line); }
 
 /* ---------- Stats ---------- */
-.stats-section { padding: var(--space--xl) 0; }
 .stats-set { display: flex; flex-wrap: wrap; gap: var(--space--xl); justify-content: center; }
 .stats-set_item { text-align: center; }
 .stats-set_number { display: block; font-family: var(--type--family-heading); font-size: var(--type--display); font-weight: 700; letter-spacing: -0.02em; color: var(--color--primary); }
@@ -336,7 +378,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Programs / feature grid ---------- */
 .program-section { padding: var(--space--2xl) 0; }
 .program-list { display: grid; gap: var(--space--lg); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: var(--space--xl); }
-.program-item { padding: var(--space--lg); border-radius: var(--radius--md); background: var(--color--surface); box-shadow: var(--effect--shadow-1); }
+.program-item { padding: var(--space--lg); border-radius: var(--radius--md); background: var(--color--surface); box-shadow: var(--effect--shadow-sm); }
 .program-item_icon { width: 48px; height: 48px; }
 .program-item_title { font-family: var(--type--family-heading); font-size: var(--type--h3); margin: var(--space--sm) 0; }
 .program-item_text { color: var(--color--text-mu); }
@@ -344,7 +386,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Testimonials ---------- */
 .testimonial-section { padding: var(--space--2xl) 0; background: var(--color--surface-alt); }
 .testimonial-slider { display: grid; grid-template-columns: 1fr; gap: var(--space--lg); }
-.testimonial-slide { background: var(--color--surface); border-radius: var(--radius--lg); padding: var(--space--xl); box-shadow: var(--effect--shadow-2); }
+.testimonial-slide { background: var(--color--surface); border-radius: var(--radius--lg); padding: var(--space--xl); box-shadow: var(--effect--shadow-lg); }
 .testimonial-slide_quote { font-size: var(--type--h2); line-height: 1.3; letter-spacing: -0.01em; color: var(--color--text); }
 .testimonial-slide_quote::before { content: "\201C"; display: block; font-family: var(--type--family-heading); font-size: 3rem; line-height: 0.4; color: var(--color--primary); margin-bottom: var(--space--sm); }
 .testimonial-slide_author { margin-top: var(--space--md); font-weight: 600; color: var(--color--accent-deep); }
@@ -379,7 +421,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .logo-cloud { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space--xl); margin-top: var(--space--md); }
 .logo-cloud_item { display: inline-flex; }
 .logo-cloud_logo { height: 1.75rem; width: auto; opacity: 0.6; filter: grayscale(1); transition: opacity var(--effect--transition-base), filter var(--effect--transition-base); }
-.logo-cloud_item:hover .logo-cloud_logo { opacity: 1; filter: none; }
+.logo-cloud_logo:hover { opacity: 1; filter: none; }
 
 /* ---------- Steps (numbered process) ---------- */
 .steps { counter-reset: step; display: grid; gap: var(--space--lg); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: var(--space--xl); }
@@ -398,7 +440,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Pricing (tiered plan cards) ---------- */
 .pricing { display: grid; gap: var(--space--lg); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: var(--space--xl); align-items: start; }
 .pricing_tier { display: grid; grid-template-columns: 1fr; gap: var(--space--sm); padding: var(--space--lg); border: 1px solid var(--color--border); border-radius: var(--radius--lg); background: var(--color--surface); }
-.pricing_tier.is-featured { border-color: var(--color--primary); box-shadow: var(--effect--shadow-2); }
+.pricing_tier.is-featured { border-color: var(--color--primary); box-shadow: var(--effect--shadow-lg); }
 .pricing_name { font-family: var(--type--family-heading); font-size: var(--type--h3); font-weight: 600; letter-spacing: -0.01em; }
 .pricing_price { font-family: var(--type--family-heading); font-size: var(--type--display); font-weight: 700; letter-spacing: -0.02em; color: var(--color--text); }
 .pricing_note { color: var(--color--text-mu); font-size: var(--type--small); }
@@ -447,9 +489,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    ========================================================================== */
 
 /* ---------- Card ---------- */
-.card { background: var(--color--surface); border: 1px solid var(--color--border); border-radius: var(--radius--md); padding: var(--space--lg); box-shadow: var(--effect--shadow-1); }
-.card.is-heavy { box-shadow: var(--effect--shadow-2); }
-.card.is-p-0 { padding: 0; }
+.card { background: var(--color--surface); border: 1px solid var(--color--border); border-radius: var(--radius--md); padding: var(--space--lg); box-shadow: var(--effect--shadow-sm); }
+.card.is-heavy { box-shadow: var(--effect--shadow-lg); }
 .card.is-flush { box-shadow: none; }
 .card_title { font-family: var(--type--family-heading); font-size: var(--type--h3); margin-bottom: var(--space--sm); }
 .card_text { color: var(--color--text-mu); }
@@ -457,13 +498,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Pill — rounded inline label ---------- */
 .pill { display: inline-flex; align-items: center; gap: var(--space--xs); padding: 0.25em 0.75em; border-radius: 999px; font-size: var(--type--small); font-weight: 600; line-height: 1.4; background: var(--color--surface-alt); color: var(--color--text); }
 .pill.is-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.pill.is-accent { background: var(--color--accent); color: var(--color--text-inverse); }
+.pill.is-accent { background: var(--color--accent); color: var(--color--on-primary); }
 .pill.is-outline { background: transparent; border: 1px solid var(--color--border); color: var(--color--text-mu); }
 
 /* ---------- Tag — compact label ---------- */
 .tag { display: inline-flex; align-items: center; gap: var(--space--xs); padding: 0.15em 0.55em; border-radius: var(--radius--sm); font-size: var(--type--small); font-weight: 500; line-height: 1.5; background: var(--color--surface-alt); color: var(--color--text-mu); border: 1px solid var(--color--border); }
 .tag.is-primary { background: var(--color--primary); color: var(--color--on-primary); border-color: transparent; }
-.tag.is-accent { background: var(--color--accent); color: var(--color--text-inverse); border-color: transparent; }
+.tag.is-accent { background: var(--color--accent); color: var(--color--on-primary); border-color: transparent; }
 .tag.is-sm { font-size: 0.75rem; padding: 0.1em 0.4em; }
 
 /* ---------- Dot — status indicator ---------- */
@@ -591,8 +632,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Dropdown ---------- */
 .dropdown { position: relative; display: inline-block; }
 .dropdown_trigger { display: inline-flex; align-items: center; gap: var(--space--xs); cursor: pointer; }
-.dropdown_menu { position: absolute; top: calc(100% + 0.25rem); left: 0; min-width: 12rem; background: var(--color--surface); border: 1px solid var(--color--border); border-radius: var(--radius--md); box-shadow: var(--effect--shadow-2); padding: var(--space--xs); display: none; z-index: 20; }
-.dropdown.is-open .dropdown_menu { display: block; }
+.dropdown_menu { position: absolute; top: calc(100% + 0.25rem); left: 0; min-width: 12rem; background: var(--color--surface); border: 1px solid var(--color--border); border-radius: var(--radius--md); box-shadow: var(--effect--shadow-lg); padding: var(--space--xs); display: none; z-index: 20; }
+/* State on the menu itself, not `.dropdown.is-open .dropdown_menu` — Webflow
+   has no ancestor-state selector (design.md rule 12). Toggle is-open here. */
+.dropdown_menu.is-open { display: block; }
 .dropdown.is-right .dropdown_menu { left: auto; right: 0; }
 .dropdown_item { display: block; width: 100%; text-align: left; padding: var(--space--xs) var(--space--sm); border-radius: var(--radius--sm); color: var(--color--text); background: none; }
 .dropdown_item:hover { background: var(--color--surface-alt); }
@@ -610,7 +653,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .slider_viewport { overflow: hidden; }
 .slider_track { display: flex; transition: transform var(--effect--transition-base); }
 .slider_slide { flex: 0 0 100%; min-width: 0; }
-.slider_nav { position: absolute; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 999px; background: var(--color--surface); border: 1px solid var(--color--border); box-shadow: var(--effect--shadow-1); cursor: pointer; color: var(--color--text); }
+.slider_nav { position: absolute; top: 50%; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 999px; background: var(--color--surface); border: 1px solid var(--color--border); box-shadow: var(--effect--shadow-sm); cursor: pointer; color: var(--color--text); }
 .slider_nav.is-prev { left: var(--space--sm); }
 .slider_nav.is-next { right: var(--space--sm); }
 .slider_nav:disabled { opacity: 0.4; cursor: default; }
@@ -653,67 +696,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    Combo classes use a -tier dash suffix (is-span-6-md); utilities use a
    _tier underscore suffix (u-hide_md).
    ========================================================================== */
-
-/* ---------- Column system: 12-col grid ---------- */
-.col-wrapper { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--space--lg); }
-.col-wrapper.is-gap-sm { gap: var(--space--sm); }
-.col-wrapper.is-gap-lg { gap: var(--space--xl); }
-.col { grid-column: span 12; min-width: 0; }
-.col.is-span-1 { grid-column: span 1; }
-.col.is-span-2 { grid-column: span 2; }
-.col.is-span-3 { grid-column: span 3; }
-.col.is-span-4 { grid-column: span 4; }
-.col.is-span-5 { grid-column: span 5; }
-.col.is-span-6 { grid-column: span 6; }
-.col.is-span-7 { grid-column: span 7; }
-.col.is-span-8 { grid-column: span 8; }
-.col.is-span-9 { grid-column: span 9; }
-.col.is-span-10 { grid-column: span 10; }
-.col.is-span-11 { grid-column: span 11; }
-.col.is-span-12 { grid-column: span 12; }
-
-@media (max-width: 991px) {
-  .col.is-span-1-md { grid-column: span 1; }
-  .col.is-span-2-md { grid-column: span 2; }
-  .col.is-span-3-md { grid-column: span 3; }
-  .col.is-span-4-md { grid-column: span 4; }
-  .col.is-span-5-md { grid-column: span 5; }
-  .col.is-span-6-md { grid-column: span 6; }
-  .col.is-span-7-md { grid-column: span 7; }
-  .col.is-span-8-md { grid-column: span 8; }
-  .col.is-span-9-md { grid-column: span 9; }
-  .col.is-span-10-md { grid-column: span 10; }
-  .col.is-span-11-md { grid-column: span 11; }
-  .col.is-span-12-md { grid-column: span 12; }
-}
-@media (max-width: 767px) {
-  .col.is-span-1-sm { grid-column: span 1; }
-  .col.is-span-2-sm { grid-column: span 2; }
-  .col.is-span-3-sm { grid-column: span 3; }
-  .col.is-span-4-sm { grid-column: span 4; }
-  .col.is-span-5-sm { grid-column: span 5; }
-  .col.is-span-6-sm { grid-column: span 6; }
-  .col.is-span-7-sm { grid-column: span 7; }
-  .col.is-span-8-sm { grid-column: span 8; }
-  .col.is-span-9-sm { grid-column: span 9; }
-  .col.is-span-10-sm { grid-column: span 10; }
-  .col.is-span-11-sm { grid-column: span 11; }
-  .col.is-span-12-sm { grid-column: span 12; }
-}
-@media (max-width: 479px) {
-  .col.is-span-1-xs { grid-column: span 1; }
-  .col.is-span-2-xs { grid-column: span 2; }
-  .col.is-span-3-xs { grid-column: span 3; }
-  .col.is-span-4-xs { grid-column: span 4; }
-  .col.is-span-5-xs { grid-column: span 5; }
-  .col.is-span-6-xs { grid-column: span 6; }
-  .col.is-span-7-xs { grid-column: span 7; }
-  .col.is-span-8-xs { grid-column: span 8; }
-  .col.is-span-9-xs { grid-column: span 9; }
-  .col.is-span-10-xs { grid-column: span 10; }
-  .col.is-span-11-xs { grid-column: span 11; }
-  .col.is-span-12-xs { grid-column: span 12; }
-}
 
 /* ---------- Fixed-count grid: grid-cols is-Ncol ---------- */
 .grid-cols { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: var(--space--lg); }
@@ -817,7 +799,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .u-bg-surface-alt { background: var(--color--surface-alt); }
 .u-bg-surface-inverse { background: var(--color--surface-inverse); color: var(--color--text-inverse); }
 .u-bg-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.u-bg-accent { background: var(--color--accent); }
+.u-bg-accent { background: var(--color--accent); color: var(--color--on-primary); }
 
 /* ---------- Spacing (margin u-m*, padding u-p*; steps 0 xs sm md lg xl 2xl) ---------- */
 .u-mt-0 { margin-top: 0; }
@@ -947,7 +929,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   padding: 8px 12px; border-radius: var(--radius--md);
   border: 1px solid var(--color--border);
   background: var(--color--surface); color: var(--color--text);
-  box-shadow: var(--effect--shadow-1); cursor: pointer;
+  box-shadow: var(--effect--shadow-sm); cursor: pointer;
 }
 
 /* Brand wordmark: monospace tag feel */
@@ -960,7 +942,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   border-radius: var(--radius--lg);
   overflow: hidden;
   background: var(--color--surface);
-  box-shadow: var(--effect--shadow-2);
+  box-shadow: var(--effect--shadow-lg);
 }
 .mock_bar {
   display: flex; align-items: center; gap: var(--space--sm);
@@ -984,7 +966,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .skel-row { height: 12px; border-radius: 999px; background: var(--color--surface-alt); }
 .skel-row.is-title { height: 22px; width: 62%; background: var(--color--border); }
 .skel-row.is-accent { background: color-mix(in srgb, var(--color--primary) 55%, var(--color--surface-alt)); width: 38%; }
-.skel-row.is-w-90 { width: 90%; } .skel-row.is-w-75 { width: 75%; } .skel-row.is-w-50 { width: 50%; }
 .skel-cta { height: 34px; width: 130px; border-radius: var(--radius--sm); background: var(--color--primary); margin-top: 0.4rem; }
 .skel-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.7rem; margin-top: 0.9rem; }
 .skel-card { height: 68px; border-radius: var(--radius--md); border: 1px solid var(--color--border); background: var(--color--surface-alt); }
@@ -1049,16 +1030,11 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: #0d0d10; border: 1px solid var(--color--on-inverse-faint);
   border-radius: var(--radius--lg); overflow: hidden;
   font-family: var(--type--family-mono); font-size: 0.82rem; line-height: 1.7;
-  box-shadow: var(--effect--shadow-2);
+  box-shadow: var(--effect--shadow-lg);
 }
 .term_bar { display: flex; gap: 6px; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--color--on-inverse-faint); }
 .term_bar span { width: 11px; height: 11px; border-radius: 999px; background: var(--color--on-inverse-line); }
 .term_body { padding: var(--space--lg); color: var(--color--on-inverse-strong); }
-/* `term_c-mu` etc., matching `term_bar`/`term_body` above, not `.term .c-mu`
-   — a descendant selector has no Webflow expression. */
-.term_c-mu { color: var(--color--on-inverse-line); }
-.term_c-or { color: var(--color--primary); }
-.term_c-gr { color: #5fd08a; }
 
 /* Metric row inside cards */
 .kpi { display: grid; grid-template-columns: 1fr; gap: var(--space--xs); }
@@ -1129,7 +1105,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .status-view { max-width: 520px; margin: var(--space--md) auto 0; text-align: left; display: grid; grid-template-columns: 1fr; gap: var(--space--md); }
 .status-view_token { color: var(--color--on-inverse-body); font-size: var(--type--small); }
 .status-view_token code {
-  font-family: var(--type--family-mono); color: var(--color--primary);
+  font-family: var(--type--family-mono); color: var(--color--accent-on-inverse);
   background: rgba(0, 0, 0, 0.3); border-radius: var(--radius--sm); padding: 0.1em 0.4em;
 }
 /* `status-view_note`, matching `status-view_token` above, not
@@ -1193,13 +1169,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Comparison (us-vs-them) ---------- */
 .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space--lg); margin-top: var(--space--xl); align-items: start; }
 .comparison_col { border: 1px solid var(--color--border); border-radius: var(--radius--lg); padding: var(--space--lg); background: var(--color--surface); }
-.comparison_col:last-child { border-color: var(--color--primary); box-shadow: var(--effect--shadow-2); }
+/* `is-featured`, not `:last-child`, and a real marker element, not
+   `.comparison_col:first-child .comparison_list li::before` — Webflow has no
+   pseudo-qualified ancestor and no ::before. */
+.comparison_col.is-featured { border-color: var(--color--primary); box-shadow: var(--effect--shadow-lg); }
 .comparison_label { font-family: var(--type--family-heading); font-size: var(--type--h3); font-weight: 600; letter-spacing: -0.01em; margin-bottom: var(--space--sm); }
 .comparison_note { color: var(--color--text-mu); font-size: var(--type--small); margin-bottom: var(--space--md); }
 .comparison_list { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr; gap: var(--space--sm); }
-.comparison_list li { padding-left: 1.75em; position: relative; color: var(--color--text); }
-.comparison_col:first-child .comparison_list li::before { content: "\00d7"; position: absolute; left: 0; color: var(--color--text-mu); font-weight: 700; }
-.comparison_col:last-child .comparison_list li::before { content: "\2713"; position: absolute; left: 0; color: var(--color--accent-deep); font-weight: 700; }
+.comparison_item { padding-left: 1.75em; position: relative; color: var(--color--text); }
+.comparison_mark { position: absolute; left: 0; color: var(--color--text-mu); font-weight: 700; }
+.comparison_mark.is-pro { color: var(--color--accent-deep); }
 @media (max-width: 767px) { .comparison { grid-template-columns: 1fr; } }
 /* ---------- Case-study teaser (before/after) ---------- */
 .case-study { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space--lg); align-items: start; margin-top: var(--space--xl); }
@@ -1211,7 +1190,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .case-study_note { color: var(--color--text-mu); font-size: var(--type--small); }
 @media (max-width: 767px) { .case-study { grid-template-columns: 1fr; } }
 /* ---------- Browser frame ---------- */
-.browser-frame { border: 1px solid var(--color--border); border-radius: var(--radius--lg); overflow: hidden; background: var(--color--surface); box-shadow: var(--effect--shadow-2); }
+.browser-frame { border: 1px solid var(--color--border); border-radius: var(--radius--lg); overflow: hidden; background: var(--color--surface); box-shadow: var(--effect--shadow-lg); }
 .browser-frame.is-flush { box-shadow: none; }
 .browser-frame_bar { display: flex; align-items: center; gap: var(--space--sm); padding: 0.6rem 0.9rem; background: var(--color--surface-alt); border-bottom: 1px solid var(--color--border); }
 .browser-frame_dots { display: flex; gap: 6px; flex: none; }
@@ -1219,14 +1198,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .browser-frame_url { flex: 1; font-family: var(--type--family-mono); font-size: 0.72rem; color: var(--color--text-mu); background: var(--color--surface); border: 1px solid var(--color--border); border-radius: 999px; padding: 0.28rem 0.75rem; text-align: center; max-width: 320px; margin: 0 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .browser-frame_body { padding: var(--space--lg); }
 /* ---------- Terminal ---------- */
-.terminal { background: var(--color--surface-inverse); color: var(--color--text-inverse); border: 1px solid var(--color--on-inverse-faint); border-radius: var(--radius--lg); overflow: hidden; font-family: var(--type--family-mono); font-size: 0.82rem; line-height: 1.7; box-shadow: var(--effect--shadow-2); }
+.terminal { background: var(--color--surface-inverse); color: var(--color--text-inverse); border: 1px solid var(--color--on-inverse-faint); border-radius: var(--radius--lg); overflow: hidden; font-family: var(--type--family-mono); font-size: 0.82rem; line-height: 1.7; box-shadow: var(--effect--shadow-lg); }
 .terminal_bar { display: flex; gap: 6px; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--color--on-inverse-faint); }
 .terminal_bar span { width: 11px; height: 11px; border-radius: 999px; background: var(--color--on-inverse-line); display: block; }
 .terminal_body { padding: var(--space--lg); color: var(--color--on-inverse-strong); }
 /* 0.4 measured at 3.83:1 on --color--surface-inverse — below the 4.5:1 AA
    floor for body text. 0.5 gives 5.27:1 in light theme, 5.09:1 in dark. */
 .terminal_dim { color: var(--color--on-inverse-mu); }
-.terminal_accent { color: var(--color--primary); }
+.terminal_accent { color: var(--color--accent-on-inverse); }
 /* ---------- Metric ---------- */
 .metric { display: grid; grid-template-columns: 1fr; gap: var(--space--xs); }
 .metric.is-center { justify-items: center; text-align: center; }
@@ -1234,36 +1213,52 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .metric_label { color: var(--color--text-mu); font-size: var(--type--small); }
 
 /* ============================================================================
-   DIRECTION AXIS  —  data-direction="bold|light|warm"
+   DIRECTION AXIS  —  data-direction="pitch|proof|receipt"
    ----------------------------------------------------------------------------
-   A second, independent token axis composing with the theme. `bold` is the
+   A second, independent token axis composing with the theme. `pitch` is the
    default and reproduces today's design exactly, so nothing changes until a
    visitor opts in.
 
-   Written as `html[data-direction=…]`, NOT `:root[data-direction=…]`, for two
-   reasons: `html[attr]` (0,1,1) outranks `:root` (0,1,0) so these win over the
-   base tokens, and the Webflow export drops any selector containing `:root`
-   (scope-css.js) — a `:root`-scoped direction would vanish on publish.
+   These three are concepts, not colorways: each names what leads and how the
+   hero is organised (see the hero-widget block below), not just a palette.
+   Pitch — headline + form lead, the sales case. Proof — a before/after visual
+   leads, full width, everything else follows it. Receipt — a stamped,
+   itemized ticket leads, centered and narrow, set partly in Kankles. Fonts,
+   radii and spacing below are still the floor every direction shares; the
+   widget markup in index.html is the actual difference.
+
+   In Webflow this is a second native variable mode collection ("Direction",
+   modes Pitch/Proof/Receipt), shaped exactly like the THEME axis above: Pitch
+   is the base mode, so its values sit at `:root`; Proof and Receipt publish
+   as bare mode classes, `.direction-proof` / `.direction-receipt`, both
+   (0,1,0) — same specificity as `.theme-dark`, and the two axes now compose
+   as two independent classes on <html> rather than one native mode and one
+   hand-written block. `html[data-direction=…]` selectors still exist below,
+   but ONLY for the structural/descendant rules a variable mode can't express
+   (hero reading order, widget show/hide, per-direction copy) — those stay
+   attribute-based custom code (BP-206) and are unaffected by this axis being
+   native now. `data-direction` keeps being set alongside the classes purely
+   so those rules keep matching.
+
+   --- aliases: tokens set by BOTH axes ---------------------------------------
+   --color--surface-alt, --color--border, --color--surface-inverse and
+   --color--text-inverse depend on theme AND direction together, so neither
+   collection can own them outright — each is declared here as a THEME alias
+   (`--color--<name>: var(--direction--<name>-light|dark)`, set at `:root` and
+   in `.theme-dark`/the prefers-color-scheme block above) that resolves
+   through a pair of DIRECTION variables (`--direction--<name>-light` and
+   `--direction--<name>-dark`) which each direction mode supplies below. This
+   is what lets the old `html[data-direction="receipt"].theme-dark` compose
+   rule go away: receipt + dark now resolves like every other combination,
+   through the alias, with no selector that needs to match both an attribute
+   and a class at once. No variable is ever declared in both `.theme-dark`
+   and a `.direction-*` block — the two write disjoint property names — so
+   there is no same-specificity source-order coin flip left to resolve.
    ========================================================================== */
 
-/* --- new tokens, declared at the base so every direction inherits a value --- */
+/* --- Pitch (base mode): every direction token's default value, including the
+   four aliases' light/dark halves — today's design, reproduced exactly. --- */
 :root {
-  --type--weight-display: 700;
-  --type--tracking-display: -0.032em;
-  --type--leading-display: 1.1;
-  --radius--control: var(--radius--sm);
-  --space--section: var(--space--2xl);
-  --space--stack: var(--space--md);
-  --border--hairline-width: 1px;
-  --border--control-width: 2px;
-  --type--eyebrow-transform: uppercase;
-  --type--eyebrow-tracking: 0.04em;
-  --type--eyebrow-family: var(--type--family-mono);
-  --direction--hero-align: left;
-}
-
-/* 01 bold — today's design. Heavy tight display type, small radii, ink bands. */
-html[data-direction="bold"] {
   --type--weight-display: 800;
   --type--tracking-display: -0.036em;
   --type--leading-display: 1.05;
@@ -1273,13 +1268,40 @@ html[data-direction="bold"] {
   --radius--lg: 8px;
   --space--section: 6.5rem;
   --space--stack: 1rem;
+  --border--hairline-width: 1px;
   --border--control-width: 2px;
+  --type--eyebrow-transform: uppercase;
+  --type--eyebrow-tracking: 0.04em;
+  --type--eyebrow-family: var(--type--family-mono);
   --direction--hero-align: left;
+  /* Display font — see "Kankles" below. First attempt on the hero H1 looked
+     like colliding lines and got misdiagnosed as "illegible past one word";
+     the real cause was forcing font-weight 700 on a font that only ships
+     Regular (synthetic bold thickens strokes without widening advances) on
+     top of Kankles' own space glyph, which is ~200 units wide against
+     ~950-1150 for a letter — a fifth-width space. Fixed at the source: every
+     element below that turns this token on also sets font-weight: 400 and
+     word-spacing: 0.3em. Every direction but Receipt just aliases the normal
+     heading font, so this costs nothing elsewhere. */
+  --type--family-display: var(--type--family-heading);
+  /* Alias halves — Pitch's own surface-alt/border/surface-inverse/text-inverse,
+     same values light and dark carried today (see the THEME AXIS block
+     above, which reads the dark half back through the alias). */
+  --direction--surface-alt-light: #f7f7f8;
+  --direction--surface-alt-dark: #1f1f23;
+  --direction--border-light: #e1e1e4;
+  --direction--border-dark: #3b3b42;
+  --direction--surface-inverse-light: #16161a;
+  --direction--surface-inverse-dark: #1f1f23;
+  --direction--text-inverse-light: #ffffff;
+  --direction--text-inverse-dark: #ffffff;
 }
 
-/* 02 light — airy and paper-first. Lighter display type, pill controls,
-   generous rhythm, centred hero. */
-html[data-direction="light"] {
+/* 02 proof — airy and paper-first, but the real difference is structural:
+   the hero's before/after visual leads (full width, first in reading order),
+   headline and form follow it. See ".hero_widget.is-proof" and the hero-split
+   overrides below. */
+.direction-proof {
   --type--weight-display: 500;
   --type--tracking-display: -0.018em;
   --type--leading-display: 1.2;
@@ -1303,15 +1325,22 @@ html[data-direction="light"] {
   --color--on-inverse-line: rgba(22,22,26,0.30);
   --color--on-inverse-faint: rgba(22,22,26,0.16);
   --color--on-inverse-wash: rgba(22,22,26,0.08);
-  --color--surface-inverse: #faf8f5;
-  --color--text-inverse: #16161a;
+  /* Proof doesn't distinguish light/dark theme — same value both halves. */
+  --direction--surface-inverse-light: #faf8f5;
+  --direction--surface-inverse-dark: #faf8f5;
+  --direction--text-inverse-light: #16161a;
+  --direction--text-inverse-dark: #16161a;
 }
 
-/* 03 warm — square-edged and editorial, mono eyebrows, tighter rhythm. The
-   hero/CTA/footer bands now turn orange (surface-inverse) with dark-ink
+/* 03 receipt — square-edged, mono-heavy rhythm, and structurally the hero
+   becomes a centered, narrow ticket: see the hero-split overrides below. The
+   hero/CTA/footer bands turn orange (surface-inverse) with dark-ink
    on-inverse text, since the component CSS's white-alpha text was tokenized
-   above and this direction can now redefine what those tokens resolve to. */
-html[data-direction="warm"] {
+   above and this direction can now redefine what those tokens resolve to.
+   The hero heading, the ticket's "Verified" stamp, and every big short
+   number (stats, prices, the ticket serial) switch to Kankles here — see the
+   @font-face and --type--family-display override below. */
+.direction-receipt {
   --type--weight-display: 700;
   --type--tracking-display: -0.024em;
   --type--leading-display: 1.15;
@@ -1325,25 +1354,51 @@ html[data-direction="warm"] {
   --border--control-width: 2px;
   --type--eyebrow-tracking: 0.12em;
   --direction--hero-align: left;
-  --color--surface-alt: #fff4ea;   /* palette primitive: warm paper tint */
-  --color--border: #e8d5c2;        /* palette primitive: warm hairline */
-  /* Dark-ink ramp, same values as the light direction — see comment there. */
+  /* Alias halves — was the hand-written receipt+dark compose rule; that
+     selector is gone now, its light/dark values just live here instead. */
+  --direction--surface-alt-light: #fff4ea;   /* palette primitive: warm paper tint */
+  --direction--surface-alt-dark: #241d18;    /* palette primitive: warm ink tint */
+  --direction--border-light: #e8d5c2;        /* palette primitive: warm hairline */
+  --direction--border-dark: #4a3b2e;         /* palette primitive: warm hairline, dark */
+  /* Dark-ink ramp, same values as the proof direction — see comment there. */
   --color--on-inverse-strong: rgba(22,22,26,0.92);
   --color--on-inverse-body: rgba(22,22,26,0.78);
   --color--on-inverse-mu: rgba(22,22,26,0.62);
   --color--on-inverse-line: rgba(22,22,26,0.30);
   --color--on-inverse-faint: rgba(22,22,26,0.16);
   --color--on-inverse-wash: rgba(22,22,26,0.08);
-  --color--surface-inverse: #ff7900;
-  --color--text-inverse: #16161a;
+  /* Receipt doesn't distinguish light/dark theme either — same both halves. */
+  --direction--surface-inverse-light: #e8480c;
+  --direction--surface-inverse-dark: #e8480c;
+  --direction--text-inverse-light: #16161a;
+  --direction--text-inverse-dark: #16161a;
+  /* Kankles is a heavy display face. Render-tested 2026-09-18 at every size
+     the page uses: it holds at display size (.heading-2xl), on big numerals
+     and on the one-word nav wordmark. It fails at h2/h3 (counters close up,
+     every section shouts, the hero stops being the loud thing), and is mush
+     on buttons and eyebrows (13-16px). Several glyphs misread at any size —
+     P reads "IO", V/v read "U/u", Y and 4 are ambiguous — so copy set in it
+     avoids them: hence Receipt's own hero line and the "Owned" stamp. */
+  --type--family-display: 'Kankles', var(--type--family-heading);
 }
-/* warm + dark compose. Stays hand-written CSS on both sides: it needs a mode
-   AND an attribute to match at once, which a variable mode cannot express. At
-   (0,2,1) it outranks both the warm block (0,1,1) and the mode class (0,1,0),
-   so it wins wherever it applies. */
-html[data-direction="warm"].theme-dark {
-  --color--surface-alt: #241d18;   /* palette primitive: warm ink tint */
-  --color--border: #4a3b2e;        /* palette primitive: warm hairline, dark */
+
+/* Kankles — self-hosted, ships one weight (Regular). Every rule that turns
+   it on (below and above) sets font-weight: 400 explicitly rather than
+   trusting inheritance: this file's shared component rules default several
+   of those elements to 700, and a browser asked for a weight a font doesn't
+   have synthesizes it (thickens the strokes without widening the advance
+   widths), which is what actually broke the hero heading the first time —
+   see --type--family-display above. Registering font-weight: 400 here also
+   stops the browser matching this face for an unrelated bold request under
+   receipt. Modern browsers only fetch a @font-face file when something on
+   the page actually resolves to it, so this costs nothing under Pitch or
+   Proof. */
+@font-face {
+  font-family: 'Kankles';
+  src: url('fonts/Kankles.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 /* --- consume the new tokens in the existing components --- */
@@ -1352,7 +1407,41 @@ html[data-direction="warm"].theme-dark {
   font-weight: var(--type--weight-display);
   letter-spacing: var(--type--tracking-display);
 }
-.heading-2xl { line-height: var(--type--leading-display); }
+.heading-2xl { line-height: var(--type--leading-display); font-family: var(--type--family-display); }
+/* Receipt's heading runs through Kankles — see the --type--family-display
+   comment above for why weight/word-spacing/line-height are overridden
+   together here rather than left at the shared heading defaults. */
+html[data-direction="receipt"] .heading-2xl {
+  font-weight: 400;
+  word-spacing: 0.3em;
+  line-height: 1.25;
+}
+/* Receipt's section headings (h2s). Kankles on the whole heading failed the
+   render test, but leaving them as plain 700 Inter made every section below
+   the hero look like a different site (owner, 2026-09-18). Two moves tie them
+   back: the Inter goes to 800 and 2.5rem so it can sit beside Kankles' mass,
+   and ONE word per heading (.heading-accent, a bare span that does nothing
+   under Pitch/Proof) is set in Kankles. Accent words are picked to avoid the
+   glyphs Kankles misreads (P, V/v, Y, 4) — check that before adding one. */
+html[data-direction="receipt"] .heading-xl {
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: -0.04em;
+  /* 1.2, not tighter: when a heading wraps, a Kankles ascender on line two
+     collides with an Inter descender on line one at 1.1 (seen in render).
+     balance stops a wrapped heading leaving one word alone on its last line. */
+  line-height: 1.2;
+  text-wrap: balance;
+}
+html[data-direction="receipt"] .heading-accent {
+  font-family: var(--type--family-display);
+  font-weight: 400;
+  word-spacing: 0.3em;
+  letter-spacing: 0;
+  font-size: 0.92em;
+  margin-left: 0.12em;
+  margin-right: 0.12em;
+}
 .eyebrow {
   font-family: var(--type--eyebrow-family);
   text-transform: var(--type--eyebrow-transform);
@@ -1364,12 +1453,40 @@ html[data-direction="warm"].theme-dark {
 .hero_content { gap: var(--space--stack); }
 .cta-section { padding: var(--space--section) 0; }
 
-/* Composition differences that tokens can't carry. Kept to alignment only —
-   no new content, no reordered sections. */
-html[data-direction="light"] .hero_content { margin-inline: auto; text-align: center; justify-items: center; }
-html[data-direction="light"] .hero_content .text-lg { margin-inline: auto; }
-html[data-direction="light"] .title-set { margin-inline: auto; text-align: center; }
-html[data-direction="light"] .title-set .text-lg { margin-inline: auto; }
+/* Composition differences that tokens can't carry — this is the actual
+   "different concept" per direction, not the palette above it. No new page
+   sections, but the hero's own grid and reading order genuinely change. */
+html[data-direction="proof"] .hero_content { margin-inline: auto; text-align: center; justify-items: center; }
+html[data-direction="proof"] .hero_content .text-lg { margin-inline: auto; }
+html[data-direction="proof"] .title-set { margin-inline: auto; text-align: center; }
+html[data-direction="proof"] .title-set .text-lg { margin-inline: auto; }
+
+/* Proof: the before/after visual leads. Full-width single column (explicit
+   1fr, not an implicit auto-fit — see webflow-grids-need-explicit-columns),
+   visual first in both source order via `order` and reading order. */
+html[data-direction="proof"] .container.is-hero-split { grid-template-columns: 1fr; }
+html[data-direction="proof"] .hero_content { order: 2; }
+html[data-direction="proof"] .hero_widget.is-proof { order: 1; }
+
+/* Receipt: a centered, narrow ticket — the hero reads top-to-bottom like a
+   checkout flow, not a wide two-column split. */
+html[data-direction="receipt"] .container.is-hero-split { grid-template-columns: 1fr; justify-items: center; }
+/* The heading gets 860px so "Three designs out." holds one line in Kankles
+   (measured ~800px at 52px); the paragraph and form keep the 640px ticket
+   measure. justify-items centers the narrower children in the wider grid. */
+html[data-direction="receipt"] .hero_content { max-width: 860px; text-align: center; justify-items: center; }
+html[data-direction="receipt"] .hero_content .text-lg { margin-inline: auto; max-width: 640px; }
+html[data-direction="receipt"] .hero-capture { margin-inline: auto; width: 100%; max-width: 640px; }
+
+/* Per-direction copy. Receipt sets its hero/CTA line in Kankles, which can't
+   carry the 13-word sentence Pitch and Proof share (five lines, and "Pay" /
+   "love" misread — see the receipt token block). Same show/hide pattern as
+   .hero_widget; display:none keeps the unused line out of the accessibility
+   tree, so there is one h1 text per direction. */
+.dir-copy.is-receipt { display: none; }
+html[data-direction="receipt"] .dir-copy.is-default { display: none; }
+html[data-direction="receipt"] .dir-copy.is-receipt { display: inline; }
+html[data-direction="receipt"] .hero_widget.is-receipt { width: 100%; max-width: 420px; }
 
 /* --- the direction control (7e): floating pill stack, right edge --- */
 /* A full-width band directly under the nav, sitting on the same surface as the
@@ -1388,7 +1505,7 @@ html[data-direction="light"] .title-set .text-lg { margin-inline: auto; }
   background: var(--color--surface); color: var(--color--text-mu);
   border: var(--border--hairline-width) solid var(--color--border);
   border-radius: var(--radius--control);
-  box-shadow: var(--effect--shadow-1);
+  box-shadow: var(--effect--shadow-sm);
   font: inherit; cursor: pointer;
   /* Colour only — never layout, so switching cannot shift the page. */
   transition: background var(--effect--transition-base), color var(--effect--transition-base), border-color var(--effect--transition-base);
@@ -1402,7 +1519,7 @@ html[data-direction="light"] .title-set .text-lg { margin-inline: auto; }
   box-shadow: 0 0 0 2px var(--color--surface), 0 0 0 4px var(--color--text);
 }
 .dirswitch_label { font-family: var(--type--family-mono); font-size: var(--type--small); white-space: nowrap; }
-.dirswitch_num { color: var(--color--primary); }
+.dirswitch_num { color: var(--color--accent-deep); }
 .dirswitch_sep { opacity: 0.5; }
 .dirswitch_live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
@@ -1421,41 +1538,129 @@ html[data-direction="light"] .title-set .text-lg { margin-inline: auto; }
     background: var(--color--surface);
     border: var(--border--hairline-width) solid var(--color--border);
     border-radius: var(--radius--control);
-    box-shadow: var(--effect--shadow-2);
+    box-shadow: var(--effect--shadow-lg);
     overflow: hidden;
   }
   .dirswitch_pill { border: 0; border-radius: 0; box-shadow: none; }
   .dirswitch_pill[aria-checked="true"] { background: var(--color--surface-alt); }
 }
 
-/* --- hero split: content left, direction plate right --- */
-/* The plate has to read as a panel against whatever band it sits on. In light
-   and warm the band isn't ink, so a solid ink plate is the strong contrast the
-   design wants. In bold the band IS ink — a solid ink plate is invisible — so
-   it lifts off the band instead, using the on-inverse wash that already flips
-   per direction. One class, so Webflow can express it as a real style. */
-:root { --color--plate-surface: var(--color--on-inverse-wash); }
-html[data-direction="light"],
-html[data-direction="warm"] { --color--plate-surface: var(--color--ink-fixed); }
+/* --- hero split: content on one side, the direction's own widget on the
+   other (Pitch) — or leading/centered, per the overrides above (Proof,
+   Receipt). Three widgets share `.hero_widget` for the show/hide toggle and
+   shared responsive rules; each has its own variant (`is-pitch`, `is-proof`,
+   `is-receipt`) for its actual look. --- */
+.hero_widget { display: none; }
+html[data-direction="pitch"] .hero_widget[data-widget="pitch"] { display: flex; }
+html[data-direction="proof"] .hero_widget[data-widget="proof"] { display: flex; }
+html[data-direction="receipt"] .hero_widget[data-widget="receipt"] { display: flex; }
 
-.hero_plate {
+.hero_widget-tag {
+  font-family: var(--type--family-mono); font-size: var(--type--small);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color--accent-on-inverse);
+}
+
+/* Pitch — the plate has to read as a panel against whatever band it sits on.
+   In proof and receipt the band isn't ink, so a solid ink plate is the strong
+   contrast the design wants. In pitch the band IS ink — a solid ink plate is
+   invisible — so it lifts off the band instead, using the on-inverse wash
+   that already flips per direction. One token, so Webflow can express it as
+   a real style. */
+:root { --color--plate-surface: var(--color--on-inverse-wash); }
+.direction-proof,
+.direction-receipt { --color--plate-surface: var(--color--ink-fixed); }
+
+.hero_widget.is-pitch {
   background: var(--color--plate-surface);
   border: var(--border--hairline-width) solid var(--color--on-inverse-line);
   border-radius: var(--radius--md);
   min-height: 340px;
   padding: var(--space--lg);
-  display: flex; flex-direction: column; justify-content: flex-end;
+  flex-direction: column; justify-content: flex-end;
   gap: var(--space--sm);
 }
-.hero_plate-label {
-  font-family: var(--type--family-mono); font-size: var(--type--small);
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--color--primary);
-}
 .hero_plate-rule { width: 92px; height: 2px; background: var(--color--primary); }
+
+/* Proof — the before/after visual. Explicit column template (1fr auto 1fr),
+   not an implicit grid — see webflow-grids-need-explicit-columns. */
+.hero_widget.is-proof { flex-direction: column; gap: var(--space--sm); }
+.hero_proof-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: var(--space--sm); align-items: stretch; }
+.hero_proof-pane { border-radius: var(--radius--md); padding: var(--space--lg); min-height: 160px; display: flex; align-items: flex-end; }
+.hero_proof-pane.is-before { background: var(--color--on-inverse-wash); border: var(--border--hairline-width) dashed var(--color--on-inverse-line); }
+.hero_proof-pane.is-after { background: var(--color--plate-surface); border: var(--border--hairline-width) solid var(--color--primary); }
+.hero_proof-tag { font-family: var(--type--family-mono); font-size: var(--type--small); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color--text-mu); }
+.hero_proof-tag.is-after { color: var(--color--accent-on-inverse); }
+.hero_proof-arrow { display: flex; align-items: center; font-size: 1.5rem; color: var(--color--on-inverse-mu); }
+
+/* Receipt — the stamped ticket. Reuses the surface-inverse/text-inverse pair
+   the receipt direction already sets above (measured 5.10:1, see the
+   accent-on-inverse comment below), so this widget is correctly contrasted
+   automatically rather than carrying its own hand-picked colors. */
+.hero_widget.is-receipt {
+  flex-direction: column; gap: var(--space--md);
+  background: var(--color--surface-inverse); color: var(--color--text-inverse);
+  border: var(--border--hairline-width) solid var(--color--on-inverse-line);
+  border-radius: var(--radius--md);
+  padding: var(--space--lg);
+}
+/* Column, not a row: at Kankles' width + 0.3em word-spacing, "NO. 0001"
+   beside the direction label doesn't fit the ticket's 420px on one line and
+   wraps mid-number. Stacked, each gets the full width. */
+.hero_receipt-head { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space--xs); }
+/* .hero_widget-tag is styled --color--primary for the pitch/proof widgets,
+   which sit on non-orange backgrounds. Receipt's ticket panel background IS
+   primary orange (--color--surface-inverse here), so that same orange text
+   would be invisible on it — inherit the ticket's own ink instead. */
+.hero_widget-tag.is-receipt { color: inherit; }
+.hero_receipt-no { font-family: var(--type--family-mono); font-size: var(--type--small); letter-spacing: 0.08em; }
+/* Kankles gets real presence on Receipt: the hero heading above, plus every
+   short, big number on the page — stat callouts, prices, the ticket serial.
+   Every consumer repeats font-weight: 400 + word-spacing: 0.3em — see the
+   --type--family-display comment above for why both are load-bearing, not
+   decorative. Prices stay in Kankles by owner decision (2026-09-18), chosen
+   from a side-by-side render against Inter and JetBrains Mono, knowing the
+   "4" in "$2,450" is one of the ambiguous glyphs. */
+html[data-direction="receipt"] .stats-set_number,
+html[data-direction="receipt"] .pricing_price {
+  font-family: var(--type--family-display);
+  font-weight: 400;
+  word-spacing: 0.3em;
+  line-height: 1.3;
+}
+/* A price that is words, not digits ("Let's talk"): at display size in
+   Kankles it wraps to two lines and pushes its card out of row with the
+   other two. Same face, h2 size, so the three cards stay aligned. */
+html[data-direction="receipt"] .pricing_price.is-text {
+  font-size: var(--type--h2);
+  line-height: calc(var(--type--display) * 1.3);
+}
+html[data-direction="receipt"] .hero_receipt-no {
+  font-family: var(--type--family-display);
+  font-weight: 400;
+  word-spacing: 0.3em;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+}
+.hero_receipt-items { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr; gap: var(--space--sm); border-top: var(--border--hairline-width) dashed var(--color--on-inverse-line); padding-top: var(--space--md); }
+.hero_receipt-item { display: flex; justify-content: space-between; gap: var(--space--sm); font-family: var(--type--family-mono); font-size: var(--type--small); }
+/* Same -7deg a stamped seal turns at (casabe-conformance-kickoff.md) — this
+   widget is where that mark's language belongs until the real seal exists. */
+.hero_receipt-stamp {
+  align-self: flex-end;
+  font-family: var(--type--family-display);
+  font-weight: 400;
+  word-spacing: 0.3em;
+  font-size: 1.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transform: rotate(-7deg);
+  opacity: 0.9;
+}
+
 @media (max-width: 900px) {
   .container.is-hero-split { grid-template-columns: 1fr; gap: var(--space--lg); }
-  .hero_plate { min-height: 200px; }
+  .hero_widget { min-height: 200px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .dirswitch_pill { transition: none; }
@@ -1463,27 +1668,29 @@ html[data-direction="warm"] { --color--plate-surface: var(--color--ink-fixed); }
 
 /* --- accent-on-inverse -------------------------------------------------------
    Anything using --color--primary as a FOREGROUND on an inverse band vanishes
-   when that band is itself orange (warm). Route those through their own token
-   so a direction can move them without touching the accent everywhere else.
-   Measured: #16161a on #ff7900 is 6.86:1; white on the same is 2.63:1, which is
-   why warm inverts to ink rather than lightening.
+   when that band is itself orange (receipt). Route those through their own
+   token so a direction can move them without touching the accent everywhere
+   else. Measured: #16161a on #e8480c is 4.61:1; white on the same is 3.92:1,
+   which is why receipt inverts to ink rather than lightening.
    -------------------------------------------------------------------------- */
 :root { --color--accent-on-inverse: var(--color--primary); }
-html[data-direction="light"] { --color--accent-on-inverse: var(--color--accent); }
-html[data-direction="warm"]  { --color--accent-on-inverse: #16161a; }
+/* Proof's inverse bands are light paper in both themes, so orange text on
+   them would fail the kit's rule (small text is never orange on light). */
+.direction-proof   { --color--accent-on-inverse: #16161a; }
+.direction-receipt { --color--accent-on-inverse: #16161a; }
 
 .eyebrow.is-on-inverse,
 .eyebrow.is-on-inverse-tight { color: var(--color--accent-on-inverse); }
 
-/* A solid orange fill is invisible on an orange band — swap warm's primary
+/* A solid orange fill is invisible on an orange band — swap receipt's primary
    buttons to an ink fill inside the inverse bands only. */
-html[data-direction="warm"] .hero .button.is-primary,
-html[data-direction="warm"] .cta-section .button.is-primary {
+html[data-direction="receipt"] .hero .button.is-primary,
+html[data-direction="receipt"] .cta-section .button.is-primary {
   background: var(--color--ink-fixed);
   color: #ffffff;
 }
-html[data-direction="warm"] .hero .button.is-primary:hover,
-html[data-direction="warm"] .cta-section .button.is-primary:hover {
+html[data-direction="receipt"] .hero .button.is-primary:hover,
+html[data-direction="receipt"] .cta-section .button.is-primary:hover {
   background: #2d2d33;
 }
 
@@ -1499,23 +1706,21 @@ html[data-direction="warm"] .cta-section .button.is-primary:hover {
       hero form. Reserve its height at the foot of the page.
    -------------------------------------------------------------------------- */
 @media (max-width: 900px) {
-  /* No `order: -1` — hoisting the plate above the copy handed the entire first
-     screen to a decorative panel and pushed the headline below the fold. */
-  .hero_plate { min-height: 110px; }
+  /* No `order: -1` on Pitch — hoisting the widget above the copy handed the
+     entire first screen to a decorative panel and pushed the headline below
+     the fold. Proof's own order:1/2 above still applies; this just caps
+     height so the widget doesn't run long on a narrow phone. */
+  .hero_widget { min-height: 110px; }
+  .hero_widget.is-pitch { min-height: 110px; }
 }
-/* On a phone the plate earns none of its space. */
-@media (max-width: 620px) {
-  .hero_plate { display: none; }
-}
-
 /* Matches the switcher's dock breakpoint so the reserved space appears exactly
    when the bar does. 44px pill + padding + margin. */
 @media (max-width: 1440px) {
-  .page { padding-bottom: 88px; }
+  .page { padding-bottom: 5.5rem; }
 }
 
 /* Nothing may exceed the viewport width — the plate proved this needs saying. */
-.hero_plate { max-width: 100%; }
+.hero_widget { max-width: 100%; }
 
 /* --- inline-style hoist: index.html blockers, resolved as named classes ---
    Each of these previously carried its declarations as a raw style="" attr.
@@ -1523,20 +1728,21 @@ html[data-direction="warm"] .cta-section .button.is-primary:hover {
    so none of the site-wide fixes (shorthand expansion, token binding) ever
    reached them. See webflow-inline-styles-must-be-classes memory. */
 
-/* Nav-scoped size variants — same variant + color as the base combo, plus the
-   nav's compact padding. Folds size into the modifier name rather than a
-   third class, per design.md rule 8's two-class ceiling. */
-.button.is-primary-sm { background: var(--color--primary); color: var(--color--on-primary); padding: 0.6rem 1.15rem; }
-.button.is-primary-sm:hover { background: var(--color--primary-600); transform: translateY(-2px); box-shadow: var(--effect--shadow-1); }
-.button.is-outline-sm { background: transparent; border-color: currentColor; color: var(--color--accent-deep); padding: 0.4rem 0.9rem; }
-.button.is-outline-sm:hover { background: var(--color--surface-alt); }
 
 /* The hero capture form and its parts — one-off, so block_element naming
    rather than combos. */
-.hero-capture { display: grid; gap: var(--space--sm); max-width: 560px; margin-top: var(--space--sm); }
+.hero-capture { display: grid; grid-template-columns: 1fr; gap: var(--space--sm); max-width: 560px; margin-top: var(--space--sm); }
 .hero-capture_row { display: flex; gap: var(--space--sm); flex-wrap: wrap; }
 .hero-capture_tos { display: flex; gap: var(--space--sm); align-items: flex-start; font-size: var(--type--small); color: var(--color--on-inverse-body); }
 .hero-capture_tos-link { color: var(--color--accent-on-inverse); }
+.hero-capture_input { padding: 0.875rem 1rem; border: 1px solid var(--color--border); border-radius: var(--radius--sm); font: inherit; background: var(--color--surface); color: var(--color--text); }
+.hero-capture_input.is-url { flex: 1; min-width: 220px; }
+.hero-capture_checkbox { margin-top: 0.2em; }
+/* Card eyebrows on the three-directions strip. */
+/* accent-deep, not primary: ink on light, orange on dark (kit rule: small text is never orange on light). */
+.eyebrow.is-primary { color: var(--color--accent-deep); }
+/* The minimal hero is a LIGHT band in light theme, so its eyebrow can't use the orange on-inverse tone. */
+.hero.is-minimal .eyebrow.is-on-inverse-tight { color: var(--color--accent-deep); }
 
 .text-sm.is-on-inverse-mu { color: var(--color--on-inverse-mu); max-width: none; }
 /* "Trusted by local businesses" lead-in. */
@@ -1556,6 +1762,159 @@ html[data-direction="warm"] .cta-section .button.is-primary:hover {
    the brand heading, which stays plain .footer_heading. */
 .footer_heading.is-column { font-size: var(--type--body); }
 
+/* --- hero process panels (BP-195) ---------------------------------------------
+   Pitch and Proof's hero widgets draw the PROCESS, not a client's result:
+   Pitch = one URL in, three structurally different designs out; Proof = the
+   same five pieces of content, a dated layout before and the redesign after.
+   Schematic blocks only (classed <i> elements, aria-hidden). The mini pages
+   are literal white pages whatever the band or theme, so they carry fixed
+   values rather than the neutrals, which flip in dark mode. The build plays
+   once on load; prefers-reduced-motion shows the finished frame.
+   -------------------------------------------------------------------------- */
+/* Colors: paper and ink come from the fixed (theme-proof) tokens, including
+   the five schematic grays below (--color--schematic-*-fixed, declared with
+   the on-inverse ramp) — the neutral ramp flips in dark mode, so it can't
+   stand in for these literal mini-page tones. */
+.hero_mini-bar, .hero_mini-line, .hero_mini-media, .hero_mini-card,
+.hero_page-logo, .hero_page-banner, .hero_page-title, .hero_page-text, .hero_page-button {
+  display: block; border-radius: 2px; background: var(--color--schematic-fixed);
+}
+
+/* Pitch: URL chip -> stem -> three pages */
+.hero_flow { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+.hero_flow-url {
+  font-family: var(--type--family-mono); font-size: var(--type--small);
+  color: var(--color--ink-fixed); background: var(--color--paper);
+  border-radius: 999px; padding: 0.4rem 1rem; box-shadow: 0 0 0 3px var(--color--primary);
+}
+.hero_flow-typed { display: inline-block; white-space: nowrap; overflow: hidden; vertical-align: bottom; }
+.hero_flow-stem { width: 2px; height: 28px; background: var(--color--on-inverse-line); }
+.hero_flow-sites {
+  width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space--sm);
+  border-top: 2px solid var(--color--on-inverse-line); padding-top: 18px; position: relative;
+}
+.hero_mini {
+  background: var(--color--paper); border-radius: var(--radius--sm); aspect-ratio: 3 / 4;
+  padding: 10% 9%; display: flex; flex-direction: column; gap: 6%;
+}
+.hero_mini.is-split { flex-direction: row; gap: 8%; }
+/* A bar is a line of copy; its variant folds color and width into one combo
+   (design.md rule 8). `hero_mini-line` is the same bar in the split page's
+   text column, which runs a touch taller. */
+.hero_mini-bar { height: 6%; }
+.hero_mini-bar.is-ink-70 { background: var(--color--ink-fixed); width: 70%; }
+.hero_mini-bar.is-ink-45 { background: var(--color--ink-fixed); width: 45%; }
+.hero_mini-bar.is-accent-35 { background: var(--color--primary); width: 35%; }
+.hero_mini-bar.is-ink-60 { background: var(--color--ink-fixed); width: 60%; align-self: center; }
+.hero_mini-bar.is-accent-30 { background: var(--color--primary); width: 30%; align-self: center; }
+.hero_mini-media { flex: 1; }
+.hero_mini-media.is-split { flex: 0 0 42%; }
+.hero_mini-column { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8%; }
+.hero_mini-line { height: 7%; }
+.hero_mini-line.is-ink-90 { background: var(--color--ink-fixed); width: 90%; }
+.hero_mini-line.is-ink-60 { background: var(--color--ink-fixed); width: 60%; }
+.hero_mini-line.is-gray-80 { width: 80%; }
+.hero_mini-line.is-accent-50 { background: var(--color--primary); width: 50%; }
+.hero_mini-cards { flex: 1; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6%; align-items: end; }
+.hero_mini-card { height: 70%; }
+
+/* Proof: same five pieces, two layouts. The base classes draw the Before
+   page; `is-after` re-composes the same pieces. */
+.hero_proof-pane { flex-direction: column; align-items: stretch; justify-content: space-between; gap: var(--space--sm); }
+.hero_page { flex: 1; display: grid; grid-template-columns: 1fr; gap: 7px; border-radius: var(--radius--sm); padding: 12px; }
+.hero_page-logo, .hero_page-title, .hero_page-text { height: 7px; }
+.hero_page-banner { min-height: 30px; }
+/* Before: everything centred, grey, cramped — a template from a decade ago */
+.hero_page.is-before { background: var(--color--paper); justify-items: center; align-content: start; opacity: 0.85; }
+.hero_page-logo { width: 22%; height: 10px; }
+.hero_page-banner { width: 100%; background: var(--color--schematic-mid-fixed); }
+.hero_page-title { width: 90%; }
+.hero_page-text { width: 80%; }
+.hero_page-button { width: 18%; height: 9px; background: var(--color--schematic-dark-fixed); }
+/* After: same pieces, re-composed — logo top-left, the lines become the
+   headline, the banner becomes the image, the button becomes the CTA */
+.hero_page.is-after {
+  grid-template-columns: 1.1fr 1fr; grid-template-rows: auto 1fr auto auto;
+  grid-template-areas: "logo ." "h1 media" "h2 media" "btn media";
+  column-gap: 12px; align-content: stretch; padding: 4px 0 0;
+}
+.hero_page-logo.is-after { grid-area: logo; width: 22%; height: 7px; background: var(--color--schematic-on-dark-strong-fixed); }
+.hero_page-title.is-after { grid-area: h1; align-self: end; height: 12px; width: 100%; background: var(--color--paper); }
+.hero_page-text.is-after { grid-area: h2; height: 12px; width: 70%; background: var(--color--paper); }
+.hero_page-button.is-after { grid-area: btn; width: 45%; height: 12px; margin-top: 4px; background: var(--color--primary); }
+.hero_page-banner.is-after { grid-area: media; height: 100%; background: var(--color--schematic-on-dark-faint-fixed); border-radius: var(--radius--sm); }
+
+/* Motion: plays once, ends on the finished frame. Set on each moving piece
+   directly rather than scoped under the widget — these pieces only exist
+   inside the Pitch and Proof widgets. */
+/* Typing reveals the text with clip-path, not width: `width: 0` -> the
+   element's natural width animates to `auto`, which browsers can't
+   interpolate, so it jumped from empty to full at the halfway point
+   (measured: 0px until ~760ms, then 117px, no steps between). A clip-path
+   inset interpolates, and with steps(15) over the 15 monospace characters of
+   "yourwebsite.com" each step uncovers exactly one character. */
+@keyframes hero-type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes hero-rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes hero-fade { from { opacity: 0; } }
+.hero_flow-typed { animation: hero-type 0.9s steps(15, end) 0.3s both; }
+.hero_flow-stem, .hero_flow-sites { animation: hero-fade 0.3s ease-out 1.3s both; }
+.hero_mini { animation: hero-rise 0.5s cubic-bezier(0.22,0.61,0.36,1) both; }
+.hero_mini.is-stack { animation-delay: 1.5s; }
+.hero_mini.is-split { animation-delay: 1.65s; }
+.hero_mini.is-cards { animation-delay: 1.8s; }
+.hero_page-logo.is-after, .hero_page-banner.is-after, .hero_page-title.is-after,
+.hero_page-text.is-after, .hero_page-button.is-after { animation: hero-rise 0.45s cubic-bezier(0.22,0.61,0.36,1) both; }
+.hero_page-logo.is-after   { animation-delay: 0.6s; }
+.hero_page-banner.is-after { animation-delay: 0.8s; }
+.hero_page-title.is-after  { animation-delay: 1.0s; }
+.hero_page-text.is-after   { animation-delay: 1.1s; }
+.hero_page-button.is-after { animation-delay: 1.3s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero_flow-typed, .hero_flow-stem, .hero_flow-sites, .hero_mini,
+  .hero_page-logo.is-after, .hero_page-banner.is-after, .hero_page-title.is-after,
+  .hero_page-text.is-after, .hero_page-button.is-after { animation: none !important; }
+}
+@media (max-width: 620px) {
+  .hero_page { gap: 5px; padding: 8px; }
+  .hero_page.is-after { padding: 2px 0 0; }
+}
+
+/* Rules the workshop pages still use that batey-platform's site/styles.css no
+   longer carries. The platform's marketing nav moved from .main-nav* to
+   .site-nav* (a grid + hamburger); these pages keep the simple flex nav, so its
+   old rules live here. Copied from the stylesheet the committed pages were built
+   on; token names follow the current stylesheet (--effect--shadow-sm replaces -1). */
+.main-nav { position: sticky; top: 0; z-index: 10; background: var(--color--surface); box-shadow: var(--effect--shadow-sm); }
+.container.is-nav { display: flex; align-items: center; justify-content: space-between; padding-top: var(--space--sm); padding-bottom: var(--space--sm); }
+.main-nav_logo { font-family: var(--type--family-heading); font-weight: 700; letter-spacing: -0.02em; color: var(--color--text); }
+.main-nav_menu { display: flex; gap: var(--space--lg); align-items: center; }
+.main-nav_link { font-weight: 500; color: var(--color--neutral-700); }
+.main-nav_link:hover { color: var(--color--accent-deep); }
+@media (max-width: 767px) {
+  .container.is-nav { flex-wrap: wrap; row-gap: var(--space--sm); }
+  .main-nav_menu { flex-wrap: wrap; gap: var(--space--sm) var(--space--md); }
+}
+.button.is-primary-sm { background: var(--color--primary); color: var(--color--on-primary); padding: 0.6rem 1.15rem; }
+.button.is-primary-sm:hover { background: var(--color--primary-600); transform: translateY(-2px); box-shadow: var(--effect--shadow-sm); }
+.button.is-outline-sm { background: transparent; border-color: currentColor; color: var(--color--accent-deep); padding: 0.4rem 0.9rem; }
+.button.is-outline-sm:hover { background: var(--color--surface-alt); }
+.hero_plate {
+  background: var(--color--plate-surface);
+  border: var(--border--hairline-width, 1px) solid var(--color--on-inverse-line);
+  border-radius: var(--radius--md);
+  min-height: 340px;
+  max-width: 100%;
+  padding: var(--space--lg);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  gap: var(--space--sm);
+}
+.hero_plate-label {
+  font-family: var(--type--family-mono); font-size: var(--type--small);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--color--primary);
+}
+@media (max-width: 900px) { .hero_plate { min-height: 110px; } }
+@media (max-width: 620px) { .hero_plate { display: none; } }
 </style>
 <style>
 /* ---- page-level: only what the marketing site has no vocabulary for ----
@@ -1565,8 +1924,8 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 /* The artifact host stamps data-theme on <html>; the site themes by class. The
    script bridges the two — this block only covers the moment before it runs. */
 html[data-theme="dark"]:not(.theme-light) {
-  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: #1f1f23;
-  --color--surface-inverse: #1f1f23; --color--border: #3b3b42; --color--accent-deep: #e9560c;
+  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: var(--direction--surface-alt-dark);
+  --color--surface-inverse: var(--direction--surface-inverse-dark); --color--border: var(--direction--border-dark); --color--accent-deep: var(--color--primary);
   --color--success: #5fd08a; --color--warning: #f0b544; --color--danger: #f28b82;
 }
 section[id], .phase[id], .steps_item[id] { scroll-margin-top: 4.25rem; }
@@ -1579,11 +1938,11 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .nav-links { display: flex; gap: var(--space--lg); }
 .main-nav_link { font-size: var(--type--small); }
 #theme-toggle { flex: none; }
-/* Casabe lockup (src/brand): block and wordmark follow the text colour, the bar stays orange */
-.brand-lockup { display: block; width: auto; height: 30px; }  /* spec minimum for the horizontal lockup */
+/* Casabe lockup (src/brand): block and wordmark follow the text colour, the seed follows the orange token */
+.brand-lockup { display: block; width: auto; height: 30.6px; }  /* svg height = mark height x 1552/1522 (viewBox includes the wordmark descender): 30px mark */
 .main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
 .footer_logo { margin-bottom: var(--space--sm); color: var(--color--on-inverse-strong); }
-.footer_logo .brand-lockup { height: 32px; }
+.footer_logo .brand-lockup { height: 32.6px; }  /* 32px mark */
 
 /* hero */
 .hero_facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space--md) var(--space--lg); margin: var(--space--xs) 0 0; padding-top: var(--space--md); border-top: 1px solid var(--color--on-inverse-faint); }
@@ -1668,6 +2027,8 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   .heading-xl { font-size: 1.625rem; }
   .steps_title { font-size: 1.1875rem; }
   .phase_title { font-size: 1.25rem; }
+  .brand-lockup { height: 22.4px; }  /* 22px mark (152px wide, as before) so the nav links are not clipped at 375px */
+  .footer_logo .brand-lockup { height: 24.5px; }
   .container.is-nav { flex-wrap: nowrap; gap: var(--space--sm); }
   .main-nav_menu { flex-wrap: nowrap; min-width: 0; gap: var(--space--sm); }
   .nav-links { gap: 0.9rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
@@ -1756,7 +2117,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 
 <header class="main-nav">
   <div class="container is-nav">
-    <a class="main-nav_logo" href="#top" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -85.5 6325.88 1271"><g transform="scale(24.336283) translate(-6.3 -9.4)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" fill="#e8480c"/></g><g transform="translate(1450.88 1086.18) scale(1.250000)"><path fill="currentColor" d="M387 15Q217 15 123.5 -92.0Q30 -199 30 -390Q30 -579 122.0 -687.0Q214 -795 386 -795Q489 -795 562.0 -756.5Q635 -718 676.0 -650.0Q717 -582 724 -494H557Q549 -576 504.0 -622.5Q459 -669 387 -669Q296 -669 250.0 -596.0Q204 -523 204 -389Q204 -250 251.5 -180.5Q299 -111 386 -111Q461 -111 505.5 -159.0Q550 -207 557 -286H724Q717 -198 676.0 -130.0Q635 -62 562.5 -23.5Q490 15 387 15Z M1004.0 12Q920.0 12 866.0 -28.5Q812.0 -69 786.0 -140.0Q760.0 -211 760.0 -301Q760.0 -394 786.5 -464.0Q813.0 -534 867.0 -573.0Q921.0 -612 1003.0 -612Q1066.0 -612 1106.5 -587.5Q1147.0 -563 1168.0 -522H1192.0V-600H1342.0V0H1192.0V-78H1168.0Q1147.0 -40 1107.0 -14.0Q1067.0 12 1004.0 12ZM1046.0 -102Q1107.0 -102 1143.5 -155.5Q1180.0 -209 1180.0 -300Q1180.0 -392 1143.5 -445.0Q1107.0 -498 1046.0 -498Q991.0 -498 959.5 -448.5Q928.0 -399 928.0 -300Q928.0 -201 959.5 -151.5Q991.0 -102 1046.0 -102Z M1690.0 15Q1590.0 15 1530.5 -16.5Q1471.0 -48 1443.5 -96.0Q1416.0 -144 1412.0 -192H1566.0Q1571.0 -166 1587.5 -144.5Q1604.0 -123 1631.5 -111.0Q1659.0 -99 1698.0 -99Q1746.0 -99 1767.0 -115.5Q1788.0 -132 1788.0 -158Q1788.0 -182 1768.5 -198.5Q1749.0 -215 1705.0 -229L1633.0 -253Q1581.0 -271 1537.0 -292.5Q1493.0 -314 1466.5 -348.0Q1440.0 -382 1440.0 -436Q1440.0 -516 1501.0 -565.5Q1562.0 -615 1674.0 -615Q1755.0 -615 1806.5 -590.0Q1858.0 -565 1884.0 -523.5Q1910.0 -482 1914.0 -432H1766.0Q1761.0 -468 1736.0 -487.5Q1711.0 -507 1668.0 -507Q1629.0 -507 1609.5 -492.0Q1590.0 -477 1590.0 -451Q1590.0 -425 1611.0 -408.0Q1632.0 -391 1675.0 -377L1747.0 -354Q1799.0 -338 1842.5 -316.5Q1886.0 -295 1912.0 -260.5Q1938.0 -226 1938.0 -171Q1938.0 -87 1874.5 -36.0Q1811.0 15 1690.0 15Z M2216.0 12Q2132.0 12 2078.0 -28.5Q2024.0 -69 1998.0 -140.0Q1972.0 -211 1972.0 -301Q1972.0 -394 1998.5 -464.0Q2025.0 -534 2079.0 -573.0Q2133.0 -612 2215.0 -612Q2278.0 -612 2318.5 -587.5Q2359.0 -563 2380.0 -522H2404.0V-600H2554.0V0H2404.0V-78H2380.0Q2359.0 -40 2319.0 -14.0Q2279.0 12 2216.0 12ZM2258.0 -102Q2319.0 -102 2355.5 -155.5Q2392.0 -209 2392.0 -300Q2392.0 -392 2355.5 -445.0Q2319.0 -498 2258.0 -498Q2203.0 -498 2171.5 -448.5Q2140.0 -399 2140.0 -300Q2140.0 -201 2171.5 -151.5Q2203.0 -102 2258.0 -102Z M3020.0 12Q2953.0 12 2913.0 -14.0Q2873.0 -40 2852.0 -78H2828.0V0H2678.0V-800H2840.0V-534H2864.0Q2886.0 -570 2924.0 -591.0Q2962.0 -612 3020.0 -612Q3100.0 -612 3153.5 -573.0Q3207.0 -534 3233.5 -464.0Q3260.0 -394 3260.0 -301Q3260.0 -211 3234.0 -140.0Q3208.0 -69 3155.0 -28.5Q3102.0 12 3020.0 12ZM2974.0 -102Q3029.0 -102 3060.5 -151.5Q3092.0 -201 3092.0 -300Q3092.0 -399 3060.5 -448.5Q3029.0 -498 2974.0 -498Q2913.0 -498 2876.5 -445.0Q2840.0 -392 2840.0 -300Q2840.0 -209 2876.5 -155.5Q2913.0 -102 2974.0 -102Z M3595.0 15Q3453.0 15 3378.5 -70.0Q3304.0 -155 3304.0 -301Q3304.0 -399 3337.5 -469.0Q3371.0 -539 3435.5 -577.0Q3500.0 -615 3593.0 -615Q3727.0 -615 3798.5 -534.0Q3870.0 -453 3870.0 -296V-262H3462.0Q3467.0 -186 3501.5 -142.5Q3536.0 -99 3595.0 -99Q3642.0 -99 3670.5 -127.0Q3699.0 -155 3708.0 -192H3862.0Q3853.0 -137 3822.0 -90.0Q3791.0 -43 3735.0 -14.0Q3679.0 15 3595.0 15ZM3462.0 -364H3712.0Q3708.0 -432 3678.0 -469.5Q3648.0 -507 3592.0 -507Q3537.0 -507 3503.5 -471.5Q3470.0 -436 3462.0 -364Z"/></g></svg></a>
+    <a class="main-nav_logo" href="#top" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1522 10503 1552"><!-- DRAFT: outlined from GT Maru Mono Bold TRIAL. Not for production until the font is licensed. Mark height = b ascender + 4%; gap = seed diameter. --><g transform="translate(-240.1 -1889.1) scale(34.9628)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" style="fill:var(--color--primary)"/></g><path fill="currentColor" d="M2773.992832858587 30C2955.992832858587 30 3107.992832858587 -32 3196.992832858587 -122C3257.992832858587 -183 3292.992832858587 -259 3292.992832858587 -312C3292.992832858587 -387 3231.992832858587 -442 3160.992832858587 -442C3101.992832858587 -442 3064.992832858587 -421 3024.992832858587 -369C2972.992832858587 -295 2897.992832858587 -245 2782.992832858587 -245C2614.992832858587 -245 2485.992832858587 -369 2485.992832858587 -550C2485.992832858587 -731 2614.992832858587 -855 2782.992832858587 -855C2886.992832858587 -855 2966.992832858587 -810 3015.992832858587 -743C3062.992832858587 -691 3102.992832858587 -666 3163.992832858587 -666C3236.992832858587 -666 3289.992832858587 -721 3289.992832858587 -794C3289.992832858587 -853 3254.992832858587 -926 3194.992832858587 -986C3107.992832858587 -1073 2966.992832858587 -1130 2773.992832858587 -1130C2431.992832858587 -1130 2176.992832858587 -890 2176.992832858587 -550C2176.992832858587 -210 2431.992832858587 30 2773.992832858587 30ZM4030.992832858587 29C4169.992832858587 29 4288.992832858587 -18 4368.992832858587 -101C4416.992832858587 -22 4498.992832858587 24 4600.992832858587 24C4681.992832858587 24 4766.992832858587 -16 4811.992832858587 -73C4846.992832858587 -116 4862.992832858587 -157 4862.992832858587 -208C4862.992832858587 -265 4827.992832858587 -309 4779.992832858587 -309C4756.992832858587 -309 4741.992832858587 -302 4722.992832858587 -285C4707.992832858587 -271 4692.992832858587 -262 4670.992832858587 -262C4634.992832858587 -262 4622.992832858587 -287 4622.992832858587 -316V-743C4622.992832858587 -998 4450.992832858587 -1130 4159.992832858587 -1130C3959.992832858587 -1130 3788.992832858587 -1064 3683.992832858587 -947C3645.992832858587 -905 3626.992832858587 -860 3626.992832858587 -815C3626.992832858587 -748 3677.992832858587 -704 3749.992832858587 -704C3794.992832858587 -704 3829.992832858587 -723 3889.992832858587 -769C3962.992832858587 -831 4060.992832858587 -872 4153.992832858587 -872C4256.992832858587 -872 4318.992832858587 -832 4318.992832858587 -766C4318.992832858587 -719 4292.992832858587 -694 4216.992832858587 -678L3953.992832858587 -620C3737.992832858587 -573 3631.992832858587 -465 3631.992832858587 -294C3631.992832858587 -100 3791.992832858587 29 4030.992832858587 29ZM3952.992832858587 -318C3952.992832858587 -380 4003.992832858587 -423 4103.992832858587 -443L4214.992832858587 -465C4260.992832858587 -475 4295.992832858587 -489 4319.992832858587 -508V-383C4319.992832858587 -284 4230.992832858587 -211 4110.992832858587 -211C4015.992832858587 -211 3952.992832858587 -254 3952.992832858587 -318ZM5635.992832858587 30C5975.992832858587 30 6182.992832858587 -110 6182.992832858587 -340C6182.992832858587 -513 6060.992832858587 -622 5810.992832858587 -666L5596.992832858587 -703C5485.992832858587 -722 5428.992832858587 -754 5428.992832858587 -804C5428.992832858587 -858 5502.992832858587 -891 5624.992832858587 -891C5724.992832858587 -891 5810.992832858587 -862 5880.992832858587 -819C5944.992832858587 -779 5991.992832858587 -746 6041.992832858587 -746C6112.992832858587 -746 6163.992832858587 -795 6163.992832858587 -861C6163.992832858587 -922 6118.992832858587 -984 6041.992832858587 -1032C5945.992832858587 -1092 5803.992832858587 -1130 5632.992832858587 -1130C5311.992832858587 -1130 5112.992832858587 -997 5112.992832858587 -783C5112.992832858587 -614 5247.992832858587 -499 5497.992832858587 -456L5699.992832858587 -421C5806.992832858587 -403 5865.992832858587 -371 5865.992832858587 -312C5865.992832858587 -252 5790.992832858587 -218 5658.992832858587 -218C5529.992832858587 -218 5435.992832858587 -256 5345.992832858587 -320C5283.992832858587 -364 5240.992832858587 -386 5191.992832858587 -386C5118.992832858587 -386 5068.992832858587 -339 5068.992832858587 -267C5068.992832858587 -218 5100.992832858587 -180 5148.992832858587 -135C5254.992832858587 -32 5436.992832858587 30 5635.992832858587 30ZM6910.992832858587 29C7049.992832858587 29 7168.992832858587 -18 7248.992832858587 -101C7296.992832858587 -22 7378.992832858587 24 7480.992832858587 24C7561.992832858587 24 7646.992832858587 -16 7691.992832858587 -73C7726.992832858587 -116 7742.992832858587 -157 7742.992832858587 -208C7742.992832858587 -265 7707.992832858587 -309 7659.992832858587 -309C7636.992832858587 -309 7621.992832858587 -302 7602.992832858587 -285C7587.992832858587 -271 7572.992832858587 -262 7550.992832858587 -262C7514.992832858587 -262 7502.992832858587 -287 7502.992832858587 -316V-743C7502.992832858587 -998 7330.992832858587 -1130 7039.992832858587 -1130C6839.992832858587 -1130 6668.992832858587 -1064 6563.992832858587 -947C6525.992832858587 -905 6506.992832858587 -860 6506.992832858587 -815C6506.992832858587 -748 6557.992832858587 -704 6629.992832858587 -704C6674.992832858587 -704 6709.992832858587 -723 6769.992832858587 -769C6842.992832858587 -831 6940.992832858587 -872 7033.992832858587 -872C7136.992832858587 -872 7198.992832858587 -832 7198.992832858587 -766C7198.992832858587 -719 7172.992832858587 -694 7096.992832858587 -678L6833.992832858587 -620C6617.992832858587 -573 6511.992832858587 -465 6511.992832858587 -294C6511.992832858587 -100 6671.992832858587 29 6910.992832858587 29ZM6832.992832858587 -318C6832.992832858587 -380 6883.992832858587 -423 6983.992832858587 -443L7094.992832858587 -465C7140.992832858587 -475 7175.992832858587 -489 7199.992832858587 -508V-383C7199.992832858587 -284 7110.992832858587 -211 6990.992832858587 -211C6895.992832858587 -211 6832.992832858587 -254 6832.992832858587 -318ZM8578.992832858587 30C8880.992832858587 30 9110.992832858587 -202 9110.992832858587 -550C9110.992832858587 -898 8880.992832858587 -1130 8578.992832858587 -1130C8444.992832858587 -1130 8330.992832858587 -1085 8253.992832858587 -1001V-1308C8253.992832858587 -1400 8192.992832858587 -1464 8104.992832858587 -1464C8016.992832858587 -1464 7954.992832858587 -1400 7954.992832858587 -1308V-132C7954.992832858587 -40 8016.992832858587 24 8104.992832858587 24C8180.992832858587 24 8235.992832858587 -23 8249.992832858587 -95C8330.992832858587 -8 8439.992832858587 30 8578.992832858587 30ZM8248.992832858587 -550C8248.992832858587 -724 8360.992832858587 -855 8525.992832858587 -855C8682.992832858587 -855 8802.992832858587 -735 8802.992832858587 -550C8802.992832858587 -365 8682.992832858587 -245 8525.992832858587 -245C8360.992832858587 -245 8248.992832858587 -376 8248.992832858587 -550ZM9992.992832858587 29C10174.992832858587 29 10354.992832858587 -34 10435.992832858587 -144C10458.992832858587 -175 10475.992832858587 -211 10475.992832858587 -247C10475.992832858587 -320 10439.992832858587 -365 10363.992832858587 -365C10316.992832858587 -365 10277.992832858587 -346 10236.992832858587 -320C10179.992832858587 -273 10107.992832858587 -246 10006.992832858587 -246C9832.992832858587 -246 9705.992832858587 -327 9686.992832858587 -459H10345.992832858587C10452.992832858587 -459 10502.992832858587 -511 10502.992832858587 -627C10502.992832858587 -919 10277.992832858587 -1130 9959.992832858587 -1130C9623.992832858587 -1130 9387.992832858587 -892 9387.992832858587 -548C9387.992832858587 -197 9627.992832858587 29 9992.992832858587 29ZM9686.992832858587 -689C9706.992832858587 -812 9804.992832858587 -893 9947.992832858587 -893C10092.992832858587 -893 10185.992832858587 -812 10206.992832858587 -689Z"/></svg></a>
     <nav class="main-nav_menu" aria-label="Sections">
       <div class="nav-links">
         <a class="main-nav_link" href="#materials">Materials</a>
@@ -2197,7 +2558,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   <div class="container">
     <div class="footer_layout">
       <div>
-        <div class="footer_logo" role="img" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -85.5 6325.88 1271"><g transform="scale(24.336283) translate(-6.3 -9.4)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" fill="#e8480c"/></g><g transform="translate(1450.88 1086.18) scale(1.250000)"><path fill="currentColor" d="M387 15Q217 15 123.5 -92.0Q30 -199 30 -390Q30 -579 122.0 -687.0Q214 -795 386 -795Q489 -795 562.0 -756.5Q635 -718 676.0 -650.0Q717 -582 724 -494H557Q549 -576 504.0 -622.5Q459 -669 387 -669Q296 -669 250.0 -596.0Q204 -523 204 -389Q204 -250 251.5 -180.5Q299 -111 386 -111Q461 -111 505.5 -159.0Q550 -207 557 -286H724Q717 -198 676.0 -130.0Q635 -62 562.5 -23.5Q490 15 387 15Z M1004.0 12Q920.0 12 866.0 -28.5Q812.0 -69 786.0 -140.0Q760.0 -211 760.0 -301Q760.0 -394 786.5 -464.0Q813.0 -534 867.0 -573.0Q921.0 -612 1003.0 -612Q1066.0 -612 1106.5 -587.5Q1147.0 -563 1168.0 -522H1192.0V-600H1342.0V0H1192.0V-78H1168.0Q1147.0 -40 1107.0 -14.0Q1067.0 12 1004.0 12ZM1046.0 -102Q1107.0 -102 1143.5 -155.5Q1180.0 -209 1180.0 -300Q1180.0 -392 1143.5 -445.0Q1107.0 -498 1046.0 -498Q991.0 -498 959.5 -448.5Q928.0 -399 928.0 -300Q928.0 -201 959.5 -151.5Q991.0 -102 1046.0 -102Z M1690.0 15Q1590.0 15 1530.5 -16.5Q1471.0 -48 1443.5 -96.0Q1416.0 -144 1412.0 -192H1566.0Q1571.0 -166 1587.5 -144.5Q1604.0 -123 1631.5 -111.0Q1659.0 -99 1698.0 -99Q1746.0 -99 1767.0 -115.5Q1788.0 -132 1788.0 -158Q1788.0 -182 1768.5 -198.5Q1749.0 -215 1705.0 -229L1633.0 -253Q1581.0 -271 1537.0 -292.5Q1493.0 -314 1466.5 -348.0Q1440.0 -382 1440.0 -436Q1440.0 -516 1501.0 -565.5Q1562.0 -615 1674.0 -615Q1755.0 -615 1806.5 -590.0Q1858.0 -565 1884.0 -523.5Q1910.0 -482 1914.0 -432H1766.0Q1761.0 -468 1736.0 -487.5Q1711.0 -507 1668.0 -507Q1629.0 -507 1609.5 -492.0Q1590.0 -477 1590.0 -451Q1590.0 -425 1611.0 -408.0Q1632.0 -391 1675.0 -377L1747.0 -354Q1799.0 -338 1842.5 -316.5Q1886.0 -295 1912.0 -260.5Q1938.0 -226 1938.0 -171Q1938.0 -87 1874.5 -36.0Q1811.0 15 1690.0 15Z M2216.0 12Q2132.0 12 2078.0 -28.5Q2024.0 -69 1998.0 -140.0Q1972.0 -211 1972.0 -301Q1972.0 -394 1998.5 -464.0Q2025.0 -534 2079.0 -573.0Q2133.0 -612 2215.0 -612Q2278.0 -612 2318.5 -587.5Q2359.0 -563 2380.0 -522H2404.0V-600H2554.0V0H2404.0V-78H2380.0Q2359.0 -40 2319.0 -14.0Q2279.0 12 2216.0 12ZM2258.0 -102Q2319.0 -102 2355.5 -155.5Q2392.0 -209 2392.0 -300Q2392.0 -392 2355.5 -445.0Q2319.0 -498 2258.0 -498Q2203.0 -498 2171.5 -448.5Q2140.0 -399 2140.0 -300Q2140.0 -201 2171.5 -151.5Q2203.0 -102 2258.0 -102Z M3020.0 12Q2953.0 12 2913.0 -14.0Q2873.0 -40 2852.0 -78H2828.0V0H2678.0V-800H2840.0V-534H2864.0Q2886.0 -570 2924.0 -591.0Q2962.0 -612 3020.0 -612Q3100.0 -612 3153.5 -573.0Q3207.0 -534 3233.5 -464.0Q3260.0 -394 3260.0 -301Q3260.0 -211 3234.0 -140.0Q3208.0 -69 3155.0 -28.5Q3102.0 12 3020.0 12ZM2974.0 -102Q3029.0 -102 3060.5 -151.5Q3092.0 -201 3092.0 -300Q3092.0 -399 3060.5 -448.5Q3029.0 -498 2974.0 -498Q2913.0 -498 2876.5 -445.0Q2840.0 -392 2840.0 -300Q2840.0 -209 2876.5 -155.5Q2913.0 -102 2974.0 -102Z M3595.0 15Q3453.0 15 3378.5 -70.0Q3304.0 -155 3304.0 -301Q3304.0 -399 3337.5 -469.0Q3371.0 -539 3435.5 -577.0Q3500.0 -615 3593.0 -615Q3727.0 -615 3798.5 -534.0Q3870.0 -453 3870.0 -296V-262H3462.0Q3467.0 -186 3501.5 -142.5Q3536.0 -99 3595.0 -99Q3642.0 -99 3670.5 -127.0Q3699.0 -155 3708.0 -192H3862.0Q3853.0 -137 3822.0 -90.0Q3791.0 -43 3735.0 -14.0Q3679.0 15 3595.0 15ZM3462.0 -364H3712.0Q3708.0 -432 3678.0 -469.5Q3648.0 -507 3592.0 -507Q3537.0 -507 3503.5 -471.5Q3470.0 -436 3462.0 -364Z"/></g></svg></div>
+        <div class="footer_logo" role="img" aria-label="Casabe"><svg class="brand-lockup" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1522 10503 1552"><!-- DRAFT: outlined from GT Maru Mono Bold TRIAL. Not for production until the font is licensed. Mark height = b ascender + 4%; gap = seed diameter. --><g transform="translate(-240.1 -1889.1) scale(34.9628)"><path fill="currentColor" d="M 32.866 10.5 L 57.133 52.532 A 1 1 0 0 1 56.267 54.032 L 7.733 54.032 A 1 1 0 0 1 6.867 52.532 L 31.134 10.5 A 1 1 0 0 1 32.866 10.5 Z"/><circle cx="32" cy="39.0217" r="6" style="fill:var(--color--primary)"/></g><path fill="currentColor" d="M2773.992832858587 30C2955.992832858587 30 3107.992832858587 -32 3196.992832858587 -122C3257.992832858587 -183 3292.992832858587 -259 3292.992832858587 -312C3292.992832858587 -387 3231.992832858587 -442 3160.992832858587 -442C3101.992832858587 -442 3064.992832858587 -421 3024.992832858587 -369C2972.992832858587 -295 2897.992832858587 -245 2782.992832858587 -245C2614.992832858587 -245 2485.992832858587 -369 2485.992832858587 -550C2485.992832858587 -731 2614.992832858587 -855 2782.992832858587 -855C2886.992832858587 -855 2966.992832858587 -810 3015.992832858587 -743C3062.992832858587 -691 3102.992832858587 -666 3163.992832858587 -666C3236.992832858587 -666 3289.992832858587 -721 3289.992832858587 -794C3289.992832858587 -853 3254.992832858587 -926 3194.992832858587 -986C3107.992832858587 -1073 2966.992832858587 -1130 2773.992832858587 -1130C2431.992832858587 -1130 2176.992832858587 -890 2176.992832858587 -550C2176.992832858587 -210 2431.992832858587 30 2773.992832858587 30ZM4030.992832858587 29C4169.992832858587 29 4288.992832858587 -18 4368.992832858587 -101C4416.992832858587 -22 4498.992832858587 24 4600.992832858587 24C4681.992832858587 24 4766.992832858587 -16 4811.992832858587 -73C4846.992832858587 -116 4862.992832858587 -157 4862.992832858587 -208C4862.992832858587 -265 4827.992832858587 -309 4779.992832858587 -309C4756.992832858587 -309 4741.992832858587 -302 4722.992832858587 -285C4707.992832858587 -271 4692.992832858587 -262 4670.992832858587 -262C4634.992832858587 -262 4622.992832858587 -287 4622.992832858587 -316V-743C4622.992832858587 -998 4450.992832858587 -1130 4159.992832858587 -1130C3959.992832858587 -1130 3788.992832858587 -1064 3683.992832858587 -947C3645.992832858587 -905 3626.992832858587 -860 3626.992832858587 -815C3626.992832858587 -748 3677.992832858587 -704 3749.992832858587 -704C3794.992832858587 -704 3829.992832858587 -723 3889.992832858587 -769C3962.992832858587 -831 4060.992832858587 -872 4153.992832858587 -872C4256.992832858587 -872 4318.992832858587 -832 4318.992832858587 -766C4318.992832858587 -719 4292.992832858587 -694 4216.992832858587 -678L3953.992832858587 -620C3737.992832858587 -573 3631.992832858587 -465 3631.992832858587 -294C3631.992832858587 -100 3791.992832858587 29 4030.992832858587 29ZM3952.992832858587 -318C3952.992832858587 -380 4003.992832858587 -423 4103.992832858587 -443L4214.992832858587 -465C4260.992832858587 -475 4295.992832858587 -489 4319.992832858587 -508V-383C4319.992832858587 -284 4230.992832858587 -211 4110.992832858587 -211C4015.992832858587 -211 3952.992832858587 -254 3952.992832858587 -318ZM5635.992832858587 30C5975.992832858587 30 6182.992832858587 -110 6182.992832858587 -340C6182.992832858587 -513 6060.992832858587 -622 5810.992832858587 -666L5596.992832858587 -703C5485.992832858587 -722 5428.992832858587 -754 5428.992832858587 -804C5428.992832858587 -858 5502.992832858587 -891 5624.992832858587 -891C5724.992832858587 -891 5810.992832858587 -862 5880.992832858587 -819C5944.992832858587 -779 5991.992832858587 -746 6041.992832858587 -746C6112.992832858587 -746 6163.992832858587 -795 6163.992832858587 -861C6163.992832858587 -922 6118.992832858587 -984 6041.992832858587 -1032C5945.992832858587 -1092 5803.992832858587 -1130 5632.992832858587 -1130C5311.992832858587 -1130 5112.992832858587 -997 5112.992832858587 -783C5112.992832858587 -614 5247.992832858587 -499 5497.992832858587 -456L5699.992832858587 -421C5806.992832858587 -403 5865.992832858587 -371 5865.992832858587 -312C5865.992832858587 -252 5790.992832858587 -218 5658.992832858587 -218C5529.992832858587 -218 5435.992832858587 -256 5345.992832858587 -320C5283.992832858587 -364 5240.992832858587 -386 5191.992832858587 -386C5118.992832858587 -386 5068.992832858587 -339 5068.992832858587 -267C5068.992832858587 -218 5100.992832858587 -180 5148.992832858587 -135C5254.992832858587 -32 5436.992832858587 30 5635.992832858587 30ZM6910.992832858587 29C7049.992832858587 29 7168.992832858587 -18 7248.992832858587 -101C7296.992832858587 -22 7378.992832858587 24 7480.992832858587 24C7561.992832858587 24 7646.992832858587 -16 7691.992832858587 -73C7726.992832858587 -116 7742.992832858587 -157 7742.992832858587 -208C7742.992832858587 -265 7707.992832858587 -309 7659.992832858587 -309C7636.992832858587 -309 7621.992832858587 -302 7602.992832858587 -285C7587.992832858587 -271 7572.992832858587 -262 7550.992832858587 -262C7514.992832858587 -262 7502.992832858587 -287 7502.992832858587 -316V-743C7502.992832858587 -998 7330.992832858587 -1130 7039.992832858587 -1130C6839.992832858587 -1130 6668.992832858587 -1064 6563.992832858587 -947C6525.992832858587 -905 6506.992832858587 -860 6506.992832858587 -815C6506.992832858587 -748 6557.992832858587 -704 6629.992832858587 -704C6674.992832858587 -704 6709.992832858587 -723 6769.992832858587 -769C6842.992832858587 -831 6940.992832858587 -872 7033.992832858587 -872C7136.992832858587 -872 7198.992832858587 -832 7198.992832858587 -766C7198.992832858587 -719 7172.992832858587 -694 7096.992832858587 -678L6833.992832858587 -620C6617.992832858587 -573 6511.992832858587 -465 6511.992832858587 -294C6511.992832858587 -100 6671.992832858587 29 6910.992832858587 29ZM6832.992832858587 -318C6832.992832858587 -380 6883.992832858587 -423 6983.992832858587 -443L7094.992832858587 -465C7140.992832858587 -475 7175.992832858587 -489 7199.992832858587 -508V-383C7199.992832858587 -284 7110.992832858587 -211 6990.992832858587 -211C6895.992832858587 -211 6832.992832858587 -254 6832.992832858587 -318ZM8578.992832858587 30C8880.992832858587 30 9110.992832858587 -202 9110.992832858587 -550C9110.992832858587 -898 8880.992832858587 -1130 8578.992832858587 -1130C8444.992832858587 -1130 8330.992832858587 -1085 8253.992832858587 -1001V-1308C8253.992832858587 -1400 8192.992832858587 -1464 8104.992832858587 -1464C8016.992832858587 -1464 7954.992832858587 -1400 7954.992832858587 -1308V-132C7954.992832858587 -40 8016.992832858587 24 8104.992832858587 24C8180.992832858587 24 8235.992832858587 -23 8249.992832858587 -95C8330.992832858587 -8 8439.992832858587 30 8578.992832858587 30ZM8248.992832858587 -550C8248.992832858587 -724 8360.992832858587 -855 8525.992832858587 -855C8682.992832858587 -855 8802.992832858587 -735 8802.992832858587 -550C8802.992832858587 -365 8682.992832858587 -245 8525.992832858587 -245C8360.992832858587 -245 8248.992832858587 -376 8248.992832858587 -550ZM9992.992832858587 29C10174.992832858587 29 10354.992832858587 -34 10435.992832858587 -144C10458.992832858587 -175 10475.992832858587 -211 10475.992832858587 -247C10475.992832858587 -320 10439.992832858587 -365 10363.992832858587 -365C10316.992832858587 -365 10277.992832858587 -346 10236.992832858587 -320C10179.992832858587 -273 10107.992832858587 -246 10006.992832858587 -246C9832.992832858587 -246 9705.992832858587 -327 9686.992832858587 -459H10345.992832858587C10452.992832858587 -459 10502.992832858587 -511 10502.992832858587 -627C10502.992832858587 -919 10277.992832858587 -1130 9959.992832858587 -1130C9623.992832858587 -1130 9387.992832858587 -892 9387.992832858587 -548C9387.992832858587 -197 9627.992832858587 29 9992.992832858587 29ZM9686.992832858587 -689C9706.992832858587 -812 9804.992832858587 -893 9947.992832858587 -893C10092.992832858587 -893 10185.992832858587 -812 10206.992832858587 -689Z"/></svg></div>
         <p class="footer_copyright">Canvas zip pouch workshop handout</p>
       </div>
     </div>

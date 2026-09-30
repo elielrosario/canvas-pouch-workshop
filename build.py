@@ -10,26 +10,31 @@ pages fetch nothing but the progress API, and writes:
   index.html                        redirect from the bare address to the attendee page
   artifact.html                     the attendee page without <head>, for the claude.ai copy
 
-Brand sources are read from the sibling checkouts in ~/Git Library.
+Brand sources are read from the sibling checkouts in ~/Git Library (override with
+LIBRARY_DIR, e.g. when building from a git worktree, where ../ is not the library).
 """
-import html, json, re, pathlib
+import html, json, os, re, pathlib
 
-LIB = pathlib.Path(__file__).resolve().parent.parent
 here = pathlib.Path(__file__).resolve().parent
+LIB = pathlib.Path(os.environ.get("LIBRARY_DIR") or here.parent)
+# Test a stylesheet other than the sibling checkout's (e.g. an unmerged branch).
+SITE_CSS = pathlib.Path(os.environ.get("SITE_CSS") or LIB / "batey-platform/site/styles.css")
 
 fonts = "\n".join(re.findall(
     r"@font-face\s*\{.*?\}",
     (LIB / "design-system-library/systems/house-default/dist/components.css").read_text(),
     flags=re.S))
-site = (LIB / "batey-platform/site/styles.css").read_text()
+site = SITE_CSS.read_text()
 # Let an explicit host "light" beat a dark OS, same as the site's .theme-light escape hatch.
 site = site.replace("html:not(.theme-light) {", 'html:not(.theme-light):not([data-theme="light"]) {')
-site_css = "<style>\n" + fonts + "\n" + site + "\n</style>"
+# Workshop-only rules the platform stylesheet dropped (old nav, small buttons, hero plate).
+legacy = (here / "src/legacy-site.css").read_text()
+site_css = "<style>\n" + fonts + "\n" + site + "\n" + legacy + "</style>"
 
 # Casabe lockup (spec: src/brand/README.md). The currentColor file: the triangle and
-# wordmark follow the text colour on light and dark, the seed is fixed brand orange.
+# wordmark follow the text colour on light and dark, the seed takes the site's orange token.
 lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
-assert lockup.count('fill="#e8480c"') == 1, "lockup seed not found"
+assert lockup.count("fill:var(--color--primary)") == 1, "lockup seed not found"
 lockup = lockup.replace(
     "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
 
