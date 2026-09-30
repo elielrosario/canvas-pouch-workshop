@@ -8,7 +8,7 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 
 - **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is fixed orange `#e8480c`. Geometry is the kit's `mark/casabe-mark.svg`, metadata stripped.
 - **Wordmark:** the vectorised Familjen Grotesk 700 paths from the previous lockup, **unchanged**. The kit ships no wordmark because GT Maru is not yet licensed. When it is, outline the lockup from the licensed font and replace only the wordmark group.
-- **Layout (viewBox 6326 x 1100):** mark height 1100, mark bottom edge on the wordmark baseline, mark 1.1x the cap height, gap 200 (about two thirds of the seed diameter 292). The apex sits 86 above the cap line.
+- **Layout (viewBox 6326 x 1271):** the mark is 1100 tall with its bottom edge on the wordmark baseline (1.1x the cap height), gap 200 (about two thirds of the seed diameter 292). The box adds 85 of empty space above and below so the lockup is no wider than the previous one at 30px tall (about 149px; it was 155px) and the mobile nav still fits. The mark itself renders about 26px tall at 30px.
 - **Sizes on the site:** 30px tall in the nav, 32px in the footer and on the QR sign (set in `src/body.html`, `src/progress.html`, `src/sign.html`).
 
 `build.py` injects the file at `<!--LOCKUP-->`, adding the `brand-lockup` class.
@@ -27,7 +27,7 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 | Paper | `#f7f7f8` |
 | Orange (seed) | `#e8480c` |
 
-The site stylesheet's own primary is `#f1511b` (from `batey-platform/site/styles.css`), which differs from the kit's orange. The site tokens are left as they are.
+The built pages inline a site stylesheet whose primary is `#ff7900`; the current `batey-platform/site/styles.css` has `#f1511b`. Both differ from the kit's orange. The site tokens are left as they are.
 
 ## Icons (`assets/brand/`, from the kit's `icons/`)
 
