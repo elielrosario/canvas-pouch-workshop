@@ -26,17 +26,17 @@ site = (LIB / "batey-platform/site/styles.css").read_text()
 site = site.replace("html:not(.theme-light) {", 'html:not(.theme-light):not([data-theme="light"]) {')
 site_css = "<style>\n" + fonts + "\n" + site + "\n</style>"
 
-# Casabe lockup (spec: src/brand/README.md). The currentColor file, with its bar set
-# to brand orange: the two-tone lockup that follows the text colour on light and dark.
+# Casabe lockup (spec: src/brand/README.md). The currentColor file: the triangle and
+# wordmark follow the text colour on light and dark, the seed is fixed brand orange.
 lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
-bar = '<path fill="currentColor" d="M8 70 H92 V89 H8 Z"/>'
-assert lockup.count(bar) == 1, "lockup bar path not found"
-lockup = lockup.replace(bar, bar.replace("currentColor", "#ff7900")).replace(
+assert lockup.count('fill="#e8480c"') == 1, "lockup seed not found"
+lockup = lockup.replace(
     "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
 
-ICONS = ('<link rel="icon" href="/assets/brand/casabe-favicon.svg" type="image/svg+xml">\n'
+ICONS = ('<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">\n'
          '<link rel="icon" href="/assets/brand/favicon-32.png" sizes="32x32" type="image/png">\n'
-         '<link rel="apple-touch-icon" href="/assets/brand/casabe-icon-ink-180.png">\n')
+         '<link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">\n'
+         '<link rel="manifest" href="/assets/brand/site.webmanifest">\n')
 
 
 def full_page(page, description):
