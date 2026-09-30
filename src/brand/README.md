@@ -4,12 +4,22 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 
 ## Lockup
 
-`casabe-lockup-currentcolor.svg` is the mark followed by the lowercase outlined `casabe` wordmark, laid out the way the casabe.studio nav does it.
+**DRAFT, do not ship until the GT Maru license is bought.** `casabe-lockup-currentcolor.svg` is the mark followed by `casabe` outlined from the **trial** font GT Maru Mono Bold. Grilli Type's trial license forbids use in final files, so before this merges the outlines must be regenerated from the licensed font (source: the brand-kit lockup draft, `casabe-lockup-draft/`).
 
-- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is `style="fill:var(--color--primary)"`, so it takes the site's orange token (`#e8480c`) and follows the colour switch. The build inlines the SVG into each page, which is what lets the variable resolve; the file on its own (opened as an image) has no `--color--primary` and renders the seed black. Geometry is the kit's `mark/casabe-mark.svg`, metadata stripped.
-- **Wordmark:** the five outlined `casabe` paths from batey-platform's nav package (`packages/nav/src/index.ts`, `WORDMARK_PATH_0..4`, PR #425), all `currentColor`, each keeping its own fill rule (the `s` overlap slivers are nonzero, the counters in `a`/`b`/`e` are evenodd). Copy them from there rather than redrawing; when the nav wordmark changes, replace the nested wordmark `<svg>` here.
-- **Layout (viewBox 162.4 x 32):** the nav's own numbers at a 32 unit mark height. Mark 36.4 x 32 (kit viewBox `6.3 9.4 51.4 45.2`), gap 12.5, wordmark 113.5 x 26.9 (viewBox `44.5 104.5 1268.5 302`), bottoms aligned (the nav uses `align-items: flex-end`). No padding in the box, so the mark renders at the full lockup height.
-- **Sizes on the site:** 30px tall in the nav (152px wide), 32px in the footer and on the QR sign (162px wide) (set in `src/body.html`, `src/progress.html`, `src/sign.html`). At 375px the nav still fits "Materials", "Steps" and the theme button without clipping.
+- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is `style="fill:var(--color--primary)"` (the draft file hardcodes `#e8480c`; it is swapped for the token), so it takes the site's orange and follows the colour switch. The build inlines the SVG into each page, which is what lets the variable resolve; the file on its own (opened as an image) renders the seed black. Geometry is the kit's `mark/casabe-mark.svg`.
+- **Wordmark:** five-letter `casabe` outlines, `currentColor`, in one path.
+- **Proportions (B+):** the mark's bottom sits on the text baseline; the mark is as tall as the "b" plus 4%; the gap between mark and "c" equals the seed's diameter; lockup width = mark height x 6.9. viewBox is `0 -1522 10503 1552`: the mark spans 1522 units, the extra 30 is the descender of the "c" and "e" overshoot below the baseline.
+- **Sizes on the site:** the SVG height is the mark height x 1552/1522 (x 1.0197), set in `src/body.html`, `src/progress.html`, `src/sign.html`.
+
+  | Place | Mark | SVG height | Width |
+  |---|---|---|---|
+  | Nav, 768px and up | 30px | 30.6px | 207px |
+  | Nav, below 768px | 22px | 22.4px | 152px (same as the old lockup) |
+  | Footer, 768px and up | 32px | 32.6px | 221px |
+  | Footer, below 768px | 24px | 24.5px | 166px |
+  | QR sign | 32px | 32.6px | 221px |
+
+  At 375px a 24px mark (166px wide) overflowed the nav links by 9px, so the nav mark is 22px there; at 375px the links have 5px to spare. At 360px the nav links still overflow by 10px (the old lockup was the same width, so this is unchanged).
 
 `build.py` injects the file at `<!--LOCKUP-->`, adding the `brand-lockup` class.
 
