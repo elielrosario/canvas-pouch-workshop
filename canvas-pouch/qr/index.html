@@ -295,7 +295,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
    text (--color--on-primary) in both light and dark mode. */
 .button.is-primary { background: var(--color--primary); color: var(--color--on-primary); }
 .button.is-primary:hover { background: var(--color--primary-600); transform: translateY(-2px); box-shadow: var(--effect--shadow-sm); }
-.button.is-secondary { background: var(--color--accent); color: var(--color--text-inverse); }
+.button.is-secondary { background: var(--color--accent); color: var(--color--on-primary); }
 .button.is-outline { background: transparent; border-color: currentColor; color: var(--color--accent-deep); }
 .button.is-outline:hover { background: var(--color--surface-alt); }
 .button-group { display: flex; gap: var(--space--md); flex-wrap: wrap; }
@@ -498,13 +498,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* ---------- Pill — rounded inline label ---------- */
 .pill { display: inline-flex; align-items: center; gap: var(--space--xs); padding: 0.25em 0.75em; border-radius: 999px; font-size: var(--type--small); font-weight: 600; line-height: 1.4; background: var(--color--surface-alt); color: var(--color--text); }
 .pill.is-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.pill.is-accent { background: var(--color--accent); color: var(--color--text-inverse); }
+.pill.is-accent { background: var(--color--accent); color: var(--color--on-primary); }
 .pill.is-outline { background: transparent; border: 1px solid var(--color--border); color: var(--color--text-mu); }
 
 /* ---------- Tag — compact label ---------- */
 .tag { display: inline-flex; align-items: center; gap: var(--space--xs); padding: 0.15em 0.55em; border-radius: var(--radius--sm); font-size: var(--type--small); font-weight: 500; line-height: 1.5; background: var(--color--surface-alt); color: var(--color--text-mu); border: 1px solid var(--color--border); }
 .tag.is-primary { background: var(--color--primary); color: var(--color--on-primary); border-color: transparent; }
-.tag.is-accent { background: var(--color--accent); color: var(--color--text-inverse); border-color: transparent; }
+.tag.is-accent { background: var(--color--accent); color: var(--color--on-primary); border-color: transparent; }
 .tag.is-sm { font-size: 0.75rem; padding: 0.1em 0.4em; }
 
 /* ---------- Dot — status indicator ---------- */
@@ -799,7 +799,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .u-bg-surface-alt { background: var(--color--surface-alt); }
 .u-bg-surface-inverse { background: var(--color--surface-inverse); color: var(--color--text-inverse); }
 .u-bg-primary { background: var(--color--primary); color: var(--color--on-primary); }
-.u-bg-accent { background: var(--color--accent); }
+.u-bg-accent { background: var(--color--accent); color: var(--color--on-primary); }
 
 /* ---------- Spacing (margin u-m*, padding u-p*; steps 0 xs sm md lg xl 2xl) ---------- */
 .u-mt-0 { margin-top: 0; }
@@ -1105,7 +1105,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .status-view { max-width: 520px; margin: var(--space--md) auto 0; text-align: left; display: grid; grid-template-columns: 1fr; gap: var(--space--md); }
 .status-view_token { color: var(--color--on-inverse-body); font-size: var(--type--small); }
 .status-view_token code {
-  font-family: var(--type--family-mono); color: var(--color--primary);
+  font-family: var(--type--family-mono); color: var(--color--accent-on-inverse);
   background: rgba(0, 0, 0, 0.3); border-radius: var(--radius--sm); padding: 0.1em 0.4em;
 }
 /* `status-view_note`, matching `status-view_token` above, not
@@ -1670,7 +1670,7 @@ html[data-direction="receipt"] .hero_receipt-no {
    Anything using --color--primary as a FOREGROUND on an inverse band vanishes
    when that band is itself orange (receipt). Route those through their own
    token so a direction can move them without touching the accent everywhere
-   else. Measured: #16161a on #e8480c is 5.10:1; white on the same is 3.54:1,
+   else. Measured: #16161a on #e8480c is 4.61:1; white on the same is 3.92:1,
    which is why receipt inverts to ink rather than lightening.
    -------------------------------------------------------------------------- */
 :root { --color--accent-on-inverse: var(--color--primary); }
