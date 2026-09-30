@@ -4,12 +4,12 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 
 ## Lockup
 
-`casabe-lockup-currentcolor.svg` is the mark followed by the `Casabe` wordmark.
+`casabe-lockup-currentcolor.svg` is the mark followed by the lowercase outlined `casabe` wordmark, laid out the way the casabe.studio nav does it.
 
-- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is fixed orange `#e8480c`. Geometry is the kit's `mark/casabe-mark.svg`, metadata stripped.
-- **Wordmark:** the vectorised Familjen Grotesk 700 paths from the previous lockup, **unchanged**. The kit ships no wordmark because GT Maru is not yet licensed. When it is, outline the lockup from the licensed font and replace only the wordmark group.
-- **Layout (viewBox 6326 x 1271):** the mark is 1100 tall with its bottom edge on the wordmark baseline (1.1x the cap height), gap 200 (about two thirds of the seed diameter 292). The box adds 85 of empty space above and below so the lockup is no wider than the previous one at 30px tall (about 149px; it was 155px) and the mobile nav still fits. The mark itself renders about 26px tall at 30px.
-- **Sizes on the site:** 30px tall in the nav, 32px in the footer and on the QR sign (set in `src/body.html`, `src/progress.html`, `src/sign.html`).
+- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is `style="fill:var(--color--primary)"`, so it takes the site's orange token (`#e8480c`) and follows the colour switch. The build inlines the SVG into each page, which is what lets the variable resolve; the file on its own (opened as an image) has no `--color--primary` and renders the seed black. Geometry is the kit's `mark/casabe-mark.svg`, metadata stripped.
+- **Wordmark:** the five outlined `casabe` paths from batey-platform's nav package (`packages/nav/src/index.ts`, `WORDMARK_PATH_0..4`, PR #425), all `currentColor`, each keeping its own fill rule (the `s` overlap slivers are nonzero, the counters in `a`/`b`/`e` are evenodd). Copy them from there rather than redrawing; when the nav wordmark changes, replace the nested wordmark `<svg>` here.
+- **Layout (viewBox 162.4 x 32):** the nav's own numbers at a 32 unit mark height. Mark 36.4 x 32 (kit viewBox `6.3 9.4 51.4 45.2`), gap 12.5, wordmark 113.5 x 26.9 (viewBox `44.5 104.5 1268.5 302`), bottoms aligned (the nav uses `align-items: flex-end`). No padding in the box, so the mark renders at the full lockup height.
+- **Sizes on the site:** 30px tall in the nav (152px wide), 32px in the footer and on the QR sign (162px wide) (set in `src/body.html`, `src/progress.html`, `src/sign.html`). At 375px the nav still fits "Materials", "Steps" and the theme button without clipping.
 
 `build.py` injects the file at `<!--LOCKUP-->`, adding the `brand-lockup` class.
 
@@ -27,7 +27,9 @@ Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of t
 | Paper | `#f7f7f8` |
 | Orange (seed) | `#e8480c` |
 
-The built pages inline a site stylesheet whose primary is `#ff7900`; the current `batey-platform/site/styles.css` has `#f1511b`. Both differ from the kit's orange. The site tokens are left as they are.
+The built pages inline batey-platform's `site/styles.css`, whose `--color--primary` is the kit orange `#e8480c` on the `claude/kit-colours` branch. The workshops CSS uses the tokens (`--color--primary`, `--color--ink-fixed`, the `--direction--*-dark` surfaces) and holds no orange or ink hex of its own.
+
+Accessibility (kit rules): small text is never orange on a light background (`#e8480c` on `#f7f7f8` is 3.66:1); buttons are ink text on orange; orange text is fine on dark. The large bold step numerals (24px, 26px on the QR sign) are the only orange text on light and pass the 3:1 large-text bar.
 
 ## Icons (`assets/brand/`, from the kit's `icons/`)
 

@@ -9,8 +9,8 @@ body { margin: 0; font-family: var(--type--family-sans); font-size: var(--type--
 /* The artifact host stamps data-theme on <html>; the site themes by class. The
    script bridges the two — this block only covers the moment before it runs. */
 html[data-theme="dark"]:not(.theme-light) {
-  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: #1f1f23;
-  --color--surface-inverse: #1f1f23; --color--border: #3b3b42; --color--accent-deep: #e9560c;
+  --color--text: #f7f7f8; --color--text-mu: #9a9aa2; --color--surface: #16161a; --color--surface-alt: var(--direction--surface-alt-dark);
+  --color--surface-inverse: var(--direction--surface-inverse-dark); --color--border: var(--direction--border-dark); --color--accent-deep: var(--color--primary);
   --color--success: #5fd08a; --color--warning: #f0b544; --color--danger: #f28b82;
 }
 section[id], .phase[id], .steps_item[id] { scroll-margin-top: 4.25rem; }
@@ -23,7 +23,7 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .nav-links { display: flex; gap: var(--space--lg); }
 .main-nav_link { font-size: var(--type--small); }
 #theme-toggle { flex: none; }
-/* Casabe lockup (src/brand): block and wordmark follow the text colour, the bar stays orange */
+/* Casabe lockup (src/brand): block and wordmark follow the text colour, the seed follows the orange token */
 .brand-lockup { display: block; width: auto; height: 30px; }  /* spec minimum for the horizontal lockup */
 .main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
 .footer_logo { margin-bottom: var(--space--sm); color: var(--color--on-inverse-strong); }
