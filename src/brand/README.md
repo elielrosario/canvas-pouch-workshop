@@ -1,105 +1,46 @@
-# Casabe — Partido Mark · Production Spec
+# Casabe mark and lockup
 
-Locked 2026-09-11. Source of truth for geometry is this document; the lab (`casabe-partido-lab.html`, preset "Módulo 10" with module set to 12) regenerates it.
+Mark **W3 · seed r 6**: a rounded ink triangle with an orange seed. Source of truth is the Casabe brand kit (its `README.md`); this file records how the workshops site uses it.
 
-## Geometry
+## Lockup
 
-Mark box: **100 × 89** units, no padding. All values on a single module **m = 12**.
+**DRAFT, do not ship until the GT Maru license is bought.** `casabe-lockup-currentcolor.svg` is the mark followed by `casabe` outlined from the **trial** font GT Maru Mono Bold. Grilli Type's trial license forbids use in final files, so before this merges the outlines must be regenerated from the licensed font (source: the brand-kit lockup draft, `casabe-lockup-draft/`).
 
-| Element | Value |
-|---|---|
-| Block | x 8–92 (84 wide) · y 0–58 (58 tall) · square corners |
-| Triangle counter (void) | apex (50, 12) · base y 46 · half-width 25.16 · height 34 |
-| Clearance around triangle | top 12 · bottom 12 · sides 16.84 (derived) |
-| Slope | half-width ÷ height = **0.74** (same as the CP mark) |
-| Gap block → bar | 12 |
-| Bar | x 8–92 · y 70–89 (19 = m × 1.6) · square corners |
+- **Mark:** triangle is `currentColor` (follows the nav/footer text colour, so it flips on dark with no second file); the seed is `style="fill:var(--color--primary)"` (the draft file hardcodes `#e8480c`; it is swapped for the token), so it takes the site's orange and follows the colour switch. The build inlines the SVG into each page, which is what lets the variable resolve; the file on its own (opened as an image) renders the seed black. Geometry is the kit's `mark/casabe-mark.svg`.
+- **Wordmark:** five-letter `casabe` outlines, `currentColor`, in one path.
+- **Proportions (B+):** the mark's bottom sits on the text baseline; the mark is as tall as the "b" plus 4%; the gap between mark and "c" equals the seed's diameter; lockup width = mark height x 6.9. viewBox is `0 -1522 10503 1552`: the mark spans 1522 units, the extra 30 is the descender of the "c" and "e" overshoot below the baseline.
+- **Sizes on the site:** the SVG height is the mark height x 1552/1522 (x 1.0197), set in `src/body.html`, `src/progress.html`, `src/sign.html`.
 
-Paths (evenodd for the block):
+  | Place | Mark | SVG height | Width |
+  |---|---|---|---|
+  | Nav, 768px and up | 30px | 30.6px | 207px |
+  | Nav, below 768px | 22px | 22.4px | 152px (same as the old lockup) |
+  | Footer, 768px and up | 32px | 32.6px | 221px |
+  | Footer, below 768px | 24px | 24.5px | 166px |
+  | QR sign | 32px | 32.6px | 221px |
 
-```
-Block + counter:  M8 0 H92 V58 H8 Z  M50 12 L75.16 46 L24.84 46 Z
-Bar:              M8 70 H92 V89 H8 Z
-```
+  At 375px a 24px mark (166px wide) overflowed the nav links by 9px, so the nav mark is 22px there; at 375px the links have 5px to spare. At 360px the nav links still overflow by 10px (the old lockup was the same width, so this is unchanged).
 
-The counter is a true knockout — the surface shows through it. Never paint it.
+`build.py` injects the file at `<!--LOCKUP-->`, adding the `brand-lockup` class.
 
-## Lockups
+## Clear space and minimum size (from the kit)
 
-**Horizontal.** The mark's **block top sits on the cap line and the bar's top edge sits on the baseline** — the word stands on the bar, and the bar hangs below the baseline as foundation. This makes the mark 1.271× the cap height and puts its ink centroid within 3 units of the wordmark's (measured; the bar-bottom-on-baseline alternative left the mark a quarter cap-height too high). Gap between mark and wordmark = 1.5 modules at lockup scale.
-
-**Stacked.** Mark centred over the wordmark; wordmark width = 1.6× the mark's width; gap = 1.5 modules.
-
-**Wordmark.** `Casabe`, capital C, **Familjen Grotesk 700**, −0.02em tracking, **vectorised** — the lockup files contain paths, never live text. If the typeface changes (see `casabe-wordmark-fonts.html`), regenerate the lockups; the mark and the rules don't change.
-
-## Clear space & minimum size
-
-- **Clear space:** one module (12 units, i.e. 12% of the mark's width) on all sides, measured from the block and bar edges — not from the counter.
-- **Minimum size, mark alone:** 18px tall. Below that the counter closes. The 16px favicon is the exception and works because the bar is orange and the triangle is still 4–5px.
-- **Minimum size, horizontal lockup:** 30px total height, which puts the cap height at ~24px and the mark's bar still 2px clear of the block.
+- Clear space equals the seed's diameter on all sides.
+- Minimum 16px tall on screen. Below 24px use the ink/paper mark with the orange seed; never the knockout, the hole closes up.
+- Don't recolour, stretch, rotate, outline or add effects. Don't move the seed.
 
 ## Colour
 
-Tokens from `site/styles.css`. Primary `#ff7900` is theme-invariant.
+| Token | Hex |
+|---|---|
+| Ink | `#16161a` |
+| Paper | `#f7f7f8` |
+| Orange (seed) | `#e8480c` |
 
-| Context | Block | Bar | Counter |
-|---|---|---|---|
-| Light surface, mono | ink `#16161a` | ink | shows surface |
-| Light surface, two-tone (**default lockup**) | ink | `#ff7900` | shows surface |
-| Dark surface (`#16161a`) | `rgba(255,255,255,.88)` | `#ff7900` | shows surface |
-| Orange surface | ink | ink | shows surface |
+The built pages inline batey-platform's `site/styles.css`, whose `--color--primary` is the kit orange `#e8480c` on the `claude/kit-colours` branch. The workshops CSS uses the tokens (`--color--primary`, `--color--ink-fixed`, the `--direction--*-dark` surfaces) and holds no orange or ink hex of its own.
 
-Never set the block orange on a light surface below ~48px (contrast). The bar may be orange at any size.
+Accessibility (kit rules): small text is never orange on a light background (`#e8480c` on `#f7f7f8` is 3.66:1); buttons are ink text on orange; orange text is fine on dark. The large bold step numerals (24px, 26px on the QR sign) are the only orange text on light and pass the 3:1 large-text bar.
 
-For CSS-driven colour, use the `-currentcolor` files: the block and wordmark take `currentColor`, the bar is fixed orange in the `-twotone` variant.
+## Icons (`assets/brand/`, from the kit's `icons/`)
 
-## App icons
-
-1024 grid, mark scaled to 64% of the canvas, centred. Three surfaces:
-
-- **ink** — ink background, white block, orange bar *(primary app icon)*
-- **orange** — orange background, ink block, ink bar
-- **light** — white background, ink block, orange bar
-
-Rounded (`rx 224`, ≈ iOS ratio) SVG/PNG for web use; `-square` files for platforms that apply their own mask (iOS, Android adaptive).
-
-## Files — `casabe-partido-assets/`
-
-```
-Mark
-  casabe-mark.svg                      ink mono
-  casabe-mark-twotone.svg              ink + orange bar          ← default
-  casabe-mark-inverse.svg              on-inverse mono
-  casabe-mark-inverse-twotone.svg      on-inverse + orange bar
-  casabe-mark-currentcolor.svg         CSS-driven, mono
-  casabe-mark-currentcolor-twotone.svg CSS-driven, orange bar
-  casabe-mark-{256,512,1024}.png, casabe-mark-twotone-{256,512,1024}.png
-
-Wordmark
-  casabe-wordmark.svg, casabe-wordmark-currentcolor.svg   (Familjen Grotesk 700, vectorised)
-
-Lockups
-  casabe-lockup.svg / -twotone / -inverse / -inverse-twotone / -currentcolor
-  casabe-lockup-stacked.svg / -twotone / -inverse
-  casabe-lockup-{800,1600}.png, casabe-lockup-twotone-{800,1600}.png
-
-App icons
-  casabe-icon-{ink,orange,light}.svg + -{1024,512,192,180,120}.png
-  casabe-icon-{ink,orange}-square.svg + -square-1024.png
-
-Favicon
-  casabe-favicon.svg        (auto dark-mode via prefers-color-scheme)
-  favicon-{16,32,48,64}.png
-```
-
-## Implementation notes
-
-- `<head>`: `<link rel="icon" href="/casabe-favicon.svg" type="image/svg+xml">` with `favicon-32.png` as fallback; `apple-touch-icon` → `casabe-icon-ink-180.png`.
-- Nav: `casabe-lockup-currentcolor.svg` inline, height 28–32px, colour from the nav's text token — it flips correctly on the dark band with no second file.
-- The Webflow site uses Inter for UI; the lockup carries its own vectorised Familjen Grotesk wordmark, so the display face never needs to load on the site.
-
-## Open items
-
-- Wordmark typeface: **Familjen Grotesk 700** (provisional — may change). Comparison board: `casabe-wordmark-fonts.html`. Changing it is a regenerate of the wordmark and lockup files only.
-- Dots: none in the locked version. The lab supports them if the seed idea returns.
-- Update `CASABE-BRAND-GUIDELINES.md` logo section from this spec once the typeface is settled.
+`favicon.svg` (kit file plus a `prefers-color-scheme` style so the triangle is ink on light tabs and paper on dark; the kit file had no fill, so it rendered black), `favicon-16/32/48.png`, `apple-touch-icon.png`, `icon-192/512.png`, `icon-maskable-512.png`, `site.webmanifest` (icon paths made absolute). `build.py` links the SVG, the 32px PNG, the apple-touch icon and the manifest in every page head.
