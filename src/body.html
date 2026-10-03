@@ -24,10 +24,10 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
 .main-nav_link { font-size: var(--type--small); }
 #theme-toggle { flex: none; }
 /* Casabe lockup (src/brand): block and wordmark follow the text colour, the seed follows the orange token */
-.brand-lockup { display: block; width: auto; height: 30.6px; }  /* svg height = mark height x 1552/1522 (viewBox includes the wordmark descender): 30px mark */
+.brand-lockup { display: block; width: auto; height: 34px; }  /* knockout lockup, 485.72 x 81.91 viewBox: 34px tall = 202px wide, mark ~33px (0.86 x font size, kit rule) */
 .main-nav_logo { display: inline-flex; align-items: center; flex: none; color: var(--color--text); }
 .footer_logo { margin-bottom: var(--space--sm); color: var(--color--on-inverse-strong); }
-.footer_logo .brand-lockup { height: 32.6px; }  /* 32px mark */
+.footer_logo .brand-lockup { height: 36px; }  /* 213px wide */
 
 /* hero */
 .hero_facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space--md) var(--space--lg); margin: var(--space--xs) 0 0; padding-top: var(--space--md); border-top: 1px solid var(--color--on-inverse-faint); }
@@ -112,8 +112,8 @@ h2[tabindex="-1"]:focus, h4[tabindex="-1"]:focus { outline: none; }
   .heading-xl { font-size: 1.625rem; }
   .steps_title { font-size: 1.1875rem; }
   .phase_title { font-size: 1.25rem; }
-  .brand-lockup { height: 22.4px; }  /* 22px mark (152px wide, as before) so the nav links are not clipped at 375px */
-  .footer_logo .brand-lockup { height: 24.5px; }
+  .brand-lockup { height: 25px; }  /* 148px wide, so the nav links are not clipped at 375px */
+  .footer_logo .brand-lockup { height: 28px; }  /* 166px wide */
   .container.is-nav { flex-wrap: nowrap; gap: var(--space--sm); }
   .main-nav_menu { flex-wrap: nowrap; min-width: 0; gap: var(--space--sm); }
   .nav-links { gap: 0.9rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
