@@ -32,9 +32,10 @@ legacy = (here / "src/legacy-site.css").read_text()
 site_css = "<style>\n" + fonts + "\n" + site + "\n" + legacy + "</style>"
 
 # Casabe lockup (spec: src/brand/README.md). The currentColor file: the triangle and
-# wordmark follow the text colour on light and dark, the seed takes the site's orange token.
+# wordmark are one colour (currentColor) and follow the text colour on light and dark; the
+# seed is a hole cut through the triangle (evenodd), so the background shows through.
 lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
-assert lockup.count("fill:var(--color--primary)") == 1, "lockup seed not found"
+assert 'fill-rule="evenodd"' in lockup and "currentColor" in lockup and "c2pa" not in lockup, "lockup knockout hole not found"
 lockup = lockup.replace(
     "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
 
