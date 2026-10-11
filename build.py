@@ -33,9 +33,9 @@ site_css = "<style>\n" + fonts + "\n" + site + "\n" + legacy + "</style>"
 
 # Casabe lockup (spec: src/brand/README.md). The currentColor file: the triangle and
 # wordmark are one colour (currentColor) and follow the text colour on light and dark; the
-# seed is a hole cut through the triangle (evenodd), so the background shows through.
+# line mark is a stroked open-base triangle with a filled seed circle in the same colour.
 lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
-assert 'fill-rule="evenodd"' in lockup and "currentColor" in lockup and "c2pa" not in lockup, "lockup knockout hole not found"
+assert 'stroke="currentColor"' in lockup and 'stroke-width="6"' in lockup and "<circle" in lockup and "c2pa" not in lockup, "line mark stroke not found in lockup"
 lockup = lockup.replace(
     "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
 
