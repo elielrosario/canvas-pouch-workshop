@@ -1,10 +1,10 @@
 # Casabe mark and lockup
 
-The Casabe logo (new, owner-approved 2026-11-14): a solid, sharp-cornered triangle with a round seed, beside the uppercase name CASABE. Source of truth is the Casabe brand kit (`brand/casabe-brand-kit/` in batey-platform; its `README.md`). The shapes are never altered.
+The Casabe logo (new, owner-approved 2026-11-17): a solid triangle with rounded corners and a round seed, beside the new rounded uppercase letters CASABE. Source of truth is the Casabe brand kit (`brand/casabe-brand-kit/` in batey-platform; its `README.md`). The shapes are never altered.
 
 ## Lockup
 
-`casabe-lockup-currentcolor.svg` is the kit's `lockup/casabe-lockup-ink.svg` with the one change that its fill is `currentColor` instead of `#16161a`; geometry is identical (viewBox `0 0 73 16`, width = height x 4.5625). CSS sizes it.
+`casabe-lockup-currentcolor.svg` is the kit's `lockup/casabe-lockup-ink.svg` with the one change that its fill is `currentColor` instead of `#16161a`; geometry is identical (viewBox `0 0 85 16`, width = height x 5.3125). CSS sizes it.
 
 - **The seed is a hole.** The triangle and circle are one path with `fill-rule="evenodd"`, so the background shows through. Never put a colored dot in it.
 - **One color.** Follows the text color, so it flips on dark with no second file.
@@ -13,11 +13,11 @@ The Casabe logo (new, owner-approved 2026-11-14): a solid, sharp-cornered triang
 
   | Place | SVG height | Width |
   |---|---|---|
-  | Nav, 768px and up | 30px | 136.9px |
-  | Nav, below 768px | 22px | 100.4px |
-  | Footer, 768px and up | 32px | 146px |
-  | Footer, below 768px | 25px | 114.1px |
-  | QR sign | 32px | 146px |
+  | Nav, 768px and up | 30px | 159.4px |
+  | Nav, below 768px | 22px | 116.9px |
+  | Footer, 768px and up | 32px | 170px |
+  | Footer, below 768px | 25px | 132.8px |
+  | QR sign | 32px | 170px |
 
 ## Clear space and minimum size (kit)
 
