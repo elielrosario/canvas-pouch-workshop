@@ -31,11 +31,11 @@ site = site.replace("html:not(.theme-light) {", 'html:not(.theme-light):not([dat
 legacy = (here / "src/legacy-site.css").read_text()
 site_css = "<style>\n" + fonts + "\n" + site + "\n" + legacy + "</style>"
 
-# Casabe lockup (spec: src/brand/README.md). The currentColor file: the triangle and
-# wordmark are one colour (currentColor) and follow the text colour on light and dark; the
-# line mark is a stroked open-base triangle with a filled seed circle in the same colour.
+# Casabe lockup (spec: src/brand/README.md). The currentColor file: the solid triangle (its
+# seed is a hole cut with evenodd) and the uppercase name are one colour (currentColor) and
+# follow the text colour on light and dark.
 lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
-assert 'stroke="currentColor"' in lockup and 'stroke-width="6"' in lockup and "<circle" in lockup and "c2pa" not in lockup, "line mark stroke not found in lockup"
+assert 'fill="currentColor"' in lockup and 'fill-rule="evenodd"' in lockup and 'viewBox="0 0 73 16"' in lockup and "stroke" not in lockup and "c2pa" not in lockup, "new solid-triangle lockup not found"
 lockup = lockup.replace(
     "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
 

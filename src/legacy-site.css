@@ -32,5 +32,6 @@
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--color--primary);
 }
+.hero_plate-rule { width: 92px; height: 2px; background: var(--color--primary); }
 @media (max-width: 900px) { .hero_plate { min-height: 110px; } }
 @media (max-width: 620px) { .hero_plate { display: none; } }
