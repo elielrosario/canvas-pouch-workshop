@@ -4,7 +4,7 @@ The Casabe logo (new, owner-approved 2026-11-17): a solid triangle with rounded 
 
 ## Lockup
 
-`casabe-lockup-currentcolor.svg` is the kit's `lockup/casabe-lockup-ink.svg` with the one change that its fill is `currentColor` instead of `#16161a`; geometry is identical (viewBox `0 0 85 16`, width = height x 5.3125). CSS sizes it.
+`casabe-lockup-currentcolor.svg` is the kit's `lockup/casabe-lockup-ink.svg` with the one change that its fill is `currentColor` instead of `#16161a`; geometry is identical (viewBox `0 0 91.8818 16`, width = height x 5.7426 (letters enlarged 12%, owner decision 2026-11-17)). CSS sizes it.
 
 - **The seed is a hole.** The triangle and circle are one path with `fill-rule="evenodd"`, so the background shows through. Never put a colored dot in it.
 - **One color.** Follows the text color, so it flips on dark with no second file.
@@ -13,11 +13,11 @@ The Casabe logo (new, owner-approved 2026-11-17): a solid triangle with rounded 
 
   | Place | SVG height | Width |
   |---|---|---|
-  | Nav, 768px and up | 30px | 159.4px |
-  | Nav, below 768px | 22px | 116.9px |
-  | Footer, 768px and up | 32px | 170px |
-  | Footer, below 768px | 25px | 132.8px |
-  | QR sign | 32px | 170px |
+  | Nav, 768px and up | 30px | 172.3px |
+  | Nav, below 768px | 22px | 126.3px |
+  | Footer, 768px and up | 32px | 183.8px |
+  | Footer, below 768px | 25px | 143.6px |
+  | QR sign | 32px | 183.8px |
 
 ## Clear space and minimum size (kit)
 

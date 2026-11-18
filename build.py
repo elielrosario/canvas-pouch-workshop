@@ -35,7 +35,7 @@ site_css = "<style>\n" + fonts + "\n" + site + "\n" + legacy + "</style>"
 # seed is a hole cut with evenodd) and the uppercase name are one colour (currentColor) and
 # follow the text colour on light and dark.
 lockup = (here / "src/brand/casabe-lockup-currentcolor.svg").read_text().strip()
-assert 'fill="currentColor"' in lockup and 'fill-rule="evenodd"' in lockup and 'viewBox="0 0 85 16"' in lockup and "stroke" not in lockup and "c2pa" not in lockup, "new solid-triangle lockup not found"
+assert 'fill="currentColor"' in lockup and 'fill-rule="evenodd"' in lockup and 'viewBox="0 0 91.8818 16"' in lockup and "stroke" not in lockup and "c2pa" not in lockup, "new solid-triangle lockup not found"
 lockup = lockup.replace(
     "<svg ", '<svg class="brand-lockup" aria-hidden="true" focusable="false" ', 1)
 
