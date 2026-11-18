@@ -322,10 +322,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .site-nav_link:hover { color: var(--color--text, var(--text, #16161a)); }
 .site-nav_link.is-menu-cta, .site-nav_link.is-menu-lang { display: none; }
 .site-nav_logo { display: inline-flex; flex-direction: row; align-items: flex-end; padding-top: 6px; padding-bottom: 6px; color: var(--color--text, var(--text, #16161a)); text-decoration: none; line-height: 1; }
-.site-nav_mark { display: block; flex: none; width: 37.02px; height: 32.68px; }
-.site-nav_name { display: block; overflow: hidden; max-width: 160px; margin-left: 11.37px; margin-bottom: -0.11px; opacity: 1; transition: max-width .25s ease, margin-left .25s ease, opacity .15s ease; }
+.site-nav_mark { display: block; flex: none; width: 37.5px; height: 30px; }
+.site-nav_name { display: block; overflow: hidden; max-width: 100px; margin-left: 7.23px; margin-bottom: 1.51px; opacity: 1; transition: max-width .25s ease, margin-left .25s ease, opacity .15s ease; }
 .site-nav_name.is-collapsed { max-width: 0; margin-left: 0; opacity: 0; }
-.site-nav_wordmark { display: block; width: 151.97px; height: 27.27px; }
+.site-nav_wordmark { display: block; width: 90.88px; height: 19.24px; }
 .site-nav_cta { display: inline-flex; align-items: center; padding: 0.6rem 1.15rem; border: 2px solid transparent; border-radius: 4px; background: var(--color--primary, var(--primary, #e8480c)); color: var(--color--on-primary, #16161a); font-weight: 600; text-decoration: none; white-space: nowrap; transition: transform .2s ease, background .2s ease; }
 .site-nav_lang { font-weight: 500; color: var(--color--neutral-700, var(--text-mu, #3b3b42)); text-decoration: none; white-space: nowrap; }
 .site-nav_lang:hover { color: var(--color--text, var(--text, #16161a)); }
@@ -394,9 +394,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .site-nav_link.is-menu-lang { display: flex; }
   .site-nav_cta.is-hidden-in-menu, .site-nav_lang.is-hidden-in-menu { display: none; }
   .site-nav_logo { padding-top: 9px; padding-bottom: 9px; }
-  .site-nav_mark { width: 29.45px; height: 26px; }
-  .site-nav_name { max-width: 128px; margin-left: 9.05px; margin-bottom: -0.09px; }
-  .site-nav_wordmark { width: 120.89px; height: 21.69px; }
+  .site-nav_mark { width: 30px; height: 24px; }
+  .site-nav_name { max-width: 80px; margin-left: 5.78px; margin-bottom: 1.21px; }
+  .site-nav_wordmark { width: 72.7px; height: 15.39px; }
   .site-nav_inner.is-strip { grid-template-columns: 0 auto 1fr; column-gap: 0; padding-top: 8px; padding-bottom: 8px; }
   .site-nav_inner.is-strip.is-collapsed { padding-top: 6px; padding-bottom: 6px; }
   .site-nav_links.is-strip { gap: 0; }
@@ -553,14 +553,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 /* Footer: brand column wide, two link columns, a ruled bottom bar. */
 .footer_layout.is-brand-wide { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); }
 .footer_bottom { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: var(--space--lg); row-gap: var(--space--xs); margin-top: var(--space--xl); padding-top: var(--space--md); border-top-width: 1px; border-top-style: solid; border-top-color: var(--color--on-inverse-line); }
-/* Footer brand lockup: the nav's line mark + "casabe" wordmark (stamped from
-   @batey/nav's renderFooterLockup), at the nav's phone size — mark 26px tall,
-   above the brand kit's 24px small-mark threshold. Proportions as the nav:
-   ink-to-ink gap 0.2993 x font size, round letters pulled onto the baseline.
-   currentColor, so it follows the band's text color in every direction. */
-.footer_lockup { display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-end; column-gap: 9.05px; margin-bottom: var(--space--md); color: var(--color--text-inverse); line-height: 1; }
-.footer_mark { display: block; flex-grow: 0; flex-shrink: 0; flex-basis: auto; width: 29.45px; height: 26px; }
-.footer_wordmark { display: block; flex-grow: 0; flex-shrink: 0; flex-basis: auto; width: 120.89px; height: 21.69px; margin-bottom: -0.09px; }
+/* Footer brand lockup: the nav's solid triangle + "CASABE" wordmark (stamped
+   from @batey/nav's renderFooterLockup), at the nav's phone size: triangle
+   24px tall, 1 unit of the logo file = 1.5px. Gap 3.854 units, letters end
+   0.804 units above the triangle base. currentColor, so it follows the band's
+   text color in every direction. */
+.footer_lockup { display: flex; flex-direction: row; justify-content: flex-start; align-items: flex-end; column-gap: 5.78px; margin-bottom: var(--space--md); color: var(--color--text-inverse); line-height: 1; }
+.footer_mark { display: block; flex-grow: 0; flex-shrink: 0; flex-basis: auto; width: 30px; height: 24px; }
+.footer_wordmark { display: block; flex-grow: 0; flex-shrink: 0; flex-basis: auto; width: 72.7px; height: 15.39px; margin-bottom: 1.21px; }
 @media (max-width: 767px) {
   .pricing-notes { grid-template-columns: minmax(0, 1fr); }
   .care { grid-template-columns: minmax(0, 1fr); padding-top: var(--space--lg); padding-right: var(--space--lg); padding-bottom: var(--space--lg); padding-left: var(--space--lg); }
@@ -2995,6 +2995,7 @@ html[data-direction="receipt"] .pricing_currency { font-family: var(--type--fami
   letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--color--primary);
 }
+.hero_plate-rule { width: 92px; height: 2px; background: var(--color--primary); }
 @media (max-width: 900px) { .hero_plate { min-height: 110px; } }
 @media (max-width: 620px) { .hero_plate { display: none; } }
 </style>
